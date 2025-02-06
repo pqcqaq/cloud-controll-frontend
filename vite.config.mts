@@ -55,7 +55,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       open: env.VITE_OPEN === 'true',
       proxy: {
         '/api': {
-          target: env.VITE_API_URL,
+          target: "http://127.0.0.1:9991/api/",
           changeOrigin: true,
           ws: true,
           rewrite: (path) => path.replace(new RegExp(`^/api`), ''),
