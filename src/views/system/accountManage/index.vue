@@ -271,8 +271,9 @@
           <el-button
             @click="
               () => {
-                form.value.password = '';
-                form.value.confirmPassword = '';
+                form.password = '';
+                form.confirmPassword = '';
+                showResetPwd = false;
               }
             "
             :disabled="isLoading"
