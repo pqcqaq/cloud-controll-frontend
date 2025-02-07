@@ -99,7 +99,6 @@ import type { ColumnProps, ProTableInstance, SearchProps } from '@/components/Pr
 import type { IOneAssemblyLine } from '@/api/interface/oneassemblyline/oneAssemblyLine';
 import ImportExcel from '@/components/ImportExcel/index.vue';
 import { downloadTemplate } from '@/api/modules/system/common';
-import { ElMessageBox } from "element-plus";
 import { useDownload } from "@/hooks/useDownload";
 defineOptions({
   name: 'OneAssemblyLineView'

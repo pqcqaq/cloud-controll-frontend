@@ -1,5 +1,12 @@
 <template xmlns:el-col="http://www.w3.org/1999/html">
-  <el-dialog v-model="visible" :title="`${paramsProps.title}`" :destroy-on-close="true" width="600px" draggable append-to-body>
+  <el-dialog
+    v-model="visible"
+    :title="`${paramsProps.title}`"
+    :destroy-on-close="true"
+    width="600px"
+    draggable
+    append-to-body
+  >
     <el-form
       ref="ruleFormRef"
       label-width="80px"
@@ -12,51 +19,110 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="账户">
-            <el-input v-model="paramsProps.row.username" disabled clearable />
+            <el-input
+              v-model="paramsProps.row.username"
+              disabled
+              clearable
+            />
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="昵称" prop="nickname">
-            <el-input v-model="paramsProps.row.nickname" placeholder="请填写昵称" clearable />
+          <el-form-item
+            label="昵称"
+            prop="nickname"
+          >
+            <el-input
+              v-model="paramsProps.row.nickname"
+              placeholder="请填写昵称"
+              clearable
+            />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="手机号" prop="phone">
-            <el-input v-model="paramsProps.row.phone" placeholder="请填写手机号" clearable />
+          <el-form-item
+            label="手机号"
+            prop="phone"
+          >
+            <el-input
+              v-model="paramsProps.row.phone"
+              placeholder="请填写手机号"
+              clearable
+            />
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="邮箱" prop="email">
-            <el-input v-model="paramsProps.row.email" placeholder="请填写邮箱地址" clearable />
+          <el-form-item
+            label="邮箱"
+            prop="email"
+          >
+            <el-input
+              v-model="paramsProps.row.email"
+              placeholder="请填写邮箱地址"
+              clearable
+            />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="性别" prop="sex">
-            <el-select v-model="paramsProps.row.sex" clearable placeholder="请选择性别">
-              <el-option label="未知" :value="0" />
-              <el-option label="男" :value="1" />
-              <el-option label="女" :value="2" />
+          <el-form-item
+            label="性别"
+            prop="sex"
+          >
+            <el-select
+              v-model="paramsProps.row.sex"
+              clearable
+              placeholder="请选择性别"
+            >
+              <el-option
+                label="未知"
+                :value="0"
+              />
+              <el-option
+                label="男"
+                :value="1"
+              />
+              <el-option
+                label="女"
+                :value="2"
+              />
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="生日" prop="birthday">
-            <el-date-picker v-model="paramsProps.row.birthday" type="date" placeholder="选择生日" value-format="YYYY-MM-DD" />
+          <el-form-item
+            label="生日"
+            prop="birthday"
+          >
+            <el-date-picker
+              v-model="paramsProps.row.birthday"
+              type="date"
+              placeholder="选择生日"
+              value-format="YYYY-MM-DD"
+            />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="身份证" prop="idCard">
-            <el-input v-model="paramsProps.row.idCard" placeholder="请填写身份证" clearable />
+          <el-form-item
+            label="身份证"
+            prop="idCard"
+          >
+            <el-input
+              v-model="paramsProps.row.idCard"
+              placeholder="请填写身份证"
+              clearable
+            />
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="状态" prop="accountStatusCd">
+          <el-form-item
+            label="状态"
+            prop="accountStatusCd"
+          >
             <el-radio-group v-model="paramsProps.row.accountStatusCd">
               <el-radio-button
                 v-for="item in optionsStore.getDictOptions('account_status')"
@@ -67,9 +133,32 @@
             </el-radio-group>
           </el-form-item>
         </el-col>
+        <!-- 选择产线 -->
+        <el-col :span="12">
+          <el-form-item
+            label="产线"
+            prop="assemblyLineId"
+          >
+            <el-select
+              v-model="paramsProps.row.assemblyLineId"
+              clearable
+              placeholder="请选择产线"
+            >
+              <el-option
+                v-for="item in assemblyLines"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
       </el-row>
       <el-row>
-        <el-form-item label="头像" prop="logo">
+        <el-form-item
+          label="头像"
+          prop="logo"
+        >
           <UploadImg
             v-model:image-url="paramsProps.row.logo"
             @change="fileChange"
@@ -82,25 +171,36 @@
               <el-icon><Avatar /></el-icon>
               <span>请上传头像</span>
             </template>
-            <template #tip> 头像大小不能超过 3M </template>
+            <template #tip>
+              头像大小不能超过 3M
+            </template>
           </UploadImg>
         </el-form-item>
       </el-row>
     </el-form>
     <template #footer>
-      <el-button @click="visible = false"> 取消 </el-button>
-      <el-button type="primary" @click="handleSubmit"> 确定 </el-button>
+      <el-button @click="visible = false">
+        取消
+      </el-button>
+      <el-button
+        type="primary"
+        @click="handleSubmit"
+      >
+        确定
+      </el-button>
     </template>
   </el-dialog>
 </template>
 
 <script setup lang="ts">
 import { useOptionsStore } from '@/stores/modules/options';
-import { reactive, ref } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import { ElMessage } from 'element-plus';
 import UploadImg from '@/components/Upload/Img.vue';
 import type { IUploadResult } from '@/api/interface/system/upload';
 import { IS_PREVIEW } from '@/config';
+import { getOneAssemblyLineListApi } from '@/api/modules/oneassemblyline/oneAssemblyLine';
+import type { IOneAssemblyLine } from '@/api/interface/oneassemblyline/oneAssemblyLine';
 defineOptions({
   name: 'UserEdit'
 });
@@ -142,6 +242,32 @@ const handleSubmit = () => {
     }
   });
 };
+
+const assemblyLines = ref<{
+  label: string;
+  value: number;
+}[]>([]);
+
+const getLineInfo = () => {
+  getOneAssemblyLineListApi({
+      page: 1,
+      limit: 1000
+  }).then((res) => {
+    assemblyLines.value = [{
+      label: '非产线员工',
+      value: -1
+    },...res.data.rows.map((item: IOneAssemblyLine.Row) => {
+      return {
+        label: item.name!,
+        value: item.id!
+      }
+    })];
+  });
+}
+
+onMounted(() => {
+  getLineInfo();
+})
 
 // 获取文件变更事件
 const fileChange = (data: IUploadResult) => {
