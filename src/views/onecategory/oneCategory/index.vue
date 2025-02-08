@@ -99,7 +99,6 @@ import type { ColumnProps, ProTableInstance, SearchProps } from '@/components/Pr
 import type { IOneCategory } from '@/api/interface/onecategory/assembly';
 import ImportExcel from '@/components/ImportExcel/index.vue';
 import { downloadTemplate } from '@/api/modules/system/common';
-import { ElMessageBox } from "element-plus";
 import { useDownload } from "@/hooks/useDownload";
 defineOptions({
   name: 'OneCategoryView'
@@ -111,6 +110,8 @@ const columns: ColumnProps<IOneCategory.Row>[] = [
   { prop: 'sku', label: 'SKU' },
   { prop: 'idCode', label: '产品ID标识' },
   { prop: 'name', label: '产品名称' },
+  { prop: 'minWeight', label: '最小重量' },
+  { prop: 'maxWeight', label: '最大重量' },
   { prop: 'operation', label: '操作', width: 250, fixed: 'right' }
 ]
 // 搜索条件项
