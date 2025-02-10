@@ -73,6 +73,19 @@
             />
           </el-form-item>
         </el-col>
+        <!-- 销售码 -->
+        <el-col :span="20">
+          <el-form-item
+            label="销售码"
+            prop="salesCode"
+          >
+            <el-input
+              v-model="paramsProps.row.salesCode"
+              placeholder="请填写销售码"
+              clearable
+            />
+          </el-form-item>
+        </el-col>
       </el-row>
     </el-form>
     <template #footer>
@@ -101,6 +114,9 @@ const rules = reactive({
   sku: [{ required: true, message: '请填写SKU' }],
   idCode: [{ required: true, message: '请填写产品ID标识' }],
   name: [{ required: true, message: '请填写产品名称' }],
+  minWeight: [{ required: true, message: '请填写最小重量' }],
+  maxWeight: [{ required: true, message: '请填写最大重量' }],
+  salesCode: [{ required: true, message: '请填写销售码' }],
   delFlag: [{ required: true, message: '请填写删除与否' }]
 });
 

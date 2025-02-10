@@ -14,48 +14,21 @@
       :model="paramsProps.row"
       @submit.enter.prevent="handleSubmit"
     >
-      <el-form-item
-        label="产线名称"
-        prop="name"
-      >
+      <el-form-item label="目的地码" prop="code">
         <el-input
-          v-model="paramsProps.row.name"
-          placeholder="请填写产线名称"
+          v-model="paramsProps.row.code"
+          placeholder="请填写目的地码"
           clearable
-        />
+        ></el-input>
       </el-form-item>
-      <el-form-item
-        label="生产类别"
-        prop="idCode"
-      >
+      <el-form-item label="是否打印" prop="printed">
         <el-input-number
-          v-model="paramsProps.row.idCode"
-          :precision="0"
-          :min="1"
-          :max="999999"
-        />
-      </el-form-item>
-      <el-form-item
-        label="生产线别"
-        prop="lineType"
-      >
-        <el-input
-          v-model="paramsProps.row.lineType"
-          placeholder="请填写生产线别"
-          clearable
-        />
+          v-model="paramsProps.row.printed" :precision="0" :min="1" :max="999999" />
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button @click="visible = false">
-        取消
-      </el-button>
-      <el-button
-        type="primary"
-        @click="handleSubmit"
-      >
-        确定
-      </el-button>
+      <el-button @click="visible = false"> 取消</el-button>
+      <el-button type="primary" @click="handleSubmit"> 确定</el-button>
     </template>
   </el-dialog>
 </template>
@@ -65,14 +38,13 @@ import { ref, reactive } from 'vue'
 import { type ElForm, ElMessage } from 'element-plus'
 
 defineOptions({
-    name: 'OneAssemblyLineForm'
+    name: 'OneDestCodeForm'
 })
 
 const rules = reactive({
-  name: [{ required: true, message: '请填写产线名称' }],
-  idCode: [{ required: true, message: '请填写生产类别' }],
-  lineType: [{ required: true, message: '请填写生产线别' }],
   delFlag: [{ required: true, message: '请填写删除与否' }],
+  code: [{ required: true, message: '请填写目的地码' }],
+  printed: [{ required: true, message: '请填写是否打印' }],
 })
 
 const visible = ref(false)

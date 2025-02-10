@@ -14,12 +14,30 @@
     <!-- 表格头部 操作按钮 -->
     <div class="table-header">
       <div class="header-button-lf">
-        <slot name="tableHeader" :selected-list-ids="selectedListIds" :selected-list="selectedList" :is-selected="isSelected" />
+        <slot
+          name="tableHeader"
+          :selected-list-ids="selectedListIds"
+          :selected-list="selectedList"
+          :is-selected="isSelected"
+        />
       </div>
-      <div v-if="toolButton" class="header-button-ri">
+      <div
+        v-if="toolButton"
+        class="header-button-ri"
+      >
         <slot name="toolButton">
-          <el-button v-if="showToolButton('refresh')" :icon="Refresh" circle @click="getTableList" />
-          <el-button v-if="showToolButton('setting') && columns.length" :icon="Operation" circle @click="openColSetting" />
+          <el-button
+            v-if="showToolButton('refresh')"
+            :icon="Refresh"
+            circle
+            @click="getTableList"
+          />
+          <el-button
+            v-if="showToolButton('setting') && columns.length"
+            :icon="Operation"
+            circle
+            @click="openColSetting"
+          />
           <el-button
             v-if="showToolButton('search') && searchColumnsData.length"
             :icon="Search"
@@ -43,7 +61,10 @@
     >
       <!-- 默认插槽 -->
       <slot />
-      <template v-for="item in tableColumns" :key="item">
+      <template
+        v-for="item in tableColumns"
+        :key="item"
+      >
         <!-- selection || radio || index || expand || sort -->
         <el-table-column
           v-if="item.type && columnTypes.includes(item.type)"
@@ -54,15 +75,31 @@
           <template #default="scope">
             <!-- expand -->
             <template v-if="item.type == 'expand'">
-              <component :is="item.render" v-bind="scope" v-if="item.render" />
-              <slot v-else :name="item.type" v-bind="scope" />
+              <component
+                :is="item.render"
+                v-bind="scope"
+                v-if="item.render"
+              />
+              <slot
+                v-else
+                :name="item.type"
+                v-bind="scope"
+              />
             </template>
             <!-- radio -->
-            <el-radio v-if="item.type == 'radio'" v-model="radio" :value="scope.row[rowKey]">
+            <el-radio
+              v-if="item.type == 'radio'"
+              v-model="radio"
+              :value="scope.row[rowKey]"
+            >
               <i />
             </el-radio>
             <!-- sort -->
-            <el-tag v-if="item.type == 'sort'" type="primary" class="move">
+            <el-tag
+              v-if="item.type == 'sort'"
+              type="primary"
+              class="move"
+            >
               <el-icon>
                 <DCaret />
               </el-icon>
@@ -70,9 +107,18 @@
           </template>
         </el-table-column>
         <!-- other -->
-        <TableColumn v-if="!item.type && item.prop && item.isShow" :column="item">
-          <template v-for="slot in Object.keys($slots)" #[slot]="scope">
-            <slot :name="slot" v-bind="scope" />
+        <TableColumn
+          v-if="!item.type && item.prop && item.isShow"
+          :column="item"
+        >
+          <template
+            v-for="slot in Object.keys($slots)"
+            #[slot]="scope"
+          >
+            <slot
+              :name="slot"
+              v-bind="scope"
+            />
           </template>
         </TableColumn>
       </template>
@@ -84,7 +130,10 @@
       <template #empty>
         <div class="table-empty">
           <slot name="empty">
-            <img src="@/assets/images/notData.png" alt="notData" />
+            <img
+              src="@/assets/images/notData.png"
+              alt="notData"
+            >
             <div>暂无数据</div>
           </slot>
         </div>
@@ -101,7 +150,11 @@
     </slot>
   </div>
   <!-- 列设置 -->
-  <ColSetting v-if="toolButton" ref="colRef" v-model:col-setting="colSetting" />
+  <ColSetting
+    v-if="toolButton"
+    ref="colRef"
+    v-model:col-setting="colSetting"
+  />
 </template>
 
 <script setup lang="ts">

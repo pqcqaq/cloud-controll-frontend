@@ -9,10 +9,23 @@
     top="5vh"
     append-to-body
   >
-    <el-steps :active="active" align-center finish-status="success">
-      <el-step title="基本信息" @click="active = 0" />
-      <el-step title="字段信息" @click="active = 1" />
-      <el-step title="生成信息" @click="active = 2" />
+    <el-steps
+      :active="active"
+      align-center
+      finish-status="success"
+    >
+      <el-step
+        title="基本信息"
+        @click="active = 0"
+      />
+      <el-step
+        title="字段信息"
+        @click="active = 1"
+      />
+      <el-step
+        title="生成信息"
+        @click="active = 2"
+      />
     </el-steps>
     <div class="mt20">
       <div v-show="active === 0">
@@ -26,84 +39,171 @@
         >
           <el-row>
             <el-col :span="12">
-              <el-form-item label="表名称" prop="tableName">
-                <el-input v-model="baseInfo.tableName" clearable disabled />
+              <el-form-item
+                label="表名称"
+                prop="tableName"
+              >
+                <el-input
+                  v-model="baseInfo.tableName"
+                  clearable
+                  disabled
+                />
               </el-form-item>
             </el-col>
 
             <el-col :span="12">
-              <el-form-item label="表描述" prop="tableComment">
+              <el-form-item
+                label="表描述"
+                prop="tableComment"
+              >
                 <template #label>
                   <el-space :size="4">
                     <span>表描述</span>
-                    <el-tooltip effect="dark" content="表名，注释信息" placement="top">
+                    <el-tooltip
+                      effect="dark"
+                      content="表名，注释信息"
+                      placement="top"
+                    >
                       <i :class="'iconfont icon-yiwen'" />
                     </el-tooltip>
                   </el-space>
                   <span>&nbsp;:</span>
                 </template>
-                <el-input v-model="baseInfo.tableComment" placeholder="请填写表描述" clearable />
+                <el-input
+                  v-model="baseInfo.tableComment"
+                  placeholder="请填写表描述"
+                  clearable
+                />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="12">
-              <el-form-item label="实体类名称" prop="className">
+              <el-form-item
+                label="实体类名称"
+                prop="className"
+              >
                 <template #label>
                   <el-space :size="4">
                     <span>实体类名称</span>
-                    <el-tooltip effect="dark" content="java PO层" placement="top">
+                    <el-tooltip
+                      effect="dark"
+                      content="java PO层"
+                      placement="top"
+                    >
                       <i :class="'iconfont icon-yiwen'" />
                     </el-tooltip>
                   </el-space>
                   <span>&nbsp;:</span>
                 </template>
-                <el-input v-model="baseInfo.className" placeholder="请填写实体类名称" clearable />
+                <el-input
+                  v-model="baseInfo.className"
+                  placeholder="请填写实体类名称"
+                  clearable
+                />
               </el-form-item>
             </el-col>
 
             <el-col :span="12">
-              <el-form-item label="作者" prop="functionAuthor">
-                <el-input v-model="baseInfo.functionAuthor" placeholder="请填写作者" clearable />
+              <el-form-item
+                label="作者"
+                prop="functionAuthor"
+              >
+                <el-input
+                  v-model="baseInfo.functionAuthor"
+                  placeholder="请填写作者"
+                  clearable
+                />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="24">
-              <el-form-item label="备注" prop="remark">
-                <el-input v-model="baseInfo.remark" placeholder="请填写备注" :rows="2" type="textarea" clearable />
+              <el-form-item
+                label="备注"
+                prop="remark"
+              >
+                <el-input
+                  v-model="baseInfo.remark"
+                  placeholder="请填写备注"
+                  :rows="2"
+                  type="textarea"
+                  clearable
+                />
               </el-form-item>
             </el-col>
           </el-row>
         </el-form>
       </div>
-      <div v-show="active === 1" style="margin: 0 20px">
-        <h4 class="form-header h4">选择模版</h4>
+      <div
+        v-show="active === 1"
+        style="margin: 0 20px"
+      >
+        <h4 class="form-header h4">
+          选择模版
+        </h4>
         <div class="form-type">
-          <el-radio-group v-model="generatorInfo.generateType" size="large" @change="changeRadio">
-            <el-radio-button label="全量" value="all" />
-            <el-radio-button label="后端" value="server" />
-            <el-radio-button label="接口" value="service" />
-            <el-radio-button label="数据库" value="db" />
+          <el-radio-group
+            v-model="generatorInfo.generateType"
+            size="large"
+            @change="changeRadio"
+          >
+            <el-radio-button
+              label="全量"
+              value="all"
+            />
+            <el-radio-button
+              label="后端"
+              value="server"
+            />
+            <el-radio-button
+              label="接口"
+              value="service"
+            />
+            <el-radio-button
+              label="数据库"
+              value="db"
+            />
           </el-radio-group>
           <div class="tip custom-block">
-            <p style="color: var(--el-color-info)">Tip： {{ typeContent[generatorInfo.generateType].tooltip }}</p>
+            <p style="color: var(--el-color-info)">
+              Tip： {{ typeContent[generatorInfo.generateType].tooltip }}
+            </p>
             <p>{{ typeContent[generatorInfo.generateType].text }}</p>
           </div>
           <el-row>
-            <el-col :span="6" v-if="generatorInfo.generateType === 'all' || generatorInfo.generateType === 'server'">
+            <el-col
+              :span="6"
+              v-if="generatorInfo.generateType === 'all' || generatorInfo.generateType === 'server'"
+            >
               <el-form-item prop="type">
                 <template #label>
                   <el-space :size="4">
                     <span>Excel支持</span>
-                    <el-tooltip effect="dark" content="是否支持列表的导入导出" placement="top">
+                    <el-tooltip
+                      effect="dark"
+                      content="是否支持列表的导入导出"
+                      placement="top"
+                    >
                       <i :class="'iconfont icon-yiwen'" />
                     </el-tooltip>
                   </el-space>
                   <span>&nbsp;:</span>
                 </template>
-                <el-checkbox label="导入" name="type" v-model="generatorInfo.hasImport" true-value="1" false-value="0" />
-                <el-checkbox label="导出" name="type" v-model="generatorInfo.hasExport" true-value="1" false-value="0" />
+                <el-checkbox
+                  label="导入"
+                  name="type"
+                  v-model="generatorInfo.hasImport"
+                  true-value="1"
+                  false-value="0"
+                />
+                <el-checkbox
+                  label="导出"
+                  name="type"
+                  v-model="generatorInfo.hasExport"
+                  true-value="1"
+                  false-value="0"
+                />
               </el-form-item>
             </el-col>
             <el-col :span="3">
@@ -111,18 +211,29 @@
                 <template #label>
                   <el-space :size="4">
                     <span>自动填充</span>
-                    <el-tooltip effect="dark" content="对create、update操作进行自动填充。需遵循约定。" placement="top">
+                    <el-tooltip
+                      effect="dark"
+                      content="对create、update操作进行自动填充。需遵循约定。"
+                      placement="top"
+                    >
                       <i :class="'iconfont icon-yiwen'" />
                     </el-tooltip>
                   </el-space>
                   <span>&nbsp;:</span>
                 </template>
-                <el-checkbox name="type" v-model="generatorInfo.isAutofill" true-value="1" false-value="0" />
+                <el-checkbox
+                  name="type"
+                  v-model="generatorInfo.isAutofill"
+                  true-value="1"
+                  false-value="0"
+                />
               </el-form-item>
             </el-col>
           </el-row>
         </div>
-        <h4 class="form-header h4">配置字段</h4>
+        <h4 class="form-header h4">
+          配置字段
+        </h4>
         <div style="padding: 0 18px 0 10px">
           <ProTable
             ref="editProTableRef"
@@ -136,8 +247,15 @@
           >
             <template #isUniqueValidHeader="scope">
               {{ scope?.column.label }}
-              <el-space :size="2" class="column-table-header-yiwen">
-                <el-tooltip effect="dark" content="添加和修改时根据此属性进行唯一性校验." placement="top">
+              <el-space
+                :size="2"
+                class="column-table-header-yiwen"
+              >
+                <el-tooltip
+                  effect="dark"
+                  content="添加和修改时根据此属性进行唯一性校验."
+                  placement="top"
+                >
                   <i :class="'iconfont icon-yiwen'" />
                 </el-tooltip>
               </el-space>
@@ -145,10 +263,13 @@
 
             <template #isLogicDelHeader="scope">
               {{ scope?.column.label }}
-              <el-space :size="2" class="column-table-header-yiwen">
+              <el-space
+                :size="2"
+                class="column-table-header-yiwen"
+              >
                 <el-tooltip
                   effect="dark"
-                  content="逻辑删除标识，需配合mf配置 deleted-value-of-logic-delete 、normal-value-of-logic-delete 使用。sz-admin中默认设置其属性为T、F"
+                  content="逻辑删除标识，需配合mf配置 deleted-value-of-logic-delete 、normal-value-of-logic-delete 使用。系统中默认设置其属性为T、F"
                   placement="top"
                 >
                   <i :class="'iconfont icon-yiwen'" />
@@ -158,80 +279,151 @@
 
             <template #isInsertHeader="scope">
               {{ scope?.column.label }}
-              <el-space :size="2" class="column-table-header-yiwen">
-                <el-tooltip effect="dark" content="xxCreateDTO.java元素" placement="top" style="line-height: 1">
+              <el-space
+                :size="2"
+                class="column-table-header-yiwen"
+              >
+                <el-tooltip
+                  effect="dark"
+                  content="xxCreateDTO.java元素"
+                  placement="top"
+                  style="line-height: 1"
+                >
                   <i :class="'iconfont icon-yiwen'" />
                 </el-tooltip>
               </el-space>
             </template>
             <template #isEditHeader="scope">
               {{ scope?.column.label }}
-              <el-space :size="2" class="column-table-header-yiwen">
-                <el-tooltip effect="dark" content="xxUpdateDTO.java元素" placement="top">
+              <el-space
+                :size="2"
+                class="column-table-header-yiwen"
+              >
+                <el-tooltip
+                  effect="dark"
+                  content="xxUpdateDTO.java元素"
+                  placement="top"
+                >
                   <i :class="'iconfont icon-yiwen'" />
                 </el-tooltip>
               </el-space>
             </template>
             <template #isListHeader="scope">
               {{ scope?.column.label }}
-              <el-space :size="2" class="column-table-header-yiwen">
-                <el-tooltip effect="dark" content="xxVO.java元素" placement="top">
+              <el-space
+                :size="2"
+                class="column-table-header-yiwen"
+              >
+                <el-tooltip
+                  effect="dark"
+                  content="xxVO.java元素"
+                  placement="top"
+                >
                   <i :class="'iconfont icon-yiwen'" />
                 </el-tooltip>
               </el-space>
             </template>
             <template #isQueryHeader="scope">
               {{ scope?.column.label }}
-              <el-space :size="2" class="column-table-header-yiwen">
-                <el-tooltip effect="dark" content="xxListDTO.java元素" placement="top">
+              <el-space
+                :size="2"
+                class="column-table-header-yiwen"
+              >
+                <el-tooltip
+                  effect="dark"
+                  content="xxListDTO.java元素"
+                  placement="top"
+                >
                   <i :class="'iconfont icon-yiwen'" />
                 </el-tooltip>
               </el-space>
             </template>
             <template #isImportHeader="scope">
               {{ scope?.column.label }}
-              <el-space :size="2" class="column-table-header-yiwen">
-                <el-tooltip effect="dark" content="xxImportDTO.java元素" placement="top">
+              <el-space
+                :size="2"
+                class="column-table-header-yiwen"
+              >
+                <el-tooltip
+                  effect="dark"
+                  content="xxImportDTO.java元素"
+                  placement="top"
+                >
                   <i :class="'iconfont icon-yiwen'" />
                 </el-tooltip>
               </el-space>
             </template>
             <template #isExportHeader="scope">
               {{ scope?.column.label }}
-              <el-space :size="2" class="column-table-header-yiwen">
-                <el-tooltip effect="dark" content="excel表格导出元素" placement="top">
+              <el-space
+                :size="2"
+                class="column-table-header-yiwen"
+              >
+                <el-tooltip
+                  effect="dark"
+                  content="excel表格导出元素"
+                  placement="top"
+                >
                   <i :class="'iconfont icon-yiwen'" />
                 </el-tooltip>
               </el-space>
             </template>
             <template #queryTypeHeader="scope">
               {{ scope?.column.label }}
-              <el-space :size="2" class="column-table-header-yiwen">
-                <el-tooltip effect="dark" content="sql条件查询关键字" placement="top">
+              <el-space
+                :size="2"
+                class="column-table-header-yiwen"
+              >
+                <el-tooltip
+                  effect="dark"
+                  content="sql条件查询关键字"
+                  placement="top"
+                >
                   <i :class="'iconfont icon-yiwen'" />
                 </el-tooltip>
               </el-space>
             </template>
             <template #htmlTypeHeader="scope">
               {{ scope?.column.label }}
-              <el-space :size="2" class="column-table-header-yiwen">
-                <el-tooltip effect="dark" content="vue 组件" placement="top">
+              <el-space
+                :size="2"
+                class="column-table-header-yiwen"
+              >
+                <el-tooltip
+                  effect="dark"
+                  content="vue 组件"
+                  placement="top"
+                >
                   <i :class="'iconfont icon-yiwen'" />
                 </el-tooltip>
               </el-space>
             </template>
             <template #dictTypeHeader="scope">
               {{ scope?.column.label }}
-              <el-space :size="2" class="column-table-header-yiwen">
-                <el-tooltip effect="dark" content="对应字典表，字典管理。" placement="top">
+              <el-space
+                :size="2"
+                class="column-table-header-yiwen"
+              >
+                <el-tooltip
+                  effect="dark"
+                  content="对应字典表，字典管理。"
+                  placement="top"
+                >
                   <i :class="'iconfont icon-yiwen'" />
                 </el-tooltip>
               </el-space>
             </template>
             <template #dictShowWayHeader="scope">
               {{ scope?.column.label }}
-              <el-space :size="2" class="column-table-header-yiwen">
-                <el-tooltip effect="dark" content="字典展示类型：0 唯一标识；1 别名。" placement="top">
+              <el-space
+                :size="2"
+                class="column-table-header-yiwen"
+              >
+                <el-tooltip
+                  effect="dark"
+                  content="字典展示类型：0 唯一标识；1 别名。"
+                  placement="top"
+                >
                   <i :class="'iconfont icon-yiwen'" />
                 </el-tooltip>
               </el-space>
@@ -242,58 +434,120 @@
             </template>
 
             <template #javaType="{ row }">
-              <el-select v-model="row.javaType" filterable>
-                <el-option v-for="item in javaTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
+              <el-select
+                v-model="row.javaType"
+                filterable
+              >
+                <el-option
+                  v-for="item in javaTypeOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
               </el-select>
             </template>
 
             <template #isPk="{ row }">
-              <el-checkbox v-model="row.isPk" true-value="1" false-value="0" />
+              <el-checkbox
+                v-model="row.isPk"
+                true-value="1"
+                false-value="0"
+              />
             </template>
 
             <template #isIncrement="{ row }">
-              <el-checkbox v-model="row.isIncrement" true-value="1" false-value="0" />
+              <el-checkbox
+                v-model="row.isIncrement"
+                true-value="1"
+                false-value="0"
+              />
             </template>
 
             <template #isUniqueValid="{ row }">
-              <el-checkbox v-model="row.isUniqueValid" true-value="1" false-value="0" />
+              <el-checkbox
+                v-model="row.isUniqueValid"
+                true-value="1"
+                false-value="0"
+              />
             </template>
 
             <template #isRequired="{ row }">
-              <el-checkbox v-model="row.isRequired" true-value="1" false-value="0" />
+              <el-checkbox
+                v-model="row.isRequired"
+                true-value="1"
+                false-value="0"
+              />
             </template>
 
             <template #isLogicDel="{ row }">
-              <el-checkbox v-model="row.isLogicDel" true-value="1" false-value="0" />
+              <el-checkbox
+                v-model="row.isLogicDel"
+                true-value="1"
+                false-value="0"
+              />
             </template>
 
             <template #isInsert="{ row }">
-              <el-checkbox v-model="row.isInsert" true-value="1" false-value="0" />
+              <el-checkbox
+                v-model="row.isInsert"
+                true-value="1"
+                false-value="0"
+              />
             </template>
 
             <template #isEdit="{ row }">
-              <el-checkbox v-model="row.isEdit" true-value="1" false-value="0" />
+              <el-checkbox
+                v-model="row.isEdit"
+                true-value="1"
+                false-value="0"
+              />
             </template>
 
             <template #isList="{ row }">
-              <el-checkbox v-model="row.isList" true-value="1" false-value="0" />
+              <el-checkbox
+                v-model="row.isList"
+                true-value="1"
+                false-value="0"
+              />
             </template>
 
             <template #isQuery="{ row }">
-              <el-checkbox v-model="row.isQuery" true-value="1" false-value="0" />
+              <el-checkbox
+                v-model="row.isQuery"
+                true-value="1"
+                false-value="0"
+              />
             </template>
 
             <template #isImport="{ row }">
-              <el-checkbox v-model="row.isImport" true-value="1" false-value="0" />
+              <el-checkbox
+                v-model="row.isImport"
+                true-value="1"
+                false-value="0"
+              />
             </template>
 
             <template #isExport="{ row }">
-              <el-checkbox v-if="row.isList == '1'" v-model="row.isExport" true-value="1" false-value="0" />
+              <el-checkbox
+                v-if="row.isList == '1'"
+                v-model="row.isExport"
+                true-value="1"
+                false-value="0"
+              />
             </template>
 
             <template #queryType="{ row }">
-              <el-select v-if="row.isLogicDel == '0' && row.isQuery == '1'" v-model="row.queryType" filterable>
-                <el-option v-for="item in queryTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
+              <el-select
+                v-if="row.isLogicDel == '0' && row.isQuery == '1'"
+                v-model="row.queryType"
+                filterable
+              >
+                <el-option
+                  v-for="item in queryTypeOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
               </el-select>
             </template>
 
@@ -303,21 +557,49 @@
                 v-model="row.htmlType"
                 filterable
               >
-                <el-option v-for="item in htmlTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
+                <el-option
+                  v-for="item in htmlTypeOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
               </el-select>
             </template>
 
             <template #dictType="{ row }">
-              <el-select v-if="row.isLogicDel == '0'" v-model="row.dictType" clearable filterable>
-                <el-option-group v-for="group in dictTypeOptions" :key="group.label" :label="group.label">
-                  <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value" />
+              <el-select
+                v-if="row.isLogicDel == '0'"
+                v-model="row.dictType"
+                clearable
+                filterable
+              >
+                <el-option-group
+                  v-for="group in dictTypeOptions"
+                  :key="group.label"
+                  :label="group.label"
+                >
+                  <el-option
+                    v-for="item in group.options"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
                 </el-option-group>
               </el-select>
             </template>
 
             <template #dictShowWay="{ row }">
-              <el-select v-if="row.isLogicDel == '0' && row.dictType" v-model="row.dictShowWay" filterable>
-                <el-option v-for="item in dictShowWayOptions" :key="item.value" :label="item.label" :value="item.value" />
+              <el-select
+                v-if="row.isLogicDel == '0' && row.dictType"
+                v-model="row.dictShowWay"
+                filterable
+              >
+                <el-option
+                  v-for="item in dictShowWayOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
               </el-select>
             </template>
           </ProTable>
@@ -334,37 +616,62 @@
         >
           <el-row>
             <el-col :span="12">
-              <el-form-item label="包路径" prop="packageName">
+              <el-form-item
+                label="包路径"
+                prop="packageName"
+              >
                 <template #label>
                   <el-space :size="4">
                     <span>包名</span>
-                    <el-tooltip effect="dark" content="java包名" placement="top">
+                    <el-tooltip
+                      effect="dark"
+                      content="java包名"
+                      placement="top"
+                    >
                       <i :class="'iconfont icon-yiwen'" />
                     </el-tooltip>
                   </el-space>
                   <span>&nbsp;:</span>
                 </template>
-                <el-input v-model="generatorInfo.packageName" placeholder="请填写包路径" clearable />
+                <el-input
+                  v-model="generatorInfo.packageName"
+                  placeholder="请填写包路径"
+                  clearable
+                />
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="模块名" prop="moduleName">
+              <el-form-item
+                label="模块名"
+                prop="moduleName"
+              >
                 <template #label>
                   <el-space :size="4">
                     <span>模块名</span>
-                    <el-tooltip effect="dark" content="java包名下的一级目录名" placement="top">
+                    <el-tooltip
+                      effect="dark"
+                      content="java包名下的一级目录名"
+                      placement="top"
+                    >
                       <i :class="'iconfont icon-yiwen'" />
                     </el-tooltip>
                   </el-space>
                   <span>&nbsp;:</span>
                 </template>
-                <el-input v-model="generatorInfo.moduleName" placeholder="请填写模块名" clearable />
+                <el-input
+                  v-model="generatorInfo.moduleName"
+                  placeholder="请填写模块名"
+                  clearable
+                />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="12">
-              <el-form-item label="业务名" prop="businessName">
+              <el-form-item
+                label="业务名"
+                prop="businessName"
+              >
                 <template #label>
                   <el-space :size="4">
                     <span>业务名</span>
@@ -378,48 +685,88 @@
                   </el-space>
                   <span>&nbsp;:</span>
                 </template>
-                <el-input v-model="generatorInfo.businessName" placeholder="请填写业务名" clearable />
+                <el-input
+                  v-model="generatorInfo.businessName"
+                  placeholder="请填写业务名"
+                  clearable
+                />
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="功能名" prop="functionName">
+              <el-form-item
+                label="功能名"
+                prop="functionName"
+              >
                 <template #label>
                   <el-space :size="4">
                     <span>功能名</span>
-                    <el-tooltip effect="dark" content="展示名。如vue index页面title：编辑'商品信息' " placement="top">
+                    <el-tooltip
+                      effect="dark"
+                      content="展示名。如vue index页面title：编辑'商品信息' "
+                      placement="top"
+                    >
                       <i :class="'iconfont icon-yiwen'" />
                     </el-tooltip>
                   </el-space>
                   <span>&nbsp;:</span>
                 </template>
-                <el-input v-model="generatorInfo.functionName" placeholder="请填写功能名" clearable />
+                <el-input
+                  v-model="generatorInfo.functionName"
+                  placeholder="请填写功能名"
+                  clearable
+                />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
-            <el-col :span="12" v-if="generatorInfo.generateType == 'all'">
-              <el-form-item label="是否生成菜单" prop="menuInitType">
+            <el-col
+              :span="12"
+              v-if="generatorInfo.generateType == 'all'"
+            >
+              <el-form-item
+                label="是否生成菜单"
+                prop="menuInitType"
+              >
                 <template #label>
                   <el-space :size="4">
                     <span>生成菜单</span>
-                    <el-tooltip effect="dark" content="代码生成时是否直接生成菜单路由（自动添加到菜单管理列表）" placement="top">
+                    <el-tooltip
+                      effect="dark"
+                      content="代码生成时是否直接生成菜单路由（自动添加到菜单管理列表）"
+                      placement="top"
+                    >
                       <i :class="'iconfont icon-yiwen'" />
                     </el-tooltip>
                   </el-space>
                   <span>&nbsp;:</span>
                 </template>
                 <el-radio-group v-model="generatorInfo.menuInitType">
-                  <el-radio value="1"> 是 </el-radio>
-                  <el-radio value="0"> 否 </el-radio>
+                  <el-radio value="1">
+                    是
+                  </el-radio>
+                  <el-radio value="0">
+                    否
+                  </el-radio>
                 </el-radio-group>
               </el-form-item>
             </el-col>
-            <el-col :span="12" v-if="generatorInfo.generateType == 'all'">
-              <el-form-item label="上级菜单" prop="parentMenuId" v-show="generatorInfo.menuInitType === '1'">
+            <el-col
+              :span="12"
+              v-if="generatorInfo.generateType == 'all'"
+            >
+              <el-form-item
+                label="上级菜单"
+                prop="parentMenuId"
+                v-show="generatorInfo.menuInitType === '1'"
+              >
                 <template #label>
                   <el-space :size="4">
                     <span>上级菜单</span>
-                    <el-tooltip effect="dark" content="设置当前菜单的上级目录(非按钮类型)" placement="top">
+                    <el-tooltip
+                      effect="dark"
+                      content="设置当前菜单的上级目录(非按钮类型)"
+                      placement="top"
+                    >
                       <i :class="'iconfont icon-yiwen'" />
                     </el-tooltip>
                   </el-space>
@@ -439,8 +786,15 @@
             </el-col>
           </el-row>
           <el-row>
-            <el-col :span="24" v-if="generatorInfo.generateType == 'all'">
-              <el-form-item label="生成按钮权限" prop="btnPermissionType" v-show="generatorInfo.menuInitType === '1'">
+            <el-col
+              :span="24"
+              v-if="generatorInfo.generateType == 'all'"
+            >
+              <el-form-item
+                label="生成按钮权限"
+                prop="btnPermissionType"
+                v-show="generatorInfo.menuInitType === '1'"
+              >
                 <template #label>
                   <el-space :size="4">
                     <span>生成按钮权限</span>
@@ -455,40 +809,69 @@
                   <span>&nbsp;:</span>
                 </template>
                 <el-radio-group v-model="generatorInfo.btnPermissionType">
-                  <el-radio value="1"> 是 </el-radio>
-                  <el-radio value="0"> 否 </el-radio>
+                  <el-radio value="1">
+                    是
+                  </el-radio>
+                  <el-radio value="0">
+                    否
+                  </el-radio>
                 </el-radio-group>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="12">
-              <el-form-item label="api项目路径" prop="pathApi">
+              <el-form-item
+                label="api项目路径"
+                prop="pathApi"
+              >
                 <template #label>
                   <el-space :size="4">
                     <span>api项目路径</span>
-                    <el-tooltip effect="dark" content="java项目所在磁盘路径，直接生成代码到项目结构下" placement="top">
+                    <el-tooltip
+                      effect="dark"
+                      content="java项目所在磁盘路径，直接生成代码到项目结构下"
+                      placement="top"
+                    >
                       <i :class="'iconfont icon-yiwen'" />
                     </el-tooltip>
                   </el-space>
                   <span>&nbsp;:</span>
                 </template>
-                <el-input v-model="generatorInfo.pathApi" placeholder="请填写路径" clearable />
+                <el-input
+                  v-model="generatorInfo.pathApi"
+                  placeholder="请填写路径"
+                  clearable
+                />
               </el-form-item>
             </el-col>
 
-            <el-col :span="12" v-if="generatorInfo.generateType == 'all'">
-              <el-form-item label="web项目路径" prop="pathWeb">
+            <el-col
+              :span="12"
+              v-if="generatorInfo.generateType == 'all'"
+            >
+              <el-form-item
+                label="web项目路径"
+                prop="pathWeb"
+              >
                 <template #label>
                   <el-space :size="4">
                     <span>web项目路径</span>
-                    <el-tooltip effect="dark" content="web项目所在磁盘路径，直接生成代码到项目结构下" placement="top">
+                    <el-tooltip
+                      effect="dark"
+                      content="web项目所在磁盘路径，直接生成代码到项目结构下"
+                      placement="top"
+                    >
                       <i :class="'iconfont icon-yiwen'" />
                     </el-tooltip>
                   </el-space>
                   <span>&nbsp;:</span>
                 </template>
-                <el-input v-model="generatorInfo.pathWeb" placeholder="请填写路径" clearable />
+                <el-input
+                  v-model="generatorInfo.pathWeb"
+                  placeholder="请填写路径"
+                  clearable
+                />
               </el-form-item>
             </el-col>
           </el-row>
@@ -497,8 +880,15 @@
     </div>
 
     <template #footer>
-      <el-button type="primary" @click="handleSubmit"> 保存 </el-button>
-      <el-button @click="visible = false"> 取消 </el-button>
+      <el-button
+        type="primary"
+        @click="handleSubmit"
+      >
+        保存
+      </el-button>
+      <el-button @click="visible = false">
+        取消
+      </el-button>
     </template>
   </el-dialog>
 </template>

@@ -14,18 +14,39 @@
       :model="paramsProps.row"
       @submit.enter.prevent="handleSubmit"
     >
-      <el-form-item label="称重信息" prop="weight">
+      <el-form-item
+        label="称重信息"
+        prop="weight"
+      >
         <el-input-number
-          v-model="paramsProps.row.weight" :precision="0" :min="1" :max="999999" />
+          v-model="paramsProps.row.weight"
+          :precision="2"
+          :min="0"
+          :max="9999"
+        />
       </el-form-item>
-      <el-form-item label="产品信息" prop="productId">
+      <!-- <el-form-item
+        label="产品信息"
+        prop="productId"
+      >
         <el-input-number
-          v-model="paramsProps.row.productId" :precision="0" :min="1" :max="999999" />
-      </el-form-item>
+          v-model="paramsProps.row.productId"
+          :precision="0"
+          :min="1"
+          :max="999999"
+        />
+      </el-form-item> -->
     </el-form>
     <template #footer>
-      <el-button @click="visible = false"> 取消</el-button>
-      <el-button type="primary" @click="handleSubmit"> 确定</el-button>
+      <el-button @click="visible = false">
+        取消
+      </el-button>
+      <el-button
+        type="primary"
+        @click="handleSubmit"
+      >
+        确定
+      </el-button>
     </template>
   </el-dialog>
 </template>

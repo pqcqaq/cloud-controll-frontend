@@ -15,33 +15,32 @@
       @submit.enter.prevent="handleSubmit"
     >
       <el-form-item
-        label="产线名称"
-        prop="name"
+        label="实际地址"
+        prop="address"
       >
         <el-input
-          v-model="paramsProps.row.name"
-          placeholder="请填写产线名称"
+          v-model="paramsProps.row.address"
+          placeholder="请填写实际地址"
+          :rows="2"
+          type="textarea"
           clearable
         />
       </el-form-item>
       <el-form-item
-        label="生产类别"
-        prop="idCode"
+        label="是否启用"
+        prop="enable"
       >
-        <el-input-number
-          v-model="paramsProps.row.idCode"
-          :precision="0"
-          :min="1"
-          :max="999999"
-        />
+        <!-- <el-input-number
+          v-model="paramsProps.row.enable" :precision="0" :min="1" :max="999999" /> -->
+        <el-switch v-model="paramsProps.row.enable" />
       </el-form-item>
       <el-form-item
-        label="生产线别"
-        prop="lineType"
+        label="显示名称"
+        prop="label"
       >
         <el-input
-          v-model="paramsProps.row.lineType"
-          placeholder="请填写生产线别"
+          v-model="paramsProps.row.label"
+          placeholder="请填写显示名称"
           clearable
         />
       </el-form-item>
@@ -65,14 +64,14 @@ import { ref, reactive } from 'vue'
 import { type ElForm, ElMessage } from 'element-plus'
 
 defineOptions({
-    name: 'OneAssemblyLineForm'
+    name: 'OneDestinationForm'
 })
 
 const rules = reactive({
-  name: [{ required: true, message: '请填写产线名称' }],
-  idCode: [{ required: true, message: '请填写生产类别' }],
-  lineType: [{ required: true, message: '请填写生产线别' }],
   delFlag: [{ required: true, message: '请填写删除与否' }],
+  address: [{ required: true, message: '请填写实际地址' }],
+  enable: [{ required: true, message: '请填写是否启用' }],
+  label: [{ required: true, message: '请填写显示名称' }],
 })
 
 const visible = ref(false)

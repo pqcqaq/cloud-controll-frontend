@@ -110,6 +110,7 @@ const columns: ColumnProps<IOneCategory.Row>[] = [
   { prop: 'sku', label: 'SKU' },
   { prop: 'idCode', label: '产品ID标识' },
   { prop: 'name', label: '产品名称' },
+  { prop: 'salesCode', label: '销售码' },
   { prop: 'minWeight', label: '最小重量' },
   { prop: 'maxWeight', label: '最大重量' },
   { prop: 'operation', label: '操作', width: 250, fixed: 'right' }

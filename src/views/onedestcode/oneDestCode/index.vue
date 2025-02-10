@@ -2,7 +2,7 @@
   <div class="table-box">
     <ProTable
       ref="proTableRef"
-      title="产线信息"
+      title="目的地码生成列表"
       :indent="20"
       :columns="columns"
       :search-columns="searchColumns"
@@ -11,16 +11,15 @@
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader="scope">
-        <el-button
-          type="primary"
-          v-auth="'one.assembly.line.create'"
+        <el-button type="primary"
+          v-auth="'one.dest.code.create'"
           :icon="CirclePlus"
-          @click="openAddEdit('新增产线信息')"
+          @click="openAddEdit('新增目的地码生成列表')"
         >
           新增
         </el-button>
         <el-button
-          v-auth="'one.assembly.line.remove'"
+          v-auth="'one.dest.code.remove'"
           type="danger"
           :icon="Delete"
           plain
@@ -30,7 +29,7 @@
           批量删除
         </el-button>
         <el-button
-          v-auth="'one.assembly.line.import'"
+          v-auth="'one.dest.code.import'"
           type="primary"
           :icon="Upload"
           plain
@@ -39,7 +38,7 @@
           导入
         </el-button>
         <el-button
-          v-auth="'one.assembly.line.export'"
+          v-auth="'one.dest.code.export'"
           type="primary"
           :icon="Download"
           plain
@@ -50,16 +49,16 @@
       </template>
       <template #operation="{ row }">
         <el-button
-          v-auth="'one.assembly.line.update'"
+          v-auth="'one.dest.code.update'"
           type="primary"
           link
           :icon="EditPen"
-          @click="openAddEdit('编辑产线信息', row, false)"
+          @click="openAddEdit('编辑目的地码生成列表', row, false)"
         >
           编辑
         </el-button>
         <el-button
-          v-auth="'one.assembly.line.remove'"
+            v-auth="'one.dest.code.remove'"
           type="primary"
           link
           :icon="Delete"
@@ -69,7 +68,7 @@
         </el-button>
       </template>
     </ProTable>
-    <OneAssemblyLineForm ref="oneAssemblyLineRef" />
+    <OneDestCodeForm ref="oneDestCodeRef" />
     <ImportExcel ref="ImportExcelRef" />
   </div>
 </template>
@@ -85,45 +84,44 @@ import {
 } from '@element-plus/icons-vue'
 import ProTable from '@/components/ProTable/index.vue'
 import {
-  createOneAssemblyLineApi,
-  removeOneAssemblyLineApi,
-  updateOneAssemblyLineApi,
-  getOneAssemblyLineListApi,
-  getOneAssemblyLineDetailApi,
-  importOneAssemblyLineExcelApi,
-  exportOneAssemblyLineExcelApi,
-} from '@/api/modules/oneassemblyline/oneAssemblyLine';
+  createOneDestCodeApi,
+  removeOneDestCodeApi,
+  updateOneDestCodeApi,
+  getOneDestCodeListApi,
+  getOneDestCodeDetailApi,
+  importOneDestCodeExcelApi,
+  exportOneDestCodeExcelApi,
+} from '@/api/modules/onedestcode/oneDestCode';
 import { useHandleData } from '@/hooks/useHandleData';
-import OneAssemblyLineForm from '@/views/oneassemblyline/oneAssemblyLine/components/OneAssemblyLineForm.vue';
+import OneDestCodeForm from '@/views/onedestcode/oneDestCode/components/OneDestCodeForm.vue';
 import type { ColumnProps, ProTableInstance, SearchProps } from '@/components/ProTable/interface';
-import type { IOneAssemblyLine } from '@/api/interface/oneassemblyline/oneAssemblyLine';
+import type { IOneDestCode } from '@/api/interface/onedestcode/oneDestCode';
 import ImportExcel from '@/components/ImportExcel/index.vue';
 import { downloadTemplate } from '@/api/modules/system/common';
+import { ElMessageBox } from "element-plus";
 import { useDownload } from "@/hooks/useDownload";
 defineOptions({
-  name: 'OneAssemblyLineView'
+  name: 'OneDestCodeView'
 })
 const proTableRef = ref<ProTableInstance>();
 // 表格配置项
-const columns: ColumnProps<IOneAssemblyLine.Row>[] = [
+const columns: ColumnProps<IOneDestCode.Row>[] = [
   { type: 'selection', width: 80 },
-  { prop: 'name', label: '产线名称' },
-  { prop: 'idCode', label: '生产类别' },
-  { prop: 'categoryName', label: '生产类名' },
-  { prop: 'lineType', label: '生产线别' },
+  { prop: 'code', label: '目的地码' },
+  { prop: 'printed', label: '是否打印' },
   { prop: 'operation', label: '操作', width: 250, fixed: 'right' }
 ]
 // 搜索条件项
 const searchColumns: SearchProps[] = [
-  { prop: 'name', label: '产线名称', el: 'input' },
-  // { prop: 'categoryId', label: '生产类别', el: 'input' },
+  { prop: 'code', label: '目的地码', el: 'input' },
+  { prop: 'printed', label: '是否打印', el: 'input' },
 ]
 // 获取table列表
-const getTableList = (params: IOneAssemblyLine.Query) => {
+const getTableList = (params: IOneDestCode.Query) => {
   let newParams = formatParams(params);
-  return getOneAssemblyLineListApi(newParams);
+  return getOneDestCodeListApi(newParams);
 };
-const formatParams = (params: IOneAssemblyLine.Query) =>{
+const formatParams = (params: IOneDestCode.Query) =>{
   let newParams = JSON.parse(JSON.stringify(params));
   newParams.createTime && (newParams.createTimeStart = newParams.createTime[0]);
   newParams.createTime && (newParams.createTimeEnd = newParams.createTime[1]);
@@ -134,32 +132,32 @@ const formatParams = (params: IOneAssemblyLine.Query) =>{
   return newParams;
 }
 // 打开 drawer(新增、查看、编辑)
-const oneAssemblyLineRef = ref<InstanceType<typeof OneAssemblyLineForm>>()
+const oneDestCodeRef = ref<InstanceType<typeof OneDestCodeForm>>()
 const openAddEdit = async(title: string, row: any = {}, isAdd = true) => {
   if (!isAdd) {
-    const record = await getOneAssemblyLineDetailApi({ id: row?.id })
+    const record = await getOneDestCodeDetailApi({ id: row?.id })
     row = record?.data
   }
   const params = {
     title,
     row: { ...row },
-    api: isAdd ? createOneAssemblyLineApi : updateOneAssemblyLineApi,
+    api: isAdd ? createOneDestCodeApi : updateOneDestCodeApi,
     getTableList: proTableRef.value?.getTableList
   }
-  oneAssemblyLineRef.value?.acceptParams(params)
+  oneDestCodeRef.value?.acceptParams(params)
 }
 // 删除信息
-const deleteInfo = async (params: IOneAssemblyLine.Row) => {
+const deleteInfo = async (params: IOneDestCode.Row) => {
   await useHandleData(
-    removeOneAssemblyLineApi,
+    removeOneDestCodeApi,
     { ids: [params.id] },
-    `删除【${params.id}】产线信息`
+    `删除【${params.id}】目的地码生成列表`
   )
   proTableRef.value?.getTableList()
 }
 // 批量删除信息
 const batchDelete = async (ids: (string | number)[]) => {
-  await useHandleData(removeOneAssemblyLineApi, { ids }, '删除所选产线信息')
+  await useHandleData(removeOneDestCodeApi, { ids }, '删除所选目的地码生成列表')
   proTableRef.value?.clearSelection()
   proTableRef.value?.getTableList()
 }
@@ -167,17 +165,17 @@ const batchDelete = async (ids: (string | number)[]) => {
 const ImportExcelRef = ref<InstanceType<typeof ImportExcel>>()
 const importData = () => {
   const params = {
-    title: '产线信息',
-    templateName: '产线信息',
+    title: '目的地码生成列表',
+    templateName: '目的地码生成列表',
     tempApi: downloadTemplate,
-    importApi: importOneAssemblyLineExcelApi,
+    importApi: importOneDestCodeExcelApi,
     getTableList: proTableRef.value?.getTableList
   }
   ImportExcelRef.value?.acceptParams(params)
 }
 // 导出
 const downloadFile = async () => {
-  let newParams = formatParams(proTableRef.value?.searchParam as IOneAssemblyLine.Query);
-  useDownload(exportOneAssemblyLineExcelApi, "产线信息", newParams);
+  let newParams = formatParams(proTableRef.value?.searchParam as IOneDestCode.Query);
+  useDownload(exportOneDestCodeExcelApi, "目的地码生成列表", newParams);
 };
 </script>
