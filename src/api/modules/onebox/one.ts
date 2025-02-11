@@ -67,3 +67,10 @@ export const importOneBoxExcelApi = (params : UploadRawFile, config?: AxiosReque
 export const exportOneBoxExcelApi  = (params: IOneBox.Query) => {
   return http.download(ADMIN_MODULE + `/one-box/export`, params)
 }
+
+/**
+ * 重新打印
+ */
+export const reprintMidCodeApi = (params: IOneBox.ReprintMidCode) => {
+  return http.post(ADMIN_MODULE + `/one-box/reprint-mid-code`, params)
+}

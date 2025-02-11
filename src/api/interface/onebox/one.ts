@@ -17,6 +17,13 @@ export namespace IOneBox {
   export interface Row {
     id?: number
     midBoxCode?: string
+    printed?: boolean
+    snCodes: string[]
+    createTime: string
+  }
+
+  export interface ReprintMidCode {
+    code: string
   }
 
 }

@@ -75,15 +75,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import {
-  CirclePlus,
-  Delete,
-  EditPen,
-  Upload,
-  Download,
-} from '@element-plus/icons-vue'
-import ProTable from '@/components/ProTable/index.vue'
+import { h, ref } from 'vue';
+import { CirclePlus, Delete, EditPen, Upload, Download } from '@element-plus/icons-vue';
+import ProTable from '@/components/ProTable/index.vue';
 import {
   createOneBoxApi,
   removeOneBoxApi,
@@ -92,6 +86,7 @@ import {
   getOneBoxDetailApi,
   importOneBoxExcelApi,
   exportOneBoxExcelApi,
+  reprintMidCodeApi
 } from '@/api/modules/onebox/one';
 import { useHandleData } from '@/hooks/useHandleData';
 import OneBoxForm from '@/views/onebox/oneBox/components/OneBoxForm.vue';
@@ -99,28 +94,58 @@ import type { ColumnProps, ProTableInstance, SearchProps } from '@/components/Pr
 import type { IOneBox } from '@/api/interface/onebox/one';
 import ImportExcel from '@/components/ImportExcel/index.vue';
 import { downloadTemplate } from '@/api/modules/system/common';
-import { ElMessageBox } from "element-plus";
-import { useDownload } from "@/hooks/useDownload";
+import { ElMessageBox, ElButton, ElTag } from 'element-plus';
+import { useDownload } from '@/hooks/useDownload';
 defineOptions({
   name: 'OneBoxView'
-})
+});
 const proTableRef = ref<ProTableInstance>();
+const handleRePrint = async (row: IOneBox.Row) => {
+  await reprintMidCodeApi({
+    code: row.midBoxCode!
+  }).then(res => {
+    ElMessageBox.alert('补打成功', '提示', {
+      confirmButtonText: '确定',
+      type: 'success'
+    });
+  });
+};
 // 表格配置项
 const columns: ColumnProps<IOneBox.Row>[] = [
   { type: 'selection', width: 80 },
   { prop: 'midBoxCode', label: '中箱号' },
-  { prop: 'operation', label: '操作', width: 250, fixed: 'right' }
-]
+  { prop: 'createTime', label: '创建时间' },
+  { prop: 'snCodes', label: 'SN码' },
+  {
+    prop: 'printed',
+    label: '是否打印成功',
+    render: ({ row }) => (row.printed ? h(ElTag, { type: 'success' }, ['是']) : h(ElTag, { type: 'danger' }, ['否']))
+  },
+  { prop: 'operation', label: '操作', width: 250, fixed: 'right' },
+  {
+    prop: 'reprint',
+    label: '补打',
+    width: 100,
+    render: ({ row }) => {
+      return h(
+        ElButton,
+        {
+          type: 'primary',
+          onClick: () => handleRePrint(row)
+        },
+        ['补打']
+      );
+    }
+  }
+];
 // 搜索条件项
-const searchColumns: SearchProps[] = [
-  { prop: 'midBoxCode', label: '中箱号', el: 'input' },
-]
+const searchColumns: SearchProps[] = [{ prop: 'midBoxCode', label: '中箱号', el: 'input' }];
 // 获取table列表
 const getTableList = (params: IOneBox.Query) => {
   let newParams = formatParams(params);
   return getOneBoxListApi(newParams);
 };
-const formatParams = (params: IOneBox.Query) =>{
+const formatParams = (params: IOneBox.Query) => {
   let newParams = JSON.parse(JSON.stringify(params));
   newParams.createTime && (newParams.createTimeStart = newParams.createTime[0]);
   newParams.createTime && (newParams.createTimeEnd = newParams.createTime[1]);
@@ -129,39 +154,35 @@ const formatParams = (params: IOneBox.Query) =>{
   newParams.updateTime && (newParams.updateTimeEnd = newParams.updateTime[1]);
   delete newParams.updateTime;
   return newParams;
-}
+};
 // 打开 drawer(新增、查看、编辑)
-const oneRef = ref<InstanceType<typeof OneBoxForm>>()
-const openAddEdit = async(title: string, row: any = {}, isAdd = true) => {
+const oneRef = ref<InstanceType<typeof OneBoxForm>>();
+const openAddEdit = async (title: string, row: any = {}, isAdd = true) => {
   if (!isAdd) {
-    const record = await getOneBoxDetailApi({ id: row?.id })
-    row = record?.data
+    const record = await getOneBoxDetailApi({ id: row?.id });
+    row = record?.data;
   }
   const params = {
     title,
     row: { ...row },
     api: isAdd ? createOneBoxApi : updateOneBoxApi,
     getTableList: proTableRef.value?.getTableList
-  }
-  oneRef.value?.acceptParams(params)
-}
+  };
+  oneRef.value?.acceptParams(params);
+};
 // 删除信息
 const deleteInfo = async (params: IOneBox.Row) => {
-  await useHandleData(
-    removeOneBoxApi,
-    { ids: [params.id] },
-    `删除【${params.id}】产线一`
-  )
-  proTableRef.value?.getTableList()
-}
+  await useHandleData(removeOneBoxApi, { ids: [params.id] }, `删除【${params.id}】产线一`);
+  proTableRef.value?.getTableList();
+};
 // 批量删除信息
 const batchDelete = async (ids: (string | number)[]) => {
-  await useHandleData(removeOneBoxApi, { ids }, '删除所选产线一')
-  proTableRef.value?.clearSelection()
-  proTableRef.value?.getTableList()
-}
+  await useHandleData(removeOneBoxApi, { ids }, '删除所选产线一');
+  proTableRef.value?.clearSelection();
+  proTableRef.value?.getTableList();
+};
 // 导入
-const ImportExcelRef = ref<InstanceType<typeof ImportExcel>>()
+const ImportExcelRef = ref<InstanceType<typeof ImportExcel>>();
 const importData = () => {
   const params = {
     title: '产线一',
@@ -169,12 +190,12 @@ const importData = () => {
     tempApi: downloadTemplate,
     importApi: importOneBoxExcelApi,
     getTableList: proTableRef.value?.getTableList
-  }
-  ImportExcelRef.value?.acceptParams(params)
-}
+  };
+  ImportExcelRef.value?.acceptParams(params);
+};
 // 导出
 const downloadFile = async () => {
   let newParams = formatParams(proTableRef.value?.searchParam as IOneBox.Query);
-  useDownload(exportOneBoxExcelApi, "产线一", newParams);
+  useDownload(exportOneBoxExcelApi, '产线一', newParams);
 };
 </script>
