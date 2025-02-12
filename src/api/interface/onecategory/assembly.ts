@@ -15,6 +15,8 @@ export namespace IOneCategory {
     sku?: string
     idCode?: number
     name?: string
+    minWeight?: number
+    maxWeight?: number
  }
 
   // list或detail返回结构
@@ -23,6 +25,8 @@ export namespace IOneCategory {
     sku?: string
     idCode?: number
     name?: string
+    minWeight?: number
+    maxWeight?: number
   }
 
 }

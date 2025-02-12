@@ -99,7 +99,6 @@ import type { ColumnProps, ProTableInstance, SearchProps } from '@/components/Pr
 import type { IOneWeigh } from '@/api/interface/oneweigh/one';
 import ImportExcel from '@/components/ImportExcel/index.vue';
 import { downloadTemplate } from '@/api/modules/system/common';
-import { ElMessageBox } from "element-plus";
 import { useDownload } from "@/hooks/useDownload";
 defineOptions({
   name: 'OneWeighView'
@@ -109,7 +108,7 @@ const proTableRef = ref<ProTableInstance>();
 const columns: ColumnProps<IOneWeigh.Row>[] = [
   { type: 'selection', width: 80 },
   { prop: 'weight', label: '称重信息' },
-  { prop: 'productId', label: '产品信息' },
+  { prop: 'productName', label: '产品信息' },
   { prop: 'operation', label: '操作', width: 250, fixed: 'right' }
 ]
 // 搜索条件项

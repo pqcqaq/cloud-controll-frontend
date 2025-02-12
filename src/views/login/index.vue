@@ -3,12 +3,22 @@
     <div class="login-box">
       <SwitchDark class="dark" />
       <div class="login-left">
-        <img class="login-left-img" src="@/assets/images/login_left3.png" alt="login" />
+        <img
+          class="login-left-img"
+          src="@/assets/images/login_left3.png"
+          alt="login"
+        >
       </div>
       <div class="login-form">
         <div class="login-logo">
-          <img class="login-icon" src="@/assets/images/logo.svg" alt="" />
-          <h2 class="logo-text">Sz-Admin</h2>
+          <img
+            class="login-icon"
+            src="@/assets/images/logo.svg"
+            alt=""
+          >
+          <h2 class="logo-text">
+            信恒英聚-管理系统
+          </h2>
         </div>
         <LoginForm />
       </div>

@@ -2,7 +2,7 @@
   <div class="table-box">
     <ProTable
       ref="proTableRef"
-      title="产线"
+      title="产线信息"
       :indent="20"
       :columns="columns"
       :search-columns="searchColumns"
@@ -13,14 +13,14 @@
       <template #tableHeader="scope">
         <el-button
           type="primary"
-          v-auth="'one.category.create'"
+          v-auth="'one.assembly.line.create'"
           :icon="CirclePlus"
-          @click="openAddEdit('新增产线')"
+          @click="openAddEdit('新增产线信息')"
         >
           新增
         </el-button>
         <el-button
-          v-auth="'one.category.remove'"
+          v-auth="'one.assembly.line.remove'"
           type="danger"
           :icon="Delete"
           plain
@@ -30,7 +30,7 @@
           批量删除
         </el-button>
         <el-button
-          v-auth="'one.category.import'"
+          v-auth="'one.assembly.line.import'"
           type="primary"
           :icon="Upload"
           plain
@@ -39,7 +39,7 @@
           导入
         </el-button>
         <el-button
-          v-auth="'one.category.export'"
+          v-auth="'one.assembly.line.export'"
           type="primary"
           :icon="Download"
           plain
@@ -50,16 +50,16 @@
       </template>
       <template #operation="{ row }">
         <el-button
-          v-auth="'one.category.update'"
+          v-auth="'one.assembly.line.update'"
           type="primary"
           link
           :icon="EditPen"
-          @click="openAddEdit('编辑产线', row, false)"
+          @click="openAddEdit('编辑产线信息', row, false)"
         >
           编辑
         </el-button>
         <el-button
-          v-auth="'one.category.remove'"
+          v-auth="'one.assembly.line.remove'"
           type="primary"
           link
           :icon="Delete"
@@ -69,7 +69,7 @@
         </el-button>
       </template>
     </ProTable>
-    <OneCategoryForm ref="assemblyRef" />
+    <OneAssemblyLineForm ref="oneAssemblyLineRef" />
     <ImportExcel ref="ImportExcelRef" />
   </div>
 </template>
@@ -85,48 +85,45 @@ import {
 } from '@element-plus/icons-vue'
 import ProTable from '@/components/ProTable/index.vue'
 import {
-  createOneCategoryApi,
-  removeOneCategoryApi,
-  updateOneCategoryApi,
-  getOneCategoryListApi,
-  getOneCategoryDetailApi,
-  importOneCategoryExcelApi,
-  exportOneCategoryExcelApi,
-} from '@/api/modules/onecategory/assembly';
+  createOneAssemblyLineApi,
+  removeOneAssemblyLineApi,
+  updateOneAssemblyLineApi,
+  getOneAssemblyLineListApi,
+  getOneAssemblyLineDetailApi,
+  importOneAssemblyLineExcelApi,
+  exportOneAssemblyLineExcelApi,
+} from '@/api/modules/oneassemblyline/oneAssemblyLine';
 import { useHandleData } from '@/hooks/useHandleData';
-import OneCategoryForm from '@/views/onecategory/oneCategory/components/OneCategoryForm.vue';
+import OneAssemblyLineForm from '@/views/oneassemblyline/oneAssemblyLine/components/OneAssemblyLineForm.vue';
 import type { ColumnProps, ProTableInstance, SearchProps } from '@/components/ProTable/interface';
-import type { IOneCategory } from '@/api/interface/onecategory/assembly';
+import type { IOneAssemblyLine } from '@/api/interface/oneassemblyline/oneAssemblyLine';
 import ImportExcel from '@/components/ImportExcel/index.vue';
 import { downloadTemplate } from '@/api/modules/system/common';
 import { useDownload } from "@/hooks/useDownload";
 defineOptions({
-  name: 'OneCategoryView'
+  name: 'OneAssemblyLineView'
 })
 const proTableRef = ref<ProTableInstance>();
 // 表格配置项
-const columns: ColumnProps<IOneCategory.Row>[] = [
+const columns: ColumnProps<IOneAssemblyLine.Row>[] = [
   { type: 'selection', width: 80 },
-  { prop: 'sku', label: 'SKU' },
-  { prop: 'idCode', label: '产品ID标识' },
-  { prop: 'name', label: '产品名称' },
-  { prop: 'salesCode', label: '销售码' },
-  { prop: 'minWeight', label: '最小重量' },
-  { prop: 'maxWeight', label: '最大重量' },
+  { prop: 'name', label: '产线名称' },
+  { prop: 'idCode', label: '生产类别' },
+  { prop: 'categoryName', label: '生产类名' },
+  { prop: 'lineType', label: '生产线别' },
   { prop: 'operation', label: '操作', width: 250, fixed: 'right' }
 ]
 // 搜索条件项
 const searchColumns: SearchProps[] = [
-  { prop: 'sku', label: 'SKU', el: 'input' },
-  { prop: 'idCode', label: '产品ID标识', el: 'input' },
-  { prop: 'name', label: '产品名称', el: 'input' },
+  { prop: 'name', label: '产线名称', el: 'input' },
+  // { prop: 'categoryId', label: '生产类别', el: 'input' },
 ]
 // 获取table列表
-const getTableList = (params: IOneCategory.Query) => {
+const getTableList = (params: IOneAssemblyLine.Query) => {
   let newParams = formatParams(params);
-  return getOneCategoryListApi(newParams);
+  return getOneAssemblyLineListApi(newParams);
 };
-const formatParams = (params: IOneCategory.Query) =>{
+const formatParams = (params: IOneAssemblyLine.Query) =>{
   let newParams = JSON.parse(JSON.stringify(params));
   newParams.createTime && (newParams.createTimeStart = newParams.createTime[0]);
   newParams.createTime && (newParams.createTimeEnd = newParams.createTime[1]);
@@ -137,32 +134,32 @@ const formatParams = (params: IOneCategory.Query) =>{
   return newParams;
 }
 // 打开 drawer(新增、查看、编辑)
-const assemblyRef = ref<InstanceType<typeof OneCategoryForm>>()
+const oneAssemblyLineRef = ref<InstanceType<typeof OneAssemblyLineForm>>()
 const openAddEdit = async(title: string, row: any = {}, isAdd = true) => {
   if (!isAdd) {
-    const record = await getOneCategoryDetailApi({ id: row?.id })
+    const record = await getOneAssemblyLineDetailApi({ id: row?.id })
     row = record?.data
   }
   const params = {
     title,
     row: { ...row },
-    api: isAdd ? createOneCategoryApi : updateOneCategoryApi,
+    api: isAdd ? createOneAssemblyLineApi : updateOneAssemblyLineApi,
     getTableList: proTableRef.value?.getTableList
   }
-  assemblyRef.value?.acceptParams(params)
+  oneAssemblyLineRef.value?.acceptParams(params)
 }
 // 删除信息
-const deleteInfo = async (params: IOneCategory.Row) => {
+const deleteInfo = async (params: IOneAssemblyLine.Row) => {
   await useHandleData(
-    removeOneCategoryApi,
+    removeOneAssemblyLineApi,
     { ids: [params.id] },
-    `删除【${params.id}】产线`
+    `删除【${params.id}】产线信息`
   )
   proTableRef.value?.getTableList()
 }
 // 批量删除信息
 const batchDelete = async (ids: (string | number)[]) => {
-  await useHandleData(removeOneCategoryApi, { ids }, '删除所选产线')
+  await useHandleData(removeOneAssemblyLineApi, { ids }, '删除所选产线信息')
   proTableRef.value?.clearSelection()
   proTableRef.value?.getTableList()
 }
@@ -170,17 +167,17 @@ const batchDelete = async (ids: (string | number)[]) => {
 const ImportExcelRef = ref<InstanceType<typeof ImportExcel>>()
 const importData = () => {
   const params = {
-    title: '产线',
-    templateName: '产线',
+    title: '产线信息',
+    templateName: '产线信息',
     tempApi: downloadTemplate,
-    importApi: importOneCategoryExcelApi,
+    importApi: importOneAssemblyLineExcelApi,
     getTableList: proTableRef.value?.getTableList
   }
   ImportExcelRef.value?.acceptParams(params)
 }
 // 导出
 const downloadFile = async () => {
-  let newParams = formatParams(proTableRef.value?.searchParam as IOneCategory.Query);
-  useDownload(exportOneCategoryExcelApi, "产线", newParams);
+  let newParams = formatParams(proTableRef.value?.searchParam as IOneAssemblyLine.Query);
+  useDownload(exportOneAssemblyLineExcelApi, "产线信息", newParams);
 };
 </script>

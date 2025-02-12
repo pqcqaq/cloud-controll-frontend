@@ -2,7 +2,7 @@
   <div class="table-box">
     <ProTable
       ref="proTableRef"
-      title="产线"
+      title="目的地码生成列表"
       :indent="20"
       :columns="columns"
       :search-columns="searchColumns"
@@ -11,16 +11,15 @@
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader="scope">
-        <el-button
-          type="primary"
-          v-auth="'one.category.create'"
+        <el-button type="primary"
+          v-auth="'one.dest.code.create'"
           :icon="CirclePlus"
-          @click="openAddEdit('新增产线')"
+          @click="openAddEdit('新增目的地码生成列表')"
         >
           新增
         </el-button>
         <el-button
-          v-auth="'one.category.remove'"
+          v-auth="'one.dest.code.remove'"
           type="danger"
           :icon="Delete"
           plain
@@ -30,7 +29,7 @@
           批量删除
         </el-button>
         <el-button
-          v-auth="'one.category.import'"
+          v-auth="'one.dest.code.import'"
           type="primary"
           :icon="Upload"
           plain
@@ -39,7 +38,7 @@
           导入
         </el-button>
         <el-button
-          v-auth="'one.category.export'"
+          v-auth="'one.dest.code.export'"
           type="primary"
           :icon="Download"
           plain
@@ -50,16 +49,16 @@
       </template>
       <template #operation="{ row }">
         <el-button
-          v-auth="'one.category.update'"
+          v-auth="'one.dest.code.update'"
           type="primary"
           link
           :icon="EditPen"
-          @click="openAddEdit('编辑产线', row, false)"
+          @click="openAddEdit('编辑目的地码生成列表', row, false)"
         >
           编辑
         </el-button>
         <el-button
-          v-auth="'one.category.remove'"
+            v-auth="'one.dest.code.remove'"
           type="primary"
           link
           :icon="Delete"
@@ -69,7 +68,7 @@
         </el-button>
       </template>
     </ProTable>
-    <OneCategoryForm ref="assemblyRef" />
+    <OneDestCodeForm ref="oneDestCodeRef" />
     <ImportExcel ref="ImportExcelRef" />
   </div>
 </template>
@@ -85,48 +84,44 @@ import {
 } from '@element-plus/icons-vue'
 import ProTable from '@/components/ProTable/index.vue'
 import {
-  createOneCategoryApi,
-  removeOneCategoryApi,
-  updateOneCategoryApi,
-  getOneCategoryListApi,
-  getOneCategoryDetailApi,
-  importOneCategoryExcelApi,
-  exportOneCategoryExcelApi,
-} from '@/api/modules/onecategory/assembly';
+  createOneDestCodeApi,
+  removeOneDestCodeApi,
+  updateOneDestCodeApi,
+  getOneDestCodeListApi,
+  getOneDestCodeDetailApi,
+  importOneDestCodeExcelApi,
+  exportOneDestCodeExcelApi,
+} from '@/api/modules/onedestcode/oneDestCode';
 import { useHandleData } from '@/hooks/useHandleData';
-import OneCategoryForm from '@/views/onecategory/oneCategory/components/OneCategoryForm.vue';
+import OneDestCodeForm from '@/views/onedestcode/oneDestCode/components/OneDestCodeForm.vue';
 import type { ColumnProps, ProTableInstance, SearchProps } from '@/components/ProTable/interface';
-import type { IOneCategory } from '@/api/interface/onecategory/assembly';
+import type { IOneDestCode } from '@/api/interface/onedestcode/oneDestCode';
 import ImportExcel from '@/components/ImportExcel/index.vue';
 import { downloadTemplate } from '@/api/modules/system/common';
+import { ElMessageBox } from "element-plus";
 import { useDownload } from "@/hooks/useDownload";
 defineOptions({
-  name: 'OneCategoryView'
+  name: 'OneDestCodeView'
 })
 const proTableRef = ref<ProTableInstance>();
 // 表格配置项
-const columns: ColumnProps<IOneCategory.Row>[] = [
+const columns: ColumnProps<IOneDestCode.Row>[] = [
   { type: 'selection', width: 80 },
-  { prop: 'sku', label: 'SKU' },
-  { prop: 'idCode', label: '产品ID标识' },
-  { prop: 'name', label: '产品名称' },
-  { prop: 'salesCode', label: '销售码' },
-  { prop: 'minWeight', label: '最小重量' },
-  { prop: 'maxWeight', label: '最大重量' },
+  { prop: 'code', label: '目的地码' },
+  { prop: 'printed', label: '是否打印' },
   { prop: 'operation', label: '操作', width: 250, fixed: 'right' }
 ]
 // 搜索条件项
 const searchColumns: SearchProps[] = [
-  { prop: 'sku', label: 'SKU', el: 'input' },
-  { prop: 'idCode', label: '产品ID标识', el: 'input' },
-  { prop: 'name', label: '产品名称', el: 'input' },
+  { prop: 'code', label: '目的地码', el: 'input' },
+  { prop: 'printed', label: '是否打印', el: 'input' },
 ]
 // 获取table列表
-const getTableList = (params: IOneCategory.Query) => {
+const getTableList = (params: IOneDestCode.Query) => {
   let newParams = formatParams(params);
-  return getOneCategoryListApi(newParams);
+  return getOneDestCodeListApi(newParams);
 };
-const formatParams = (params: IOneCategory.Query) =>{
+const formatParams = (params: IOneDestCode.Query) =>{
   let newParams = JSON.parse(JSON.stringify(params));
   newParams.createTime && (newParams.createTimeStart = newParams.createTime[0]);
   newParams.createTime && (newParams.createTimeEnd = newParams.createTime[1]);
@@ -137,32 +132,32 @@ const formatParams = (params: IOneCategory.Query) =>{
   return newParams;
 }
 // 打开 drawer(新增、查看、编辑)
-const assemblyRef = ref<InstanceType<typeof OneCategoryForm>>()
+const oneDestCodeRef = ref<InstanceType<typeof OneDestCodeForm>>()
 const openAddEdit = async(title: string, row: any = {}, isAdd = true) => {
   if (!isAdd) {
-    const record = await getOneCategoryDetailApi({ id: row?.id })
+    const record = await getOneDestCodeDetailApi({ id: row?.id })
     row = record?.data
   }
   const params = {
     title,
     row: { ...row },
-    api: isAdd ? createOneCategoryApi : updateOneCategoryApi,
+    api: isAdd ? createOneDestCodeApi : updateOneDestCodeApi,
     getTableList: proTableRef.value?.getTableList
   }
-  assemblyRef.value?.acceptParams(params)
+  oneDestCodeRef.value?.acceptParams(params)
 }
 // 删除信息
-const deleteInfo = async (params: IOneCategory.Row) => {
+const deleteInfo = async (params: IOneDestCode.Row) => {
   await useHandleData(
-    removeOneCategoryApi,
+    removeOneDestCodeApi,
     { ids: [params.id] },
-    `删除【${params.id}】产线`
+    `删除【${params.id}】目的地码生成列表`
   )
   proTableRef.value?.getTableList()
 }
 // 批量删除信息
 const batchDelete = async (ids: (string | number)[]) => {
-  await useHandleData(removeOneCategoryApi, { ids }, '删除所选产线')
+  await useHandleData(removeOneDestCodeApi, { ids }, '删除所选目的地码生成列表')
   proTableRef.value?.clearSelection()
   proTableRef.value?.getTableList()
 }
@@ -170,17 +165,17 @@ const batchDelete = async (ids: (string | number)[]) => {
 const ImportExcelRef = ref<InstanceType<typeof ImportExcel>>()
 const importData = () => {
   const params = {
-    title: '产线',
-    templateName: '产线',
+    title: '目的地码生成列表',
+    templateName: '目的地码生成列表',
     tempApi: downloadTemplate,
-    importApi: importOneCategoryExcelApi,
+    importApi: importOneDestCodeExcelApi,
     getTableList: proTableRef.value?.getTableList
   }
   ImportExcelRef.value?.acceptParams(params)
 }
 // 导出
 const downloadFile = async () => {
-  let newParams = formatParams(proTableRef.value?.searchParam as IOneCategory.Query);
-  useDownload(exportOneCategoryExcelApi, "产线", newParams);
+  let newParams = formatParams(proTableRef.value?.searchParam as IOneDestCode.Query);
+  useDownload(exportOneDestCodeExcelApi, "目的地码生成列表", newParams);
 };
 </script>

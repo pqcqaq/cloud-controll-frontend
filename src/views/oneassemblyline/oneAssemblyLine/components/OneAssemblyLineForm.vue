@@ -15,27 +15,36 @@
       @submit.enter.prevent="handleSubmit"
     >
       <el-form-item
-        label="称重信息"
-        prop="weight"
+        label="产线名称"
+        prop="name"
       >
-        <el-input-number
-          v-model="paramsProps.row.weight"
-          :precision="2"
-          :min="0"
-          :max="9999"
+        <el-input
+          v-model="paramsProps.row.name"
+          placeholder="请填写产线名称"
+          clearable
         />
       </el-form-item>
-      <!-- <el-form-item
-        label="产品信息"
-        prop="productId"
+      <el-form-item
+        label="生产类别"
+        prop="idCode"
       >
         <el-input-number
-          v-model="paramsProps.row.productId"
+          v-model="paramsProps.row.idCode"
           :precision="0"
           :min="1"
           :max="999999"
         />
-      </el-form-item> -->
+      </el-form-item>
+      <el-form-item
+        label="生产线别"
+        prop="lineType"
+      >
+        <el-input
+          v-model="paramsProps.row.lineType"
+          placeholder="请填写生产线别"
+          clearable
+        />
+      </el-form-item>
     </el-form>
     <template #footer>
       <el-button @click="visible = false">
@@ -56,12 +65,13 @@ import { ref, reactive } from 'vue'
 import { type ElForm, ElMessage } from 'element-plus'
 
 defineOptions({
-    name: 'OneWeighForm'
+    name: 'OneAssemblyLineForm'
 })
 
 const rules = reactive({
-  weight: [{ required: true, message: '请填写称重信息' }],
-  productId: [{ required: true, message: '请填写产品信息' }],
+  name: [{ required: true, message: '请填写产线名称' }],
+  idCode: [{ required: true, message: '请填写生产类别' }],
+  lineType: [{ required: true, message: '请填写生产线别' }],
   delFlag: [{ required: true, message: '请填写删除与否' }],
 })
 

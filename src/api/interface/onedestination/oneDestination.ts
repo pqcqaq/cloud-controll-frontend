@@ -1,29 +1,28 @@
 import type { IPageQuery } from '@/api/interface'
 
-export namespace IOneBox {
+export namespace IOneDestination {
 
   // 查询条件
   export interface Query extends IPageQuery {
-    midBoxCode?: string
+    address?: string
+    enable?: number
+    label?: string
   }
 
   // 编辑form表单
   export interface Form {
     id?: number
-    midBoxCode?: string
+    address?: string
+    enable?: number
+    label?: string
  }
 
   // list或detail返回结构
   export interface Row {
     id?: number
-    midBoxCode?: string
-    printed?: boolean
-    snCodes: string[]
-    createTime: string
-  }
-
-  export interface ReprintMidCode {
-    code: string
+    address?: string
+    enable?: number
+    label?: string
   }
 
 }

@@ -15,27 +15,35 @@
       @submit.enter.prevent="handleSubmit"
     >
       <el-form-item
-        label="称重信息"
-        prop="weight"
+        label="实际地址"
+        prop="address"
       >
-        <el-input-number
-          v-model="paramsProps.row.weight"
-          :precision="2"
-          :min="0"
-          :max="9999"
+        <el-input
+          v-model="paramsProps.row.address"
+          placeholder="请填写实际地址"
+          :rows="2"
+          type="textarea"
+          clearable
         />
       </el-form-item>
-      <!-- <el-form-item
-        label="产品信息"
-        prop="productId"
+      <el-form-item
+        label="是否启用"
+        prop="enable"
       >
-        <el-input-number
-          v-model="paramsProps.row.productId"
-          :precision="0"
-          :min="1"
-          :max="999999"
+        <!-- <el-input-number
+          v-model="paramsProps.row.enable" :precision="0" :min="1" :max="999999" /> -->
+        <el-switch v-model="paramsProps.row.enable" />
+      </el-form-item>
+      <el-form-item
+        label="显示名称"
+        prop="label"
+      >
+        <el-input
+          v-model="paramsProps.row.label"
+          placeholder="请填写显示名称"
+          clearable
         />
-      </el-form-item> -->
+      </el-form-item>
     </el-form>
     <template #footer>
       <el-button @click="visible = false">
@@ -56,13 +64,14 @@ import { ref, reactive } from 'vue'
 import { type ElForm, ElMessage } from 'element-plus'
 
 defineOptions({
-    name: 'OneWeighForm'
+    name: 'OneDestinationForm'
 })
 
 const rules = reactive({
-  weight: [{ required: true, message: '请填写称重信息' }],
-  productId: [{ required: true, message: '请填写产品信息' }],
   delFlag: [{ required: true, message: '请填写删除与否' }],
+  address: [{ required: true, message: '请填写实际地址' }],
+  enable: [{ required: true, message: '请填写是否启用' }],
+  label: [{ required: true, message: '请填写显示名称' }],
 })
 
 const visible = ref(false)

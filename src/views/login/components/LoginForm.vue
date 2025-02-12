@@ -1,7 +1,15 @@
 <template>
-  <el-form ref="loginFormRef" :model="loginForm" :rules="loginRules" size="large">
+  <el-form
+    ref="loginFormRef"
+    :model="loginForm"
+    :rules="loginRules"
+    size="large"
+  >
     <el-form-item prop="username">
-      <el-input v-model="loginForm.username" placeholder="用户名： admin">
+      <el-input
+        v-model="loginForm.username"
+        placeholder="请输入用户名"
+      >
         <template #prefix>
           <el-icon class="el-input__icon">
             <user />
@@ -9,11 +17,14 @@
         </template>
       </el-input>
     </el-form-item>
-    <el-form-item prop="password" style="margin-bottom: 0">
+    <el-form-item
+      prop="password"
+      style="margin-bottom: 0"
+    >
       <el-input
         v-model="loginForm.password"
         type="password"
-        placeholder="密码： sz123456"
+        placeholder="请输入密码"
         show-password
         autocomplete="new-password"
       >
@@ -26,13 +37,36 @@
     </el-form-item>
   </el-form>
   <div class="login-btn">
-    <el-button :icon="CircleClose" round size="large" @click="resetForm"> 重置 </el-button>
-    <el-button :icon="UserFilled" round size="large" type="primary" :loading="loading" @click="login"> 登录 </el-button>
+    <el-button
+      :icon="CircleClose"
+      round
+      size="large"
+      @click="resetForm"
+    >
+      重置
+    </el-button>
+    <el-button
+      :icon="UserFilled"
+      round
+      size="large"
+      type="primary"
+      :loading="loading"
+      @click="login"
+    >
+      登录
+    </el-button>
   </div>
-  <div v-if="IS_PREVIEW" style="margin-top: 20px; color: var(--el-color-warning)">
+  <div
+    v-if="IS_PREVIEW"
+    style="margin-top: 20px; color: var(--el-color-warning)"
+  >
     <span>如无法登陆请联系作者：feiyuchuixue@163.com</span>
   </div>
-  <SliderCaptcha ref="captchaRef" @success="onSliderSuccess" @close="onCaptchaClose" />
+  <SliderCaptcha
+    ref="captchaRef"
+    @success="onSliderSuccess"
+    @close="onCaptchaClose"
+  />
 </template>
 
 <script setup lang="ts">
@@ -88,7 +122,7 @@ const performLogin = async () => {
     router.push(HOME_URL);
     ElNotification({
       title: getTimeState(),
-      message: '欢迎登录 Sz-Admin',
+      message: '欢迎登录 信恒英聚-后台管理系统',
       type: 'success',
       duration: 3000
     });
