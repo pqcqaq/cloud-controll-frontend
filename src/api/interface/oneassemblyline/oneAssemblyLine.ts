@@ -23,4 +23,9 @@ export namespace IOneAssemblyLine {
     idCode?: number
   }
 
+  export interface Selection {
+    id: number
+    label: string
+  }
+
 }

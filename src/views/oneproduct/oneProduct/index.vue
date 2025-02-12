@@ -2,7 +2,7 @@
   <div class="table-box">
     <ProTable
       ref="proTableRef"
-      title="产线一"
+      title="产品SN"
       :indent="20"
       :columns="columns"
       :search-columns="searchColumns"
@@ -15,7 +15,7 @@
           type="primary"
           v-auth="'one.product.create'"
           :icon="CirclePlus"
-          @click="openAddEdit('新增产线一')"
+          @click="openAddEdit('新增产品SN')"
         >
           新增
         </el-button>
@@ -49,15 +49,15 @@
         </el-button>
       </template>
       <template #operation="{ row }">
-        <el-button
+        <!-- <el-button
           v-auth="'one.product.update'"
           type="primary"
           link
           :icon="EditPen"
-          @click="openAddEdit('编辑产线一', row, false)"
+          @click="openAddEdit('编辑产品SN', row, false)"
         >
           编辑
-        </el-button>
+        </el-button> -->
         <el-button
           v-auth="'one.product.remove'"
           type="primary"
@@ -75,15 +75,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import {
-  CirclePlus,
-  Delete,
-  EditPen,
-  Upload,
-  Download,
-} from '@element-plus/icons-vue'
-import ProTable from '@/components/ProTable/index.vue'
+import { ref, h, onMounted, computed } from 'vue';
+import { CirclePlus, Delete, EditPen, Upload, Download } from '@element-plus/icons-vue';
+import ProTable from '@/components/ProTable/index.vue';
 import {
   createOneProductApi,
   removeOneProductApi,
@@ -91,7 +85,7 @@ import {
   getOneProductListApi,
   getOneProductDetailApi,
   importOneProductExcelApi,
-  exportOneProductExcelApi,
+  exportOneProductExcelApi
 } from '@/api/modules/oneproduct/one';
 import { useHandleData } from '@/hooks/useHandleData';
 import OneProductForm from '@/views/oneproduct/oneProduct/components/OneProductForm.vue';
@@ -99,31 +93,84 @@ import type { ColumnProps, ProTableInstance, SearchProps } from '@/components/Pr
 import type { IOneProduct } from '@/api/interface/oneproduct/one';
 import ImportExcel from '@/components/ImportExcel/index.vue';
 import { downloadTemplate } from '@/api/modules/system/common';
-import { ElMessageBox } from "element-plus";
-import { useDownload } from "@/hooks/useDownload";
+import { useDownload } from '@/hooks/useDownload';
+import { ElTag } from 'element-plus';
+import { getOneAssemblyLineSelectionApi } from '@/api/modules/oneassemblyline/oneAssemblyLine';
 defineOptions({
   name: 'OneProductView'
-})
+});
 const proTableRef = ref<ProTableInstance>();
 // 表格配置项
 const columns: ColumnProps<IOneProduct.Row>[] = [
   { type: 'selection', width: 80 },
-  { prop: 'code', label: '唯一标识' },
-  { prop: 'categoryId', label: '类别信息' },
+  { prop: 'code', label: '唯一标识', width: 250 },
+  { prop: 'categoryName', label: '类别名称' },
+  {
+    prop: 'printed',
+    label: '是否打印成功',
+    width: 100,
+    render: ({ row }) => (row.printed ? h(ElTag, { type: 'success' }, ['是']) : h(ElTag, { type: 'danger' }, ['否']))
+  },
+  {
+    prop: 'printedTime',
+    label: '打印时间',
+    width: 160
+  },
+  {
+    prop: 'assemblyLineName',
+    label: '产线名称'
+  },
   { prop: 'operation', label: '操作', width: 250, fixed: 'right' }
-]
+];
 // 搜索条件项
-const searchColumns: SearchProps[] = [
+const searchColumns = ref<SearchProps[]>([
   { prop: 'code', label: '唯一标识', el: 'input' },
-  { prop: 'categoryId', label: '类别信息', el: 'input' },
-]
+  // { prop: 'categoryId', label: '类别信息', el: 'input' },
+  // 日期内
+  {
+    prop: 'printedTime',
+    label: '打印时间',
+    el: 'date-picker',
+    props: {
+      type: 'daterange'
+    }
+  },
+  // 筛选产线
+  {
+    prop: 'assemblyLineId',
+    label: '产线',
+    el: 'select',
+    enum: []
+  }
+]);
 // 获取table列表
 const getTableList = (params: IOneProduct.Query) => {
   let newParams = formatParams(params);
   return getOneProductListApi(newParams);
 };
-const formatParams = (params: IOneProduct.Query) =>{
+const getSelection = () => {
+  getOneAssemblyLineSelectionApi().then(res => {
+    searchColumns.value = searchColumns.value.map(item => {
+      if (item.prop === 'assemblyLineId') {
+        item.enum = res.data.map(item => {
+          return {
+            label: item.label,
+            value: item.id
+          };
+        });
+      }
+      return item;
+    });
+  });
+};
+onMounted(() => {
+  getSelection();
+});
+const formatParams = (params: IOneProduct.Query) => {
   let newParams = JSON.parse(JSON.stringify(params));
+  newParams.printedTime && (newParams.printedTimeStart = newParams.printedTime[0]);
+  newParams.printedTime && (newParams.printedTimeEnd = newParams.printedTime[1]);
+  delete newParams.printedTime;
   newParams.createTime && (newParams.createTimeStart = newParams.createTime[0]);
   newParams.createTime && (newParams.createTimeEnd = newParams.createTime[1]);
   delete newParams.createTime;
@@ -131,52 +178,48 @@ const formatParams = (params: IOneProduct.Query) =>{
   newParams.updateTime && (newParams.updateTimeEnd = newParams.updateTime[1]);
   delete newParams.updateTime;
   return newParams;
-}
+};
 // 打开 drawer(新增、查看、编辑)
-const oneRef = ref<InstanceType<typeof OneProductForm>>()
-const openAddEdit = async(title: string, row: any = {}, isAdd = true) => {
+const oneRef = ref<InstanceType<typeof OneProductForm>>();
+const openAddEdit = async (title: string, row: any = {}, isAdd = true) => {
   if (!isAdd) {
-    const record = await getOneProductDetailApi({ id: row?.id })
-    row = record?.data
+    const record = await getOneProductDetailApi({ id: row?.id });
+    row = record?.data;
   }
   const params = {
     title,
     row: { ...row },
     api: isAdd ? createOneProductApi : updateOneProductApi,
     getTableList: proTableRef.value?.getTableList
-  }
-  oneRef.value?.acceptParams(params)
-}
+  };
+  oneRef.value?.acceptParams(params);
+};
 // 删除信息
 const deleteInfo = async (params: IOneProduct.Row) => {
-  await useHandleData(
-    removeOneProductApi,
-    { ids: [params.id] },
-    `删除【${params.id}】产线一`
-  )
-  proTableRef.value?.getTableList()
-}
+  await useHandleData(removeOneProductApi, { ids: [params.id] }, `删除【${params.id}】产品SN`);
+  proTableRef.value?.getTableList();
+};
 // 批量删除信息
 const batchDelete = async (ids: (string | number)[]) => {
-  await useHandleData(removeOneProductApi, { ids }, '删除所选产线一')
-  proTableRef.value?.clearSelection()
-  proTableRef.value?.getTableList()
-}
+  await useHandleData(removeOneProductApi, { ids }, '删除所选产品SN');
+  proTableRef.value?.clearSelection();
+  proTableRef.value?.getTableList();
+};
 // 导入
-const ImportExcelRef = ref<InstanceType<typeof ImportExcel>>()
+const ImportExcelRef = ref<InstanceType<typeof ImportExcel>>();
 const importData = () => {
   const params = {
-    title: '产线一',
-    templateName: '产线一',
+    title: '产品SN',
+    templateName: '产品SN',
     tempApi: downloadTemplate,
     importApi: importOneProductExcelApi,
     getTableList: proTableRef.value?.getTableList
-  }
-  ImportExcelRef.value?.acceptParams(params)
-}
+  };
+  ImportExcelRef.value?.acceptParams(params);
+};
 // 导出
 const downloadFile = async () => {
   let newParams = formatParams(proTableRef.value?.searchParam as IOneProduct.Query);
-  useDownload(exportOneProductExcelApi, "产线一", newParams);
+  useDownload(exportOneProductExcelApi, '产品SN', newParams);
 };
 </script>

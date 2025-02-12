@@ -2,7 +2,7 @@
   <div class="table-box">
     <ProTable
       ref="proTableRef"
-      title="产线一"
+      title="栈板码"
       :indent="20"
       :columns="columns"
       :search-columns="searchColumns"
@@ -15,7 +15,7 @@
           type="primary"
           v-auth="'one.pallet.create'"
           :icon="CirclePlus"
-          @click="openAddEdit('新增产线一')"
+          @click="openAddEdit('新增栈板码')"
         >
           新增
         </el-button>
@@ -29,7 +29,7 @@
         >
           批量删除
         </el-button>
-        <el-button
+        <!-- <el-button
           v-auth="'one.pallet.import'"
           type="primary"
           :icon="Upload"
@@ -46,18 +46,18 @@
           @click="downloadFile"
         >
           导出
-        </el-button>
+        </el-button> -->
       </template>
       <template #operation="{ row }">
-        <el-button
+        <!-- <el-button
           v-auth="'one.pallet.update'"
           type="primary"
           link
           :icon="EditPen"
-          @click="openAddEdit('编辑产线一', row, false)"
+          @click="openAddEdit('编辑栈板码', row, false)"
         >
           编辑
-        </el-button>
+        </el-button> -->
         <el-button
           v-auth="'one.pallet.remove'"
           type="primary"
@@ -150,13 +150,13 @@ const deleteInfo = async (params: IOnePallet.Row) => {
   await useHandleData(
     removeOnePalletApi,
     { ids: [params.id] },
-    `删除【${params.id}】产线一`
+    `删除【${params.id}】栈板码`
   )
   proTableRef.value?.getTableList()
 }
 // 批量删除信息
 const batchDelete = async (ids: (string | number)[]) => {
-  await useHandleData(removeOnePalletApi, { ids }, '删除所选产线一')
+  await useHandleData(removeOnePalletApi, { ids }, '删除所选栈板码')
   proTableRef.value?.clearSelection()
   proTableRef.value?.getTableList()
 }
@@ -164,8 +164,8 @@ const batchDelete = async (ids: (string | number)[]) => {
 const ImportExcelRef = ref<InstanceType<typeof ImportExcel>>()
 const importData = () => {
   const params = {
-    title: '产线一',
-    templateName: '产线一',
+    title: '栈板码',
+    templateName: '栈板码',
     tempApi: downloadTemplate,
     importApi: importOnePalletExcelApi,
     getTableList: proTableRef.value?.getTableList
@@ -175,6 +175,6 @@ const importData = () => {
 // 导出
 const downloadFile = async () => {
   let newParams = formatParams(proTableRef.value?.searchParam as IOnePallet.Query);
-  useDownload(exportOnePalletExcelApi, "产线一", newParams);
+  useDownload(exportOnePalletExcelApi, "栈板码", newParams);
 };
 </script>

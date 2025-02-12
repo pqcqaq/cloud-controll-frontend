@@ -45,6 +45,16 @@
           clearable
         />
       </el-form-item>
+      <el-form-item
+        label="模板文件夹"
+        prop="templateDir"
+      >
+        <el-input
+          v-model="paramsProps.row.templateDir"
+          placeholder="请填写模板文件夹"
+          clearable
+        />
+      </el-form-item>
     </el-form>
     <template #footer>
       <el-button @click="visible = false">

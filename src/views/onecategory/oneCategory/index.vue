@@ -2,7 +2,7 @@
   <div class="table-box">
     <ProTable
       ref="proTableRef"
-      title="产线"
+      title="生产类别"
       :indent="20"
       :columns="columns"
       :search-columns="searchColumns"
@@ -15,7 +15,7 @@
           type="primary"
           v-auth="'one.category.create'"
           :icon="CirclePlus"
-          @click="openAddEdit('新增产线')"
+          @click="openAddEdit('新增生产类别')"
         >
           新增
         </el-button>
@@ -54,7 +54,7 @@
           type="primary"
           link
           :icon="EditPen"
-          @click="openAddEdit('编辑产线', row, false)"
+          @click="openAddEdit('编辑生产类别', row, false)"
         >
           编辑
         </el-button>
@@ -156,13 +156,13 @@ const deleteInfo = async (params: IOneCategory.Row) => {
   await useHandleData(
     removeOneCategoryApi,
     { ids: [params.id] },
-    `删除【${params.id}】产线`
+    `删除【${params.id}】生产类别`
   )
   proTableRef.value?.getTableList()
 }
 // 批量删除信息
 const batchDelete = async (ids: (string | number)[]) => {
-  await useHandleData(removeOneCategoryApi, { ids }, '删除所选产线')
+  await useHandleData(removeOneCategoryApi, { ids }, '删除所选生产类别')
   proTableRef.value?.clearSelection()
   proTableRef.value?.getTableList()
 }
@@ -170,8 +170,8 @@ const batchDelete = async (ids: (string | number)[]) => {
 const ImportExcelRef = ref<InstanceType<typeof ImportExcel>>()
 const importData = () => {
   const params = {
-    title: '产线',
-    templateName: '产线',
+    title: '生产类别',
+    templateName: '生产类别',
     tempApi: downloadTemplate,
     importApi: importOneCategoryExcelApi,
     getTableList: proTableRef.value?.getTableList
@@ -181,6 +181,6 @@ const importData = () => {
 // 导出
 const downloadFile = async () => {
   let newParams = formatParams(proTableRef.value?.searchParam as IOneCategory.Query);
-  useDownload(exportOneCategoryExcelApi, "产线", newParams);
+  useDownload(exportOneCategoryExcelApi, "生产类别", newParams);
 };
 </script>

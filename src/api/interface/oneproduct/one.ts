@@ -20,6 +20,9 @@ export namespace IOneProduct {
     id?: number
     code?: string
     categoryId?: number
+    categoryName?: string
+    printed?: boolean
+    printedTime?: string
   }
 
 }

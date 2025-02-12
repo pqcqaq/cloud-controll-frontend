@@ -2,7 +2,7 @@
   <div class="table-box">
     <ProTable
       ref="proTableRef"
-      title="产线一"
+      title="订单号"
       :indent="20"
       :columns="columns"
       :search-columns="searchColumns"
@@ -15,7 +15,7 @@
           type="primary"
           v-auth="'one.order.create'"
           :icon="CirclePlus"
-          @click="openAddEdit('新增产线一')"
+          @click="openAddEdit('新增订单号')"
         >
           新增
         </el-button>
@@ -54,7 +54,7 @@
           type="primary"
           link
           :icon="EditPen"
-          @click="openAddEdit('编辑产线一', row, false)"
+          @click="openAddEdit('编辑订单号', row, false)"
         >
           编辑
         </el-button>
@@ -152,13 +152,13 @@ const deleteInfo = async (params: IOneOrder.Row) => {
   await useHandleData(
     removeOneOrderApi,
     { ids: [params.id] },
-    `删除【${params.id}】产线一`
+    `删除【${params.id}】订单号`
   )
   proTableRef.value?.getTableList()
 }
 // 批量删除信息
 const batchDelete = async (ids: (string | number)[]) => {
-  await useHandleData(removeOneOrderApi, { ids }, '删除所选产线一')
+  await useHandleData(removeOneOrderApi, { ids }, '删除所选订单号')
   proTableRef.value?.clearSelection()
   proTableRef.value?.getTableList()
 }
@@ -166,8 +166,8 @@ const batchDelete = async (ids: (string | number)[]) => {
 const ImportExcelRef = ref<InstanceType<typeof ImportExcel>>()
 const importData = () => {
   const params = {
-    title: '产线一',
-    templateName: '产线一',
+    title: '订单号',
+    templateName: '订单号',
     tempApi: downloadTemplate,
     importApi: importOneOrderExcelApi,
     getTableList: proTableRef.value?.getTableList
@@ -177,6 +177,6 @@ const importData = () => {
 // 导出
 const downloadFile = async () => {
   let newParams = formatParams(proTableRef.value?.searchParam as IOneOrder.Query);
-  useDownload(exportOneOrderExcelApi, "产线一", newParams);
+  useDownload(exportOneOrderExcelApi, "订单号", newParams);
 };
 </script>

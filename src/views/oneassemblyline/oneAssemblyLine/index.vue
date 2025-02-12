@@ -111,6 +111,7 @@ const columns: ColumnProps<IOneAssemblyLine.Row>[] = [
   { prop: 'idCode', label: '生产类别' },
   { prop: 'categoryName', label: '生产类名' },
   { prop: 'lineType', label: '生产线别' },
+  { prop: 'templateDir', label: '模板文件夹' },
   { prop: 'operation', label: '操作', width: 250, fixed: 'right' }
 ]
 // 搜索条件项
