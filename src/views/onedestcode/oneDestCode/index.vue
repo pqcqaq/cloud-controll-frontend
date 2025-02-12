@@ -11,7 +11,8 @@
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader="scope">
-        <el-button type="primary"
+        <el-button
+          type="primary"
           v-auth="'one.dest.code.create'"
           :icon="CirclePlus"
           @click="openAddEdit('新增目的地码生成列表')"
@@ -58,7 +59,7 @@
           编辑
         </el-button>
         <el-button
-            v-auth="'one.dest.code.remove'"
+          v-auth="'one.dest.code.remove'"
           type="primary"
           link
           :icon="Delete"
@@ -74,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { h, ref } from 'vue'
 import {
   CirclePlus,
   Delete,
@@ -91,6 +92,7 @@ import {
   getOneDestCodeDetailApi,
   importOneDestCodeExcelApi,
   exportOneDestCodeExcelApi,
+  reprintOneDestCodeApi,
 } from '@/api/modules/onedestcode/oneDestCode';
 import { useHandleData } from '@/hooks/useHandleData';
 import OneDestCodeForm from '@/views/onedestcode/oneDestCode/components/OneDestCodeForm.vue';
@@ -98,7 +100,7 @@ import type { ColumnProps, ProTableInstance, SearchProps } from '@/components/Pr
 import type { IOneDestCode } from '@/api/interface/onedestcode/oneDestCode';
 import ImportExcel from '@/components/ImportExcel/index.vue';
 import { downloadTemplate } from '@/api/modules/system/common';
-import { ElMessageBox } from "element-plus";
+import { ElButton, ElMessageBox } from "element-plus";
 import { useDownload } from "@/hooks/useDownload";
 defineOptions({
   name: 'OneDestCodeView'
@@ -109,7 +111,29 @@ const columns: ColumnProps<IOneDestCode.Row>[] = [
   { type: 'selection', width: 80 },
   { prop: 'code', label: '目的地码' },
   { prop: 'printed', label: '是否打印' },
-  { prop: 'operation', label: '操作', width: 250, fixed: 'right' }
+  { prop: 'operation', label: '操作', width: 250, fixed: 'right' },
+  {
+    prop: 'reprint',
+    label: '补打',
+    width: 90,
+    render: ({ row }) => {
+      return h(
+        ElButton,
+        {
+          type: 'primary',
+          onClick: () => reprintOneDestCodeApi({
+            id: row.id!
+          }).then(res => {
+              ElMessageBox.alert('补打成功', '提示', {
+                confirmButtonText: '确定',
+                type: 'success'
+              });
+            })
+        },
+        ['补打']
+      );
+    }
+  }
 ]
 // 搜索条件项
 const searchColumns: SearchProps[] = [

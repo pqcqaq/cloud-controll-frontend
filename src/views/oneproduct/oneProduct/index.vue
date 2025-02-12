@@ -85,7 +85,8 @@ import {
   getOneProductListApi,
   getOneProductDetailApi,
   importOneProductExcelApi,
-  exportOneProductExcelApi
+  exportOneProductExcelApi,
+  reprintOneProductApi
 } from '@/api/modules/oneproduct/one';
 import { useHandleData } from '@/hooks/useHandleData';
 import OneProductForm from '@/views/oneproduct/oneProduct/components/OneProductForm.vue';
@@ -94,7 +95,7 @@ import type { IOneProduct } from '@/api/interface/oneproduct/one';
 import ImportExcel from '@/components/ImportExcel/index.vue';
 import { downloadTemplate } from '@/api/modules/system/common';
 import { useDownload } from '@/hooks/useDownload';
-import { ElTag } from 'element-plus';
+import { ElButton, ElMessageBox, ElTag } from 'element-plus';
 import { getOneAssemblyLineSelectionApi } from '@/api/modules/oneassemblyline/oneAssemblyLine';
 defineOptions({
   name: 'OneProductView'
@@ -103,7 +104,7 @@ const proTableRef = ref<ProTableInstance>();
 // 表格配置项
 const columns: ColumnProps<IOneProduct.Row>[] = [
   { type: 'selection', width: 80 },
-  { prop: 'code', label: '唯一标识', width: 250 },
+  { prop: 'code', label: 'SN码', width: 250 },
   { prop: 'categoryName', label: '类别名称' },
   {
     prop: 'printed',
@@ -120,11 +121,31 @@ const columns: ColumnProps<IOneProduct.Row>[] = [
     prop: 'assemblyLineName',
     label: '产线名称'
   },
-  { prop: 'operation', label: '操作', width: 250, fixed: 'right' }
+  { prop: 'operation', label: '操作', width: 250, fixed: 'right' },
+  {
+    prop: 'reprint',
+    label: '补打',
+    width: 90,
+    render: ({ row }) => {
+      return h(
+        ElButton,
+        {
+          type: 'primary',
+          onClick: () => reprintOneProductApi(row).then(res => {
+              ElMessageBox.alert('补打成功', '提示', {
+                confirmButtonText: '确定',
+                type: 'success'
+              });
+            })
+        },
+        ['补打']
+      );
+    }
+  }
 ];
 // 搜索条件项
 const searchColumns = ref<SearchProps[]>([
-  { prop: 'code', label: '唯一标识', el: 'input' },
+  { prop: 'code', label: 'SN码', el: 'input' },
   // { prop: 'categoryId', label: '类别信息', el: 'input' },
   // 日期内
   {
