@@ -101,7 +101,7 @@ const columns: ColumnProps<IVProductShippingInfoComplete.Row>[] = [
   { prop: 'orderNumber', label: '订单号', width: 120 },
   { prop: 'midBoxNumber', label: '中箱号', width: 250 },
   { prop: 'destination', label: '发货地址', width: 120 },
-  { prop: 'destCodeId', label: '目的地码ID', width: 120 },
+  // { prop: 'destCodeId', label: '目的地码ID', width: 120 },
   { prop: 'palletNumber', label: '托盘号', width: 250 },
   { prop: 'factoryDate', label: '出厂日期', width: 120 },
   { prop: 'productionDate', label: '生产日期', width: 120 },

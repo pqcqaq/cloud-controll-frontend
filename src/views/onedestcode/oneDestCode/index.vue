@@ -96,6 +96,7 @@ import ImportExcel from '@/components/ImportExcel/index.vue';
 import { downloadTemplate } from '@/api/modules/system/common';
 import { ElButton, ElMessage, ElMessageBox, ElTag, ElTooltip } from 'element-plus';
 import { useDownload } from '@/hooks/useDownload';
+import { exportVProductShippingInfoCompleteExcelApi } from '@/api/modules/vproductshippinginfocomplete/vProductShippingInfoComplete';
 defineOptions({
   name: 'OneDestCodeView'
 });
@@ -140,6 +141,8 @@ const columns: ColumnProps<IOneDestCode.Row>[] = [
       );
     }
   },
+  // address
+  { prop: 'address', label: '地址', width: 200 },
   // createTime
   { prop: 'createTime', label: '创建时间', width: 200 },
   {
@@ -169,6 +172,30 @@ const columns: ColumnProps<IOneDestCode.Row>[] = [
             })
         },
         ['补打']
+      );
+    }
+  },
+  // 导出按钮
+  {
+    prop: 'export',
+    label: '导出',
+    width: 90,
+    render: ({ row }) => {
+      return h(
+        ElButton,
+        {
+          type: 'primary',
+          onClick: () => {
+            useDownload(() => {
+              return exportVProductShippingInfoCompleteExcelApi({
+                destCode: row.code!,
+                page: 1,
+                limit: 99999
+              })
+            }, '目的地码生成列表', { id: row.id });
+          }
+        },
+        ['导出']
       );
     }
   }
