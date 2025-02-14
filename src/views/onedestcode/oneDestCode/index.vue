@@ -29,7 +29,7 @@
         >
           批量删除
         </el-button>
-        <el-button
+        <!-- <el-button
           v-auth="'one.dest.code.import'"
           type="primary"
           :icon="Upload"
@@ -46,10 +46,10 @@
           @click="downloadFile"
         >
           导出
-        </el-button>
+        </el-button> -->
       </template>
       <template #operation="{ row }">
-        <el-button
+        <!-- <el-button
           v-auth="'one.dest.code.update'"
           type="primary"
           link
@@ -57,7 +57,7 @@
           @click="openAddEdit('编辑目的地码生成列表', row, false)"
         >
           编辑
-        </el-button>
+        </el-button> -->
         <el-button
           v-auth="'one.dest.code.remove'"
           type="primary"
