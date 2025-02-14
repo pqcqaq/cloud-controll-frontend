@@ -121,6 +121,10 @@ const columns: ColumnProps<IOneProduct.Row>[] = [
     prop: 'assemblyLineName',
     label: '产线名称'
   },
+  {
+    prop: 'weight',
+    label: '重量'
+  },
   { prop: 'operation', label: '操作', width: 250, fixed: 'right' },
   {
     prop: 'reprint',
@@ -131,7 +135,8 @@ const columns: ColumnProps<IOneProduct.Row>[] = [
         ElButton,
         {
           type: 'primary',
-          onClick: () => reprintOneProductApi(row).then(res => {
+          onClick: () =>
+            reprintOneProductApi(row).then(res => {
               ElMessageBox.alert('补打成功', '提示', {
                 confirmButtonText: '确定',
                 type: 'success'

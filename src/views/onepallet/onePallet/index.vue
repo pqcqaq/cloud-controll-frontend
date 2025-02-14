@@ -139,7 +139,18 @@ const columns: ColumnProps<IOnePallet.Row>[] = [
   }
 ];
 // 搜索条件项
-const searchColumns: SearchProps[] = [{ prop: 'palletCode', label: '托盘号', el: 'input' }];
+const searchColumns: SearchProps[] = [
+  { prop: 'midBoxCode', label: '中箱号', el: 'input' },
+  {
+    prop: 'createTime',
+    label: '创建时间',
+    el: 'date-picker',
+    props: {
+      type: 'daterange'
+    }
+  },
+  { prop: 'palletCode', label: '托盘号', el: 'input' } // 日期内
+];
 // 获取table列表
 const getTableList = (params: IOnePallet.Query) => {
   let newParams = formatParams(params);

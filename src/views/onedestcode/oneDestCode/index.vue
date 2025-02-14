@@ -100,7 +100,7 @@ import type { ColumnProps, ProTableInstance, SearchProps } from '@/components/Pr
 import type { IOneDestCode } from '@/api/interface/onedestcode/oneDestCode';
 import ImportExcel from '@/components/ImportExcel/index.vue';
 import { downloadTemplate } from '@/api/modules/system/common';
-import { ElButton, ElMessageBox } from "element-plus";
+import { ElButton, ElMessageBox, ElTag } from "element-plus";
 import { useDownload } from "@/hooks/useDownload";
 defineOptions({
   name: 'OneDestCodeView'
@@ -110,7 +110,12 @@ const proTableRef = ref<ProTableInstance>();
 const columns: ColumnProps<IOneDestCode.Row>[] = [
   { type: 'selection', width: 80 },
   { prop: 'code', label: '目的地码' },
-  { prop: 'printed', label: '是否打印' },
+  {
+    prop: 'printed',
+    label: '是否打印成功',
+    width: 100,
+    render: ({ row }) => (row.printed ? h(ElTag, { type: 'success' }, ['是']) : h(ElTag, { type: 'danger' }, ['否']))
+  },
   { prop: 'operation', label: '操作', width: 250, fixed: 'right' },
   {
     prop: 'reprint',

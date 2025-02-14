@@ -75,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { h, ref } from 'vue'
 import {
   CirclePlus,
   Delete,
@@ -100,6 +100,7 @@ import type { IOneCategory } from '@/api/interface/onecategory/assembly';
 import ImportExcel from '@/components/ImportExcel/index.vue';
 import { downloadTemplate } from '@/api/modules/system/common';
 import { useDownload } from "@/hooks/useDownload";
+import { ElTag } from 'element-plus';
 defineOptions({
   name: 'OneCategoryView'
 })
@@ -107,14 +108,53 @@ const proTableRef = ref<ProTableInstance>();
 // 表格配置项
 const columns: ColumnProps<IOneCategory.Row>[] = [
   { type: 'selection', width: 80 },
-  { prop: 'sku', label: 'SKU' },
-  { prop: 'idCode', label: '产品ID标识' },
-  { prop: 'name', label: '产品名称' },
-  { prop: 'salesCode', label: '销售码' },
-  { prop: 'minWeight', label: '最小重量' },
-  { prop: 'maxWeight', label: '最大重量' },
+  { prop: 'name', label: '产品名称', width: 200 },
+  { prop: 'sku', label: 'SKU', width: 120 },
+  { prop: 'idCode', label: '产品ID标识', width: 120 },
+  { prop: 'salesCode', label: '销售码', width: 160 },
+  // color
+  { prop: 'color', label: '颜色', width: 120 },
+  { prop: 'minWeight', label: '最小重量', width: 120 },
+  { prop: 'maxWeight', label: '最大重量', width: 120 },
+  // midBoxNum?: number
+  // palletNum?: number
+  { prop: "midBoxNum", label: "中箱内产品数量", width: 120 },
+  { prop: "palletNum", label: "栈板内中箱数量", width: 120 },
+  // 是否需要SN
+  { 
+    prop: 'needSn', 
+    label: '是否需要SN', 
+    width: 120, 
+    render: ({ row }) => row.needSn ? h(ElTag, { type: 'success' }, ['是']) : h(ElTag, { type: 'danger' }, ['否'])
+  },
+  { 
+    prop: 'needWeigh', 
+    label: '是否称重', 
+    width: 120, 
+    render: ({ row }) => row.needWeigh ? h(ElTag, { type: 'success' }, ['是']) : h(ElTag, { type: 'danger' }, ['否'])
+  },
+  { 
+    prop: 'needMidBox', 
+    label: '是否需要中箱', 
+    width: 120, 
+    render: ({ row }) => row.needMidBox ? h(ElTag, { type: 'success' }, ['是']) : h(ElTag, { type: 'danger' }, ['否'])
+  },
+  { 
+    prop: 'needPallet', 
+    label: '是否需要栈板', 
+    width: 120, 
+    render: ({ row }) => row.needPallet ? h(ElTag, { type: 'success' }, ['是']) : h(ElTag, { type: 'danger' }, ['否'])
+  },
+  { prop: 'midBoxTemplateName', label: '中箱模板文件名', width: 120 },
+  { prop: 'palletTemplateName', label: '栈板模板文件名', width: 120 },
+  { prop: 'productTemplateName', label: '产品模板文件名', width: 120 },
+  { prop: 'snTemplateName', label: 'SN模板文件名', width: 120 },
+  { prop: 'destTemplateName', label: '目的地模板文件名', width: 120 },
+  { prop: 'packingSpec', label: '包装规格', width: 120 },
+  { prop: 'grossWeight', label: '毛重', width: 120 },
   { prop: 'operation', label: '操作', width: 250, fixed: 'right' }
 ]
+
 // 搜索条件项
 const searchColumns: SearchProps[] = [
   { prop: 'sku', label: 'SKU', el: 'input' },
