@@ -75,15 +75,9 @@
 </template>
 
 <script setup lang="ts">
-import { h, ref } from 'vue'
-import {
-  CirclePlus,
-  Delete,
-  EditPen,
-  Upload,
-  Download,
-} from '@element-plus/icons-vue'
-import ProTable from '@/components/ProTable/index.vue'
+import { h, ref } from 'vue';
+import { CirclePlus, Delete, EditPen, Upload, Download } from '@element-plus/icons-vue';
+import ProTable from '@/components/ProTable/index.vue';
 import {
   createOneDestCodeApi,
   removeOneDestCodeApi,
@@ -92,7 +86,7 @@ import {
   getOneDestCodeDetailApi,
   importOneDestCodeExcelApi,
   exportOneDestCodeExcelApi,
-  reprintOneDestCodeApi,
+  reprintOneDestCodeApi
 } from '@/api/modules/onedestcode/oneDestCode';
 import { useHandleData } from '@/hooks/useHandleData';
 import OneDestCodeForm from '@/views/onedestcode/oneDestCode/components/OneDestCodeForm.vue';
@@ -100,16 +94,54 @@ import type { ColumnProps, ProTableInstance, SearchProps } from '@/components/Pr
 import type { IOneDestCode } from '@/api/interface/onedestcode/oneDestCode';
 import ImportExcel from '@/components/ImportExcel/index.vue';
 import { downloadTemplate } from '@/api/modules/system/common';
-import { ElButton, ElMessageBox, ElTag } from "element-plus";
-import { useDownload } from "@/hooks/useDownload";
+import { ElButton, ElMessage, ElMessageBox, ElTag, ElTooltip } from 'element-plus';
+import { useDownload } from '@/hooks/useDownload';
 defineOptions({
   name: 'OneDestCodeView'
-})
+});
 const proTableRef = ref<ProTableInstance>();
 // 表格配置项
 const columns: ColumnProps<IOneDestCode.Row>[] = [
   { type: 'selection', width: 80 },
-  { prop: 'code', label: '目的地码' },
+  {
+    prop: 'code',
+    label: '目的地码',
+    render: ({ row }) => {
+      return h(
+        ElTooltip,
+        {
+          content: '点击复制',
+          effect: 'light'
+        },
+        {
+          default: () =>
+            h(
+              'span',
+              {
+                style: {
+                  cursor: 'pointer',
+                  color: '#409EFF'
+                },
+                onClick: () => {
+                  // 复制到剪贴板
+                  navigator.clipboard
+                    .writeText(row.code!)
+                    .then(() => {
+                      ElMessage.success('复制成功');
+                    })
+                    .catch(() => {
+                      ElMessage.error('复制失败');
+                    });
+                }
+              },
+              row.code
+            )
+        }
+      );
+    }
+  },
+  // createTime
+  { prop: 'createTime', label: '创建时间', width: 200 },
   {
     prop: 'printed',
     label: '是否打印成功',
@@ -126,9 +158,10 @@ const columns: ColumnProps<IOneDestCode.Row>[] = [
         ElButton,
         {
           type: 'primary',
-          onClick: () => reprintOneDestCodeApi({
-            id: row.id!
-          }).then(res => {
+          onClick: () =>
+            reprintOneDestCodeApi({
+              id: row.id!
+            }).then(res => {
               ElMessageBox.alert('补打成功', '提示', {
                 confirmButtonText: '确定',
                 type: 'success'
@@ -139,18 +172,18 @@ const columns: ColumnProps<IOneDestCode.Row>[] = [
       );
     }
   }
-]
+];
 // 搜索条件项
 const searchColumns: SearchProps[] = [
   { prop: 'code', label: '目的地码', el: 'input' },
-  { prop: 'printed', label: '是否打印', el: 'input' },
-]
+  { prop: 'printed', label: '是否打印', el: 'input' }
+];
 // 获取table列表
 const getTableList = (params: IOneDestCode.Query) => {
   let newParams = formatParams(params);
   return getOneDestCodeListApi(newParams);
 };
-const formatParams = (params: IOneDestCode.Query) =>{
+const formatParams = (params: IOneDestCode.Query) => {
   let newParams = JSON.parse(JSON.stringify(params));
   newParams.createTime && (newParams.createTimeStart = newParams.createTime[0]);
   newParams.createTime && (newParams.createTimeEnd = newParams.createTime[1]);
@@ -159,39 +192,35 @@ const formatParams = (params: IOneDestCode.Query) =>{
   newParams.updateTime && (newParams.updateTimeEnd = newParams.updateTime[1]);
   delete newParams.updateTime;
   return newParams;
-}
+};
 // 打开 drawer(新增、查看、编辑)
-const oneDestCodeRef = ref<InstanceType<typeof OneDestCodeForm>>()
-const openAddEdit = async(title: string, row: any = {}, isAdd = true) => {
+const oneDestCodeRef = ref<InstanceType<typeof OneDestCodeForm>>();
+const openAddEdit = async (title: string, row: any = {}, isAdd = true) => {
   if (!isAdd) {
-    const record = await getOneDestCodeDetailApi({ id: row?.id })
-    row = record?.data
+    const record = await getOneDestCodeDetailApi({ id: row?.id });
+    row = record?.data;
   }
   const params = {
     title,
     row: { ...row },
     api: isAdd ? createOneDestCodeApi : updateOneDestCodeApi,
     getTableList: proTableRef.value?.getTableList
-  }
-  oneDestCodeRef.value?.acceptParams(params)
-}
+  };
+  oneDestCodeRef.value?.acceptParams(params);
+};
 // 删除信息
 const deleteInfo = async (params: IOneDestCode.Row) => {
-  await useHandleData(
-    removeOneDestCodeApi,
-    { ids: [params.id] },
-    `删除【${params.id}】目的地码生成列表`
-  )
-  proTableRef.value?.getTableList()
-}
+  await useHandleData(removeOneDestCodeApi, { ids: [params.id] }, `删除【${params.id}】目的地码生成列表`);
+  proTableRef.value?.getTableList();
+};
 // 批量删除信息
 const batchDelete = async (ids: (string | number)[]) => {
-  await useHandleData(removeOneDestCodeApi, { ids }, '删除所选目的地码生成列表')
-  proTableRef.value?.clearSelection()
-  proTableRef.value?.getTableList()
-}
+  await useHandleData(removeOneDestCodeApi, { ids }, '删除所选目的地码生成列表');
+  proTableRef.value?.clearSelection();
+  proTableRef.value?.getTableList();
+};
 // 导入
-const ImportExcelRef = ref<InstanceType<typeof ImportExcel>>()
+const ImportExcelRef = ref<InstanceType<typeof ImportExcel>>();
 const importData = () => {
   const params = {
     title: '目的地码生成列表',
@@ -199,12 +228,12 @@ const importData = () => {
     tempApi: downloadTemplate,
     importApi: importOneDestCodeExcelApi,
     getTableList: proTableRef.value?.getTableList
-  }
-  ImportExcelRef.value?.acceptParams(params)
-}
+  };
+  ImportExcelRef.value?.acceptParams(params);
+};
 // 导出
 const downloadFile = async () => {
   let newParams = formatParams(proTableRef.value?.searchParam as IOneDestCode.Query);
-  useDownload(exportOneDestCodeExcelApi, "目的地码生成列表", newParams);
+  useDownload(exportOneDestCodeExcelApi, '目的地码生成列表', newParams);
 };
 </script>
