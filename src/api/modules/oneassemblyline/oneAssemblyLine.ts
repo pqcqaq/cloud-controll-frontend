@@ -74,3 +74,13 @@ export const exportOneAssemblyLineExcelApi = (params: IOneAssemblyLine.Query) =>
 export const getOneAssemblyLineSelectionApi = (params?: { categoryId: number }) => {
   return http.get<IOneAssemblyLine.Selection[]>(ADMIN_MODULE + `/one-assembly-line/selection`, params);
 };
+
+/**
+ * 获取模板文件信息
+ * @param params
+ * @returns {*}
+ */
+export const getTemplateFileInfoApi = (params: { id: number }) => {
+  const { id } = params;
+  return http.get<IOneAssemblyLine.TemplateFileInfo>(ADMIN_MODULE + `/one-assembly-line/template-file-info/${id}`);
+};

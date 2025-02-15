@@ -1,31 +1,36 @@
-import type { IPageQuery } from '@/api/interface'
+import type { IPageQuery } from '@/api/interface';
 
 export namespace IOneAssemblyLine {
-
   // 查询条件
   export interface Query extends IPageQuery {
-    name?: string
+    name?: string;
     // categoryId?: number
   }
 
   // 编辑form表单
   export interface Form {
-    id?: number
-    name?: string
-    idCode?: number
- }
+    id?: number;
+    name?: string;
+    idCode?: number;
+  }
 
   // list或detail返回结构
   export interface Row {
-    id?: number
-    name?: string
-    categoryName?: number
-    idCode?: number
+    id?: number;
+    name?: string;
+    categoryName?: number;
+    idCode?: number;
   }
 
   export interface Selection {
-    id: number
-    label: string
+    id: number;
+    label: string;
   }
 
+  export interface TemplateFileInfo {
+    type: 'DIRECTORY' | 'FILE';
+    filename: string;
+    children: TemplateFileInfo[];
+    fileSize: string;
+  }
 }

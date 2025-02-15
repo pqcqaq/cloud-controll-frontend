@@ -118,14 +118,16 @@ import { getOneAssemblyLineSelectionApi } from '@/api/modules/oneassemblyline/on
 const categorySelections = ref<IOneCategory.CategoryLabelVo[]>([]);
 const assemblySelections = ref<IOneAssemblyLine.Selection[]>([]);
 onMounted(() => {
-  listCategoryLabelApi().then(res => {
+  listCategoryLabelApi({
+    needSn: true
+  }).then(res => {
     categorySelections.value = res.data;
   });
-  getOneAssemblyLineSelectionApi({
-    categoryId: paramsProps.value.row.categoryId
-  }).then(res => {
-    assemblySelections.value = res.data;
-  });
+  // getOneAssemblyLineSelectionApi({
+  //   categoryId: paramsProps.value.row.categoryId
+  // }).then(res => {
+  //   assemblySelections.value = res.data;
+  // });
 });
 defineOptions({
   name: 'OneGenSnForm'
