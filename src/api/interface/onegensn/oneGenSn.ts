@@ -1,30 +1,39 @@
 import type { IPageQuery } from '@/api/interface'
 
-export namespace IOneProduct {
+export namespace IOneGenSn {
 
   // 查询条件
   export interface Query extends IPageQuery {
     code?: string
-    categoryId?: number
+    seq?: number
+    produceTimeStart?: string
+    produceTimeEnd?: string
   }
 
   // 编辑form表单
   export interface Form {
     id?: number
-    code?: string
     categoryId?: number
- }
+    code?: string
+    seq?: number
+    used?: number
+    produceTime?: string
+  }
+  
+  export interface GenDto {
+    categoryId?: number
+    produceTime?: string
+    num?: number
+  }
 
   // list或detail返回结构
   export interface Row {
     id?: number
-    code?: string
     categoryId?: number
-    categoryName?: string
-    printed?: boolean
-    printedTime?: string
-    weight?: number
-    midBoxTime?: string
+    code?: string
+    seq?: number
+    used?: number
+    produceTime?: string
   }
 
 }

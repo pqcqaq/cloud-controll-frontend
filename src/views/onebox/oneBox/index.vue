@@ -2,7 +2,7 @@
   <div class="table-box">
     <ProTable
       ref="proTableRef"
-      title="产线一"
+      title="中箱号"
       :indent="20"
       :columns="columns"
       :search-columns="searchColumns"
@@ -15,7 +15,7 @@
           type="primary"
           v-auth="'one.box.create'"
           :icon="CirclePlus"
-          @click="openAddEdit('新增产线一')"
+          @click="openAddEdit('新增中箱号')"
         >
           新增
         </el-button>
@@ -49,7 +49,7 @@
         </el-button>
       </template>
       <template #operation="{ row }">
-        <el-button
+        <!-- <el-button
           v-auth="'one.box.update'"
           type="primary"
           link
@@ -57,7 +57,7 @@
           @click="openAddEdit('编辑产线一', row, false)"
         >
           编辑
-        </el-button>
+        </el-button> -->
         <el-button
           v-auth="'one.box.remove'"
           type="primary"
@@ -114,18 +114,19 @@ const handleRePrint = async (row: IOneBox.Row) => {
 const columns: ColumnProps<IOneBox.Row>[] = [
   { type: 'selection', width: 80 },
   { prop: 'midBoxCode', label: '中箱号' },
-  { prop: 'createTime', label: '创建时间' },
+  { prop: 'createTime', label: '创建时间', width: 200 },
   { prop: 'snCodes', label: 'SN码' },
   {
     prop: 'printed',
     label: '是否打印成功',
+    width: 100,
     render: ({ row }) => (row.printed ? h(ElTag, { type: 'success' }, ['是']) : h(ElTag, { type: 'danger' }, ['否']))
   },
-  { prop: 'operation', label: '操作', width: 250, fixed: 'right' },
+  { prop: 'operation', label: '操作', width: 100, fixed: 'right' },
   {
     prop: 'reprint',
     label: '补打',
-    width: 100,
+    width: 90,
     render: ({ row }) => {
       return h(
         ElButton,
@@ -139,7 +140,19 @@ const columns: ColumnProps<IOneBox.Row>[] = [
   }
 ];
 // 搜索条件项
-const searchColumns: SearchProps[] = [{ prop: 'midBoxCode', label: '中箱号', el: 'input' }];
+const searchColumns: SearchProps[] = [
+  { prop: 'snCode', label: 'SN号码', el: 'input' },
+  // 日期内
+  {
+    prop: 'createTime',
+    label: '创建时间',
+    el: 'date-picker',
+    props: {
+      type: 'daterange'
+    }
+  },
+  { prop: 'midBoxCode', label: '中箱号', el: 'input' }
+];
 // 获取table列表
 const getTableList = (params: IOneBox.Query) => {
   let newParams = formatParams(params);
@@ -172,12 +185,12 @@ const openAddEdit = async (title: string, row: any = {}, isAdd = true) => {
 };
 // 删除信息
 const deleteInfo = async (params: IOneBox.Row) => {
-  await useHandleData(removeOneBoxApi, { ids: [params.id] }, `删除【${params.id}】产线一`);
+  await useHandleData(removeOneBoxApi, { ids: [params.id] }, `删除【${params.id}】中箱号`);
   proTableRef.value?.getTableList();
 };
 // 批量删除信息
 const batchDelete = async (ids: (string | number)[]) => {
-  await useHandleData(removeOneBoxApi, { ids }, '删除所选产线一');
+  await useHandleData(removeOneBoxApi, { ids }, '删除所选中箱号');
   proTableRef.value?.clearSelection();
   proTableRef.value?.getTableList();
 };
@@ -185,8 +198,8 @@ const batchDelete = async (ids: (string | number)[]) => {
 const ImportExcelRef = ref<InstanceType<typeof ImportExcel>>();
 const importData = () => {
   const params = {
-    title: '产线一',
-    templateName: '产线一',
+    title: '中箱号',
+    templateName: '中箱号',
     tempApi: downloadTemplate,
     importApi: importOneBoxExcelApi,
     getTableList: proTableRef.value?.getTableList
@@ -196,6 +209,6 @@ const importData = () => {
 // 导出
 const downloadFile = async () => {
   let newParams = formatParams(proTableRef.value?.searchParam as IOneBox.Query);
-  useDownload(exportOneBoxExcelApi, '产线一', newParams);
+  useDownload(exportOneBoxExcelApi, '中箱号', newParams);
 };
 </script>

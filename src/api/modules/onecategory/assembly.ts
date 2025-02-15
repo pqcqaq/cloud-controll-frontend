@@ -67,3 +67,16 @@ export const importOneCategoryExcelApi = (params : UploadRawFile, config?: Axios
 export const exportOneCategoryExcelApi  = (params: IOneCategory.Query) => {
   return http.download(ADMIN_MODULE + `/one-category/export`, params)
 }
+
+// @Operation(summary = "获取产品类别标签")
+// @SaCheckPermission(value = "one.category.query_table")
+// @GetMapping("/list-category-label")
+// public ApiResult<List<CategoryLabelVo>> listCategoryLabel() {
+//     return ApiResult.success(oneCategoryService.listCategoryLabel());
+// }
+/**
+ * 获取产品类别标签
+ */
+export const listCategoryLabelApi = () => {
+  return http.get<IOneCategory.CategoryLabelVo[]>(ADMIN_MODULE + `/one-category/list-category-label`)
+}

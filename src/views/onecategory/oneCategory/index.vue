@@ -2,7 +2,7 @@
   <div class="table-box">
     <ProTable
       ref="proTableRef"
-      title="产线"
+      title="生产类别"
       :indent="20"
       :columns="columns"
       :search-columns="searchColumns"
@@ -15,7 +15,7 @@
           type="primary"
           v-auth="'one.category.create'"
           :icon="CirclePlus"
-          @click="openAddEdit('新增产线')"
+          @click="openAddEdit('新增生产类别')"
         >
           新增
         </el-button>
@@ -54,7 +54,7 @@
           type="primary"
           link
           :icon="EditPen"
-          @click="openAddEdit('编辑产线', row, false)"
+          @click="openAddEdit('编辑生产类别', row, false)"
         >
           编辑
         </el-button>
@@ -75,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { h, ref } from 'vue'
 import {
   CirclePlus,
   Delete,
@@ -100,6 +100,7 @@ import type { IOneCategory } from '@/api/interface/onecategory/assembly';
 import ImportExcel from '@/components/ImportExcel/index.vue';
 import { downloadTemplate } from '@/api/modules/system/common';
 import { useDownload } from "@/hooks/useDownload";
+import { ElTag } from 'element-plus';
 defineOptions({
   name: 'OneCategoryView'
 })
@@ -107,14 +108,53 @@ const proTableRef = ref<ProTableInstance>();
 // 表格配置项
 const columns: ColumnProps<IOneCategory.Row>[] = [
   { type: 'selection', width: 80 },
-  { prop: 'sku', label: 'SKU' },
-  { prop: 'idCode', label: '产品ID标识' },
-  { prop: 'name', label: '产品名称' },
-  { prop: 'salesCode', label: '销售码' },
-  { prop: 'minWeight', label: '最小重量' },
-  { prop: 'maxWeight', label: '最大重量' },
+  { prop: 'name', label: '产品名称', width: 200 },
+  { prop: 'sku', label: 'SKU', width: 120 },
+  { prop: 'idCode', label: '产品ID标识', width: 120 },
+  { prop: 'salesCode', label: '销售码', width: 160 },
+  // color
+  { prop: 'color', label: '颜色', width: 120 },
+  { prop: 'minWeight', label: '最小重量', width: 120 },
+  { prop: 'maxWeight', label: '最大重量', width: 120 },
+  // midBoxNum?: number
+  // palletNum?: number
+  { prop: "midBoxNum", label: "中箱内产品数量", width: 120 },
+  { prop: "palletNum", label: "栈板内中箱数量", width: 120 },
+  // 是否需要SN
+  { 
+    prop: 'needSn', 
+    label: '是否需要SN', 
+    width: 120, 
+    render: ({ row }) => row.needSn ? h(ElTag, { type: 'success' }, ['是']) : h(ElTag, { type: 'danger' }, ['否'])
+  },
+  { 
+    prop: 'needWeigh', 
+    label: '是否称重', 
+    width: 120, 
+    render: ({ row }) => row.needWeigh ? h(ElTag, { type: 'success' }, ['是']) : h(ElTag, { type: 'danger' }, ['否'])
+  },
+  { 
+    prop: 'needMidBox', 
+    label: '是否需要中箱', 
+    width: 120, 
+    render: ({ row }) => row.needMidBox ? h(ElTag, { type: 'success' }, ['是']) : h(ElTag, { type: 'danger' }, ['否'])
+  },
+  { 
+    prop: 'needPallet', 
+    label: '是否需要栈板', 
+    width: 120, 
+    render: ({ row }) => row.needPallet ? h(ElTag, { type: 'success' }, ['是']) : h(ElTag, { type: 'danger' }, ['否'])
+  },
+  { prop: 'midBoxTemplateName', label: '中箱模板文件名', width: 120 },
+  { prop: 'palletTemplateName', label: '栈板模板文件名', width: 120 },
+  { prop: 'productTemplateName', label: '产品模板文件名', width: 120 },
+  { prop: 'snTemplateName', label: 'SN模板文件名', width: 120 },
+  { prop: 'destTemplateName', label: '目的地模板文件名', width: 120 },
+  { prop: 'packingSpec', label: '包装规格', width: 120 },
+  { prop: 'grossWeight', label: '毛重', width: 120 },
   { prop: 'operation', label: '操作', width: 250, fixed: 'right' }
 ]
+
 // 搜索条件项
 const searchColumns: SearchProps[] = [
   { prop: 'sku', label: 'SKU', el: 'input' },
@@ -156,13 +196,13 @@ const deleteInfo = async (params: IOneCategory.Row) => {
   await useHandleData(
     removeOneCategoryApi,
     { ids: [params.id] },
-    `删除【${params.id}】产线`
+    `删除【${params.id}】生产类别`
   )
   proTableRef.value?.getTableList()
 }
 // 批量删除信息
 const batchDelete = async (ids: (string | number)[]) => {
-  await useHandleData(removeOneCategoryApi, { ids }, '删除所选产线')
+  await useHandleData(removeOneCategoryApi, { ids }, '删除所选生产类别')
   proTableRef.value?.clearSelection()
   proTableRef.value?.getTableList()
 }
@@ -170,8 +210,8 @@ const batchDelete = async (ids: (string | number)[]) => {
 const ImportExcelRef = ref<InstanceType<typeof ImportExcel>>()
 const importData = () => {
   const params = {
-    title: '产线',
-    templateName: '产线',
+    title: '生产类别',
+    templateName: '生产类别',
     tempApi: downloadTemplate,
     importApi: importOneCategoryExcelApi,
     getTableList: proTableRef.value?.getTableList
@@ -181,6 +221,6 @@ const importData = () => {
 // 导出
 const downloadFile = async () => {
   let newParams = formatParams(proTableRef.value?.searchParam as IOneCategory.Query);
-  useDownload(exportOneCategoryExcelApi, "产线", newParams);
+  useDownload(exportOneCategoryExcelApi, "生产类别", newParams);
 };
 </script>

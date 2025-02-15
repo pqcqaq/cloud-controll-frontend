@@ -2,7 +2,7 @@
   <div class="table-box">
     <ProTable
       ref="proTableRef"
-      title="产线一"
+      title="称重记录"
       :indent="20"
       :columns="columns"
       :search-columns="searchColumns"
@@ -15,7 +15,7 @@
           type="primary"
           v-auth="'one.weigh.create'"
           :icon="CirclePlus"
-          @click="openAddEdit('新增产线一')"
+          @click="openAddEdit('新增称重记录')"
         >
           新增
         </el-button>
@@ -54,7 +54,7 @@
           type="primary"
           link
           :icon="EditPen"
-          @click="openAddEdit('编辑产线一', row, false)"
+          @click="openAddEdit('编辑称重记录', row, false)"
         >
           编辑
         </el-button>
@@ -151,13 +151,13 @@ const deleteInfo = async (params: IOneWeigh.Row) => {
   await useHandleData(
     removeOneWeighApi,
     { ids: [params.id] },
-    `删除【${params.id}】产线一`
+    `删除【${params.id}】称重记录`
   )
   proTableRef.value?.getTableList()
 }
 // 批量删除信息
 const batchDelete = async (ids: (string | number)[]) => {
-  await useHandleData(removeOneWeighApi, { ids }, '删除所选产线一')
+  await useHandleData(removeOneWeighApi, { ids }, '删除所选称重记录')
   proTableRef.value?.clearSelection()
   proTableRef.value?.getTableList()
 }
@@ -165,8 +165,8 @@ const batchDelete = async (ids: (string | number)[]) => {
 const ImportExcelRef = ref<InstanceType<typeof ImportExcel>>()
 const importData = () => {
   const params = {
-    title: '产线一',
-    templateName: '产线一',
+    title: '称重记录',
+    templateName: '称重记录',
     tempApi: downloadTemplate,
     importApi: importOneWeighExcelApi,
     getTableList: proTableRef.value?.getTableList
@@ -176,6 +176,6 @@ const importData = () => {
 // 导出
 const downloadFile = async () => {
   let newParams = formatParams(proTableRef.value?.searchParam as IOneWeigh.Query);
-  useDownload(exportOneWeighExcelApi, "产线一", newParams);
+  useDownload(exportOneWeighExcelApi, "称重记录", newParams);
 };
 </script>

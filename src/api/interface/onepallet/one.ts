@@ -17,6 +17,10 @@ export namespace IOnePallet {
   export interface Row {
     id?: number
     palletCode?: string
+    printed?: boolean
+    printedTime?: string
+    midBoxCodes?: string[]
+    createTime?: string
   }
 
 }
