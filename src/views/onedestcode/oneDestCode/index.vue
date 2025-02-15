@@ -145,13 +145,23 @@ const columns: ColumnProps<IOneDestCode.Row>[] = [
   { prop: 'address', label: '地址', width: 200 },
   // createTime
   { prop: 'createTime', label: '创建时间', width: 200 },
+  // {
+  //   prop: 'printed',
+  //   label: '是否打印成功',
+  //   width: 100,
+  //   render: ({ row }) => (row.printed ? h(ElTag, { type: 'success' }, ['是']) : h(ElTag, { type: 'danger' }, ['否']))
+  // },
   {
-    prop: 'printed',
-    label: '是否打印成功',
-    width: 100,
-    render: ({ row }) => (row.printed ? h(ElTag, { type: 'success' }, ['是']) : h(ElTag, { type: 'danger' }, ['否']))
+    prop: 'printedTime',
+    label: '打印时间',
+    width: 160,
+    render: ({ row }) => {
+      return row.printedTime ? row.printedTime : h(ElTag, { type: 'danger' }, ['未打印']);
+    }
   },
-  { prop: 'operation', label: '操作', width: 250, fixed: 'right' },
+  // 打印份数
+  { prop: 'printNum', label: '份数', width: 80 },
+  { prop: 'operation', label: '操作', width: 100, fixed: 'right' },
   {
     prop: 'reprint',
     label: '补打',
@@ -202,8 +212,16 @@ const columns: ColumnProps<IOneDestCode.Row>[] = [
 ];
 // 搜索条件项
 const searchColumns: SearchProps[] = [
-  { prop: 'code', label: '目的地码', el: 'input' },
-  { prop: 'printed', label: '是否打印', el: 'input' }
+  { prop: 'palletCode', label: '栈板码', el: 'input' },
+  {
+    prop: 'createTime',
+    label: '生成时间',
+    el: 'date-picker',
+    props: {
+      type: 'daterange'
+    }
+  },
+  // { prop: 'printed', label: '是否打印', el: 'input' }
 ];
 // 获取table列表
 const getTableList = (params: IOneDestCode.Query) => {

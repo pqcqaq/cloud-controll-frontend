@@ -66,9 +66,7 @@
         <template #default="{ node, data }">
           <span class="custom-tree-node">
             <span>{{ node.label }}</span>
-            <span v-if="data.fileSize">
-              ({{ data.fileSize }})
-            </span>
+            <span v-if="data.fileSize"> ({{ data.fileSize }}) </span>
           </span>
         </template>
       </el-tree>
@@ -103,6 +101,11 @@ const rules = reactive({
   lineType: [{ required: true, message: '请填写生产线别' }],
   delFlag: [{ required: true, message: '请填写删除与否' }]
 });
+
+const defaultProps = {
+  children: 'children',
+  label: 'label'
+};
 
 const visible = ref(false);
 const paramsProps = ref<View.DefaultParams>({
@@ -154,22 +157,20 @@ watch(
 
 // 计算属性：转换数据结构
 const treeData = computed(() => {
-  if (!fileInfos.value) return []
+  if (!fileInfos.value) return [];
 
   const convertToTreeNode = (node: IOneAssemblyLine.TemplateFileInfo, parentId: string = '0'): any => {
-    const id = `${parentId}-${node.filename}`
+    const id = `${parentId}-${node.filename}`;
     return {
       id,
       label: node.filename,
       fileSize: node.fileSize,
       children: node.children?.map(child => convertToTreeNode(child, id)) || []
-    }
-  }
+    };
+  };
 
-  return [convertToTreeNode(fileInfos.value)]
-})
+  return [convertToTreeNode(fileInfos.value)];
+});
 </script>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

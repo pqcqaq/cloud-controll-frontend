@@ -20,5 +20,8 @@ export namespace IOneDestCode {
     code?: string;
     printed?: number;
     address?: string;
+    printedTime?: string;
+    palletCode?: string[];
+    printNum?: number;
   }
 }
