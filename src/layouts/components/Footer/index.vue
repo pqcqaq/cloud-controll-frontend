@@ -1,11 +1,6 @@
 <template>
   <div class="footer flx-center">
-    <a
-      href="https://szadmin.cn"
-      target="_blank"
-    >
-      信恒英聚 v{{ version }} | Copyright © 2022-{{ new Date().getFullYear() }} 内部系统
-    </a>
+    信恒英聚 v{{ version }} | Copyright © 2022-{{ new Date().getFullYear() }} 内部系统
   </div>
 </template>
 <script setup lang="ts">
