@@ -55,5 +55,5 @@ export const getOneGenSnDetailApi = (params: { id: number }) => {
  * @returns  {*}
  */
 export const printSnApi = (params: IOneGenSn.GenDto) => {
-  return http.post(ADMIN_MODULE + `/one-gen-sn/gen`, params);
+  return http.post(ADMIN_MODULE + `/one-gen-sn/gen`, params, { loading: true });
 };

@@ -16,19 +16,19 @@ export const getBackupsListApi = (params: IBackups.Query) => {
  * 删除
  */
 export const removeBackupsApi = (params: { ids: (string | number)[] }) => {
-    return http.delete(ADMIN_MODULE + `/database`, params);
-}
+  return http.delete(ADMIN_MODULE + `/database`, params);
+};
 
 /**
  * 备份
  */
 export const backupApi = () => {
-    return http.post(ADMIN_MODULE + `/database/backup`);
-}
+  return http.post(ADMIN_MODULE + `/database/backup`, undefined, { loading: true });
+};
 
 /**
  * 导出
  */
 export const exportBackupsApi = (params: IBackups.Query) => {
-    return http.download(ADMIN_MODULE + `/database/export`, params);
-}
+  return http.download(ADMIN_MODULE + `/database/export`, params);
+};

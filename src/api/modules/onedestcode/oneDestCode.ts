@@ -72,5 +72,5 @@ export const exportOneDestCodeExcelApi = (params: IOneDestCode.Query) => {
  * 补打
  */
 export const reprintOneDestCodeApi = (params: { id: number }) => {
-  return http.post(ADMIN_MODULE + `/one-dest-code/reprint`, params);
+  return http.post(ADMIN_MODULE + `/one-dest-code/reprint`, params, { loading: true });
 };

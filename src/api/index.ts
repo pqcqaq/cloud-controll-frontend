@@ -9,6 +9,7 @@ import { useUserStore } from '@/stores/modules/user';
 import { useAuthStore } from '@/stores/modules/auth';
 import { useSocketStore } from '@/stores/modules/socket';
 import { ElMessage } from 'element-plus';
+import { useLoadingStore } from '@/stores/modules/loading';
 
 export interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
   loading?: boolean;
@@ -40,13 +41,14 @@ class RequestHttp {
       (config: CustomAxiosRequestConfig) => {
         const userStore = useUserStore();
         // 当前请求不需要显示 loading，在 api 服务中通过指定的第三个参数: { loading: false } 来控制
-        // config.loading !== false && showFullScreenLoading()
+        config.loading && useLoadingStore().showFullScreenLoading();
         if (config.headers && typeof config.headers.set === 'function') {
           config.headers.set('Authorization', 'Bearer ' + userStore.token);
         }
         return config;
       },
       error => {
+        useLoadingStore().hideFullScreenLoading();
         return Promise.reject(error);
       }
     );
@@ -57,6 +59,7 @@ class RequestHttp {
      */
     this.service.interceptors.response.use(
       response => {
+        useLoadingStore().hideFullScreenLoading();
         const { data } = response;
         const userStore = useUserStore();
         const socketStore = useSocketStore();
@@ -87,6 +90,7 @@ class RequestHttp {
         return data;
       },
       async error => {
+        useLoadingStore().hideFullScreenLoading();
         const { response } = error;
         // tryHideFullScreenLoading()
         // 请求超时 && 网络错误单独判断，没有 response
@@ -128,7 +132,7 @@ class RequestHttp {
     return this.service.delete(url, { data, ..._object });
   }
 
-  download(url: string, params = {}, _object = {}): Promise<BlobPart> {
+  download(url: string, params = {}, _object = { loading: true }): Promise<BlobPart> {
     return this.service.post(url, params, { ..._object, responseType: 'blob' });
   }
 

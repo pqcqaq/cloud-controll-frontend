@@ -73,5 +73,5 @@ export const exportOnePalletExcelApi = (params: IOnePallet.Query) => {
  */
 
 export const reprintPalletCodeApi = (params: { code: string }) => {
-  return http.post(ADMIN_MODULE + `/one-pallet/reprint-pallet-code`, params);
+  return http.post(ADMIN_MODULE + `/one-pallet/reprint-pallet-code`, params, { loading: true });
 };

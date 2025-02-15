@@ -72,5 +72,5 @@ export const exportOneBoxExcelApi  = (params: IOneBox.Query) => {
  * 重新打印
  */
 export const reprintMidCodeApi = (params: IOneBox.ReprintMidCode) => {
-  return http.post(ADMIN_MODULE + `/one-box/reprint-mid-code`, params)
+  return http.post(ADMIN_MODULE + `/one-box/reprint-mid-code`, params, { loading: true })
 }

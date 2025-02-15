@@ -72,5 +72,5 @@ export const exportOneProductExcelApi = (params: IOneProduct.Query) => {
  * 补打
  */
 export const reprintOneProductApi = (params: IOneProduct.Form) => {
-  return http.post(ADMIN_MODULE + `/one-product/reprint`, params);
+  return http.post(ADMIN_MODULE + `/one-product/reprint`, params, { loading: true });
 };
