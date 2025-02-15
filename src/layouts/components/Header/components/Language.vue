@@ -1,6 +1,12 @@
 <template>
-  <el-dropdown trigger="click" @command="changeLanguage">
-    <i :class="'iconfont icon-zhongyingwen'" class="toolBar-icon" />
+  <el-dropdown
+    trigger="click"
+    @command="changeLanguage"
+  >
+    <i
+      :class="'iconfont icon-zhongyingwen'"
+      class="toolBar-icon"
+    />
     <template #dropdown>
       <el-dropdown-menu>
         <el-dropdown-item
