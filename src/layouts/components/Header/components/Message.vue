@@ -6,15 +6,15 @@
       trigger="click"
     >
       <template #reference>
-        <el-badge
-          :value="5"
+        <!-- <el-badge
+          :value="0"
           class="item"
-        >
-          <i
-            :class="'iconfont icon-xiaoxi'"
-            class="toolBar-icon"
-          />
-        </el-badge>
+        > -->
+        <i
+          :class="'iconfont icon-xiaoxi'"
+          class="toolBar-icon"
+        />
+        <!-- </el-badge> -->
       </template>
       <el-tabs v-model="activeName">
         <el-tab-pane
@@ -116,7 +116,7 @@
 </template>
 
 <script setup lang="ts">
-import { ElEmpty } from 'element-plus';
+// import { ElEmpty } from 'element-plus';
 import { ref } from 'vue';
 
 const activeName = ref('first');
