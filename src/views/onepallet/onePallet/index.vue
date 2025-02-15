@@ -11,14 +11,14 @@
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader="scope">
-        <el-button
+        <!-- <el-button
           type="primary"
           v-auth="'one.pallet.create'"
           :icon="CirclePlus"
           @click="openAddEdit('新增栈板码')"
         >
           新增
-        </el-button>
+        </el-button> -->
         <el-button
           v-auth="'one.pallet.remove'"
           type="danger"
@@ -37,7 +37,7 @@
           @click="importData"
         >
           导入
-        </el-button>
+        </el-button> -->
         <el-button
           v-auth="'one.pallet.export'"
           type="primary"
@@ -46,7 +46,7 @@
           @click="downloadFile"
         >
           导出
-        </el-button> -->
+        </el-button>
       </template>
       <template #operation="{ row }">
         <!-- <el-button
@@ -113,7 +113,7 @@ const columns: ColumnProps<IOnePallet.Row>[] = [
   },
   { prop: 'createTime', label: '创建时间', width: 200 },
   { prop: 'printedTime', label: '打印时间', width: 200 },
-  { prop: 'operation', label: '操作', width: 250, fixed: 'right' },
+  { prop: 'operation', label: '操作', width: 100, fixed: 'right' },
   {
     prop: 'reprint',
     label: '补打',

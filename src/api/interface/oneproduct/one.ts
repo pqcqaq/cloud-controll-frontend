@@ -23,6 +23,8 @@ export namespace IOneProduct {
     categoryName?: string
     printed?: boolean
     printedTime?: string
+    weight?: number
+    midBoxTime?: string
   }
 
 }

@@ -11,14 +11,14 @@
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader="scope">
-        <el-button
+        <!-- <el-button
           type="primary"
           v-auth="'one.product.create'"
           :icon="CirclePlus"
           @click="openAddEdit('新增产品SN')"
         >
           新增
-        </el-button>
+        </el-button> -->
         <el-button
           v-auth="'one.product.remove'"
           type="danger"
@@ -29,7 +29,7 @@
         >
           批量删除
         </el-button>
-        <el-button
+        <!-- <el-button
           v-auth="'one.product.import'"
           type="primary"
           :icon="Upload"
@@ -37,7 +37,7 @@
           @click="importData"
         >
           导入
-        </el-button>
+        </el-button> -->
         <el-button
           v-auth="'one.product.export'"
           type="primary"
@@ -95,7 +95,7 @@ import type { IOneProduct } from '@/api/interface/oneproduct/one';
 import ImportExcel from '@/components/ImportExcel/index.vue';
 import { downloadTemplate } from '@/api/modules/system/common';
 import { useDownload } from '@/hooks/useDownload';
-import { ElButton, ElMessageBox, ElTag } from 'element-plus';
+import { ElButton, ElMessage, ElMessageBox, ElTag, ElTooltip } from 'element-plus';
 import { getOneAssemblyLineSelectionApi } from '@/api/modules/oneassemblyline/oneAssemblyLine';
 defineOptions({
   name: 'OneProductView'
@@ -104,18 +104,58 @@ const proTableRef = ref<ProTableInstance>();
 // 表格配置项
 const columns: ColumnProps<IOneProduct.Row>[] = [
   { type: 'selection', width: 80 },
-  { prop: 'code', label: 'SN码', width: 250 },
-  { prop: 'categoryName', label: '类别名称' },
   {
-    prop: 'printed',
-    label: '是否打印成功',
-    width: 100,
-    render: ({ row }) => (row.printed ? h(ElTag, { type: 'success' }, ['是']) : h(ElTag, { type: 'danger' }, ['否']))
+    prop: 'code',
+    label: 'SN码',
+    width: 220,
+    render: ({ row }) => {
+      return h(
+        ElTooltip,
+        {
+          content: '点击复制',
+          effect: 'light'
+        },
+        {
+          default: () =>
+            h(
+              'span',
+              {
+                style: {
+                  cursor: 'pointer',
+                  color: '#409EFF'
+                },
+                onClick: () => {
+                  // 复制到剪贴板
+                  navigator.clipboard
+                    .writeText(row.code!)
+                    .then(() => {
+                      ElMessage.success('复制成功');
+                    })
+                    .catch(() => {
+                      ElMessage.error('复制失败');
+                    });
+                }
+              },
+              row.code
+            )
+        }
+      );
+    }
   },
+  { prop: 'categoryName', label: '类别名称' },
+  // {
+  //   prop: 'printed',
+  //   label: '是否打印成功',
+  //   width: 100,
+  //   render: ({ row }) => (row.printed ? h(ElTag, { type: 'success' }, ['是']) : h(ElTag, { type: 'danger' }, ['否']))
+  // },
   {
     prop: 'printedTime',
     label: '打印时间',
-    width: 160
+    width: 160,
+    render: ({ row }) => {
+      return row.printedTime ? row.printedTime : h(ElTag, { type: 'danger' }, ['未打印']);
+    }
   },
   {
     prop: 'assemblyLineName',
@@ -123,9 +163,21 @@ const columns: ColumnProps<IOneProduct.Row>[] = [
   },
   {
     prop: 'weight',
-    label: '重量'
+    label: '重量',
+    width: 100,
+    render: ({ row }) => {
+      return row.weight ? row.weight + 'g' : h(ElTag, { type: 'danger' }, ['未称重']);
+    }
   },
-  { prop: 'operation', label: '操作', width: 250, fixed: 'right' },
+  {
+    prop: 'midBoxTime',
+    label: '中箱打包时间',
+    width: 160,
+    render: ({ row }) => {
+      return row.midBoxTime ? row.midBoxTime : h(ElTag, { type: 'danger' }, ['未打包']);
+    }
+  },
+  { prop: 'operation', label: '操作', width: 120, fixed: 'right' },
   {
     prop: 'reprint',
     label: '补打',

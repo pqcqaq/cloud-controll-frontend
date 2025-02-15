@@ -114,7 +114,7 @@ const handleRePrint = async (row: IOneBox.Row) => {
 const columns: ColumnProps<IOneBox.Row>[] = [
   { type: 'selection', width: 80 },
   { prop: 'midBoxCode', label: '中箱号' },
-  { prop: 'createTime', label: '创建时间', width: 150 },
+  { prop: 'createTime', label: '创建时间', width: 200 },
   { prop: 'snCodes', label: 'SN码' },
   {
     prop: 'printed',
@@ -122,7 +122,7 @@ const columns: ColumnProps<IOneBox.Row>[] = [
     width: 100,
     render: ({ row }) => (row.printed ? h(ElTag, { type: 'success' }, ['是']) : h(ElTag, { type: 'danger' }, ['否']))
   },
-  { prop: 'operation', label: '操作', width: 250, fixed: 'right' },
+  { prop: 'operation', label: '操作', width: 100, fixed: 'right' },
   {
     prop: 'reprint',
     label: '补打',

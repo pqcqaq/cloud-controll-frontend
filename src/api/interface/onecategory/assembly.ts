@@ -55,4 +55,10 @@ export namespace IOneCategory {
     grossWeight?: string;
     color?: string;
   }
+
+  export interface CategoryLabelVo {
+    id: number
+    label: string
+    idCode: number
+  }
 }

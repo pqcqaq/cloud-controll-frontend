@@ -18,7 +18,13 @@ export namespace IOneGenSn {
     seq?: number
     used?: number
     produceTime?: string
- }
+  }
+  
+  export interface GenDto {
+    categoryId?: number
+    produceTime?: string
+    num?: number
+  }
 
   // list或detail返回结构
   export interface Row {

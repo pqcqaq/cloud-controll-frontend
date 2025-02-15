@@ -71,6 +71,6 @@ export const exportOneAssemblyLineExcelApi = (params: IOneAssemblyLine.Query) =>
 /**
  * 抓取所有的产线信息列表（可能有性能问题，需谨慎）
  */
-export const getOneAssemblyLineSelectionApi = () => {
-  return http.get<IOneAssemblyLine.Selection[]>(ADMIN_MODULE + `/one-assembly-line/selection`);
+export const getOneAssemblyLineSelectionApi = (params?: { categoryId: number }) => {
+  return http.get<IOneAssemblyLine.Selection[]>(ADMIN_MODULE + `/one-assembly-line/selection`, params);
 };
