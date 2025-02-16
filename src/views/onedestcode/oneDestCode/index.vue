@@ -75,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import { h, ref } from 'vue';
+import { h, onMounted, ref } from 'vue';
 import { CirclePlus, Delete, EditPen, Upload, Download } from '@element-plus/icons-vue';
 import ProTable from '@/components/ProTable/index.vue';
 import {
@@ -97,6 +97,7 @@ import { downloadTemplate } from '@/api/modules/system/common';
 import { ElButton, ElMessage, ElMessageBox, ElTag, ElTooltip } from 'element-plus';
 import { useDownload } from '@/hooks/useDownload';
 import { exportVProductShippingInfoCompleteExcelApi } from '@/api/modules/vproductshippinginfocomplete/vProductShippingInfoComplete';
+import mittBus from '@/utils/mittBus';
 defineOptions({
   name: 'OneDestCodeView'
 });
@@ -281,4 +282,15 @@ const downloadFile = async () => {
   let newParams = formatParams(proTableRef.value?.searchParam as IOneDestCode.Query);
   useDownload(exportOneDestCodeExcelApi, '目的地码生成列表', newParams);
 };
+onMounted(() => {
+  mittBus.on('socket.NEW_PRINT', (data: any) => {
+    switch (data.type) {
+      case 'DEST':
+        proTableRef.value?.getTableList();
+        break;
+      default:
+        break;
+    }
+  });
+});
 </script>

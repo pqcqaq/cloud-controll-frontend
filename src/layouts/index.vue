@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import ThemeDrawer from '@/layouts/components/ThemeDrawer/index.vue';
 import LayoutVertical from '@/layouts/LayoutVertical/index.vue';
 import LayoutClassic from '@/layouts/LayoutClassic/index.vue';
@@ -15,7 +15,8 @@ import { useAppStore } from '@/stores/modules/app';
 import { useSocketStore } from '@/stores/modules/socket';
 import { storeToRefs } from 'pinia';
 import { useLoadingStore } from '@/stores/modules/loading';
-import { ElLoading } from 'element-plus';
+import { ElLoading, ElMessage, ElNotification } from 'element-plus';
+import mittBus from '@/utils/mittBus';
 
 defineOptions({
   name: 'Layout'
@@ -58,6 +59,37 @@ watch(
 // 开启socket
 const socketStore = useSocketStore();
 socketStore.open();
+
+onMounted(() => {
+  mittBus.on('socket.PRINT_ERROR', (data: any) => {
+    let printType = '';
+    switch (data.type) {
+      case 'SN':
+        printType = 'SN码';
+        break;
+      case 'PRODUCT':
+        printType = '产品标签';
+        break;
+      case 'MID_BOX':
+        printType = '中箱标签';
+        break;
+      case 'PALLET':
+        printType = '栈板标签';
+        break;
+      case 'DEST':
+        printType = '目的地标签';
+        break;
+      default:
+        break;
+    }
+
+    ElNotification({
+      title: '打印失败',
+      message: `打印${printType}失败，错误信息：${data.error}`,
+      type: 'error'
+    });
+  });
+});
 </script>
 
 <style scoped lang="scss">

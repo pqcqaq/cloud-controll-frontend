@@ -97,6 +97,7 @@ import ImportExcel from '@/components/ImportExcel/index.vue';
 import { useDownload } from '@/hooks/useDownload';
 import { dayjs, ElButton, ElMessage, ElMessageBox, ElTag, ElTooltip } from 'element-plus';
 import { getOneAssemblyLineSelectionApi } from '@/api/modules/oneassemblyline/oneAssemblyLine';
+import mittBus from '@/utils/mittBus';
 defineOptions({
   name: 'OneProductView'
 });
@@ -168,6 +169,11 @@ const columns: ColumnProps<IOneProduct.Row>[] = [
     render: ({ row }) => {
       return row.weight ? row.weight + 'g' : h(ElTag, { type: 'danger' }, ['未称重']);
     }
+  },
+  {
+    prop: 'weighTime',
+    label: '称重时间',
+    width: 160,
   },
   {
     prop: 'midBoxTime',
@@ -302,4 +308,15 @@ const downloadFile = async () => {
   let newParams = formatParams(proTableRef.value?.searchParam as IOneProduct.Query);
   useDownload(exportOneProductExcelApi, '产品SN', newParams);
 };
+onMounted(() => {
+  mittBus.on('socket.NEW_PRINT', (data: any) => {
+    switch (data.type) {
+      case 'PRODUCT':
+        proTableRef.value?.getTableList();
+        break;
+      default:
+        break;
+    }
+  });
+});
 </script>

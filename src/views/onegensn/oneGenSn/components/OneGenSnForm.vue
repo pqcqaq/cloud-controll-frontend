@@ -168,7 +168,7 @@ const handleSubmit = () => {
         ...paramsProps.value.row,
         produceTime: dayjs(paramsProps.value.row.produceTime).format('YYYY-MM-DD HH:mm:ss')
       });
-      ElMessage.success({ message: `${paramsProps.value.title}成功！` });
+      ElMessage.success({ message: `提交成功！` });
       paramsProps.value.getTableList!();
       visible.value = false;
     } catch (error) {

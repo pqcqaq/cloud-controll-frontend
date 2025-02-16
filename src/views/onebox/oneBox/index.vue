@@ -75,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import { h, ref } from 'vue';
+import { h, onMounted, ref } from 'vue';
 import { CirclePlus, Delete, EditPen, Upload, Download } from '@element-plus/icons-vue';
 import ProTable from '@/components/ProTable/index.vue';
 import {
@@ -96,6 +96,7 @@ import ImportExcel from '@/components/ImportExcel/index.vue';
 import { downloadTemplate } from '@/api/modules/system/common';
 import { ElMessageBox, ElButton, ElTag } from 'element-plus';
 import { useDownload } from '@/hooks/useDownload';
+import mittBus from '@/utils/mittBus';
 defineOptions({
   name: 'OneBoxView'
 });
@@ -211,4 +212,15 @@ const downloadFile = async () => {
   let newParams = formatParams(proTableRef.value?.searchParam as IOneBox.Query);
   useDownload(exportOneBoxExcelApi, '中箱号', newParams);
 };
+onMounted(() => {
+  mittBus.on('socket.NEW_PRINT', (data: any) => {
+    switch (data.type) {
+      case 'MID_BOX':
+        proTableRef.value?.getTableList();
+        break;
+      default:
+        break;
+    }
+  });
+});
 </script>
