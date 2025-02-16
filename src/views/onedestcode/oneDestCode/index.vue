@@ -75,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import { h, onMounted, ref } from 'vue';
+import { h, onMounted, onUnmounted, ref } from 'vue';
 import { CirclePlus, Delete, EditPen, Upload, Download } from '@element-plus/icons-vue';
 import ProTable from '@/components/ProTable/index.vue';
 import {
@@ -282,15 +282,21 @@ const downloadFile = async () => {
   let newParams = formatParams(proTableRef.value?.searchParam as IOneDestCode.Query);
   useDownload(exportOneDestCodeExcelApi, '目的地码生成列表', newParams);
 };
+
+const eventHandler = (data: any) => {
+  switch (data.type) {
+    case 'DEST':
+      proTableRef.value?.getTableList();
+      break;
+    default:
+      break;
+  }
+};
 onMounted(() => {
-  mittBus.on('socket.NEW_PRINT', (data: any) => {
-    switch (data.type) {
-      case 'DEST':
-        proTableRef.value?.getTableList();
-        break;
-      default:
-        break;
-    }
-  });
+  mittBus.on('socket.NEW_PRINT', eventHandler);
+});
+
+onUnmounted(() => {
+  mittBus.off('socket.NEW_PRINT', eventHandler);
 });
 </script>

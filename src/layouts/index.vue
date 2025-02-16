@@ -86,7 +86,8 @@ onMounted(() => {
     ElNotification({
       title: '打印失败',
       message: `打印${printType}失败，错误信息：${data.error}`,
-      type: 'error'
+      type: 'error',
+      duration: 0
     });
   });
 });

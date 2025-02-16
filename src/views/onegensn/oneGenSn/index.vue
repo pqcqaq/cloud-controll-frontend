@@ -56,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import { CirclePlus, Delete } from '@element-plus/icons-vue';
 import ProTable from '@/components/ProTable/index.vue';
 import { removeOneGenSnApi, getOneGenSnListApi, getOneGenSnDetailApi, printSnApi } from '@/api/modules/onegensn/oneGenSn';
@@ -147,15 +147,20 @@ const deleteInfo = async (params: IOneGenSn.Row) => {
 //   proTableRef.value?.getTableList()
 // }
 
+const eventHandler = (data: any) => {
+  switch (data.type) {
+    case 'SN':
+      proTableRef.value?.getTableList();
+      break;
+    default:
+      break;
+  }
+};
 onMounted(() => {
-  mittBus.on('socket.PRINT_ERROR', (data: any) => {
-    switch (data.type) {
-      case 'SN':
-        proTableRef.value?.getTableList();
-        break;
-      default:
-        break;
-    }
-  });
+  mittBus.on('socket.PRINT_ERROR', eventHandler);
+});
+
+onUnmounted(() => {
+  mittBus.off('socket.PRINT_ERROR', eventHandler);
 });
 </script>

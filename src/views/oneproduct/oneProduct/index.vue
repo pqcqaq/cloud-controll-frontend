@@ -75,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, h, onMounted } from 'vue';
+import { ref, h, onMounted, onUnmounted } from 'vue';
 import { Delete, Download } from '@element-plus/icons-vue';
 import ProTable from '@/components/ProTable/index.vue';
 import {
@@ -173,7 +173,7 @@ const columns: ColumnProps<IOneProduct.Row>[] = [
   {
     prop: 'weighTime',
     label: '称重时间',
-    width: 160,
+    width: 160
   },
   {
     prop: 'midBoxTime',
@@ -250,7 +250,7 @@ const getSelection = () => {
 };
 onMounted(() => {
   getSelection();
-  proTableRef.value?.searchInitParam
+  proTableRef.value?.searchInitParam;
 });
 const formatParams = (params: IOneProduct.Query) => {
   let newParams = JSON.parse(JSON.stringify(params));
@@ -308,15 +308,21 @@ const downloadFile = async () => {
   let newParams = formatParams(proTableRef.value?.searchParam as IOneProduct.Query);
   useDownload(exportOneProductExcelApi, '产品SN', newParams);
 };
+
+const eventHandler = (data: any) => {
+  switch (data.type) {
+    case 'PRODUCT':
+      proTableRef.value?.getTableList();
+      break;
+    default:
+      break;
+  }
+};
 onMounted(() => {
-  mittBus.on('socket.NEW_PRINT', (data: any) => {
-    switch (data.type) {
-      case 'PRODUCT':
-        proTableRef.value?.getTableList();
-        break;
-      default:
-        break;
-    }
-  });
+  mittBus.on('socket.NEW_PRINT', eventHandler);
+});
+
+onUnmounted(() => {
+  mittBus.off('socket.NEW_PRINT', eventHandler);
 });
 </script>
