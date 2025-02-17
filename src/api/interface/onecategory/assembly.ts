@@ -46,7 +46,7 @@ export namespace IOneCategory {
     needSn?: boolean;
     needWeigh?: boolean;
     needMidBox?: boolean;
-    needScanChenk?: boolean;
+    needScanCheck?: boolean;
     needPallet?: boolean;
     midBoxTemplateName?: string;
     palletTemplateName?: string;
