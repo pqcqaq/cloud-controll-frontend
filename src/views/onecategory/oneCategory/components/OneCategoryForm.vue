@@ -24,16 +24,29 @@
           clearable
         />
       </el-form-item>
-      <el-form-item
-        label="SKU"
-        prop="sku"
-      >
-        <el-input
-          v-model="paramsProps.row.sku"
-          placeholder="请填写SKU"
-          clearable
-        />
-      </el-form-item>
+      <el-row>
+        <el-form-item
+          label="SKU"
+          prop="sku"
+        >
+          <el-input
+            v-model="paramsProps.row.sku"
+            placeholder="请填写SKU"
+            clearable
+          />
+        </el-form-item>
+        <el-form-item
+          label="销售码"
+          prop="salesCode"
+        >
+          <el-input
+            v-model="paramsProps.row.salesCode"
+            placeholder="请填写销售码"
+            clearable
+          />
+        </el-form-item>
+      </el-row>
+      
       <el-row>
         <el-form-item
           label="产品ID标识"
@@ -58,16 +71,7 @@
           />
         </el-form-item>
       </el-row>
-      <el-form-item
-        label="销售码"
-        prop="salesCode"
-      >
-        <el-input
-          v-model="paramsProps.row.salesCode"
-          placeholder="请填写销售码"
-          clearable
-        />
-      </el-form-item>
+      
       <el-row>
         <el-col :span="12">
           <el-form-item
@@ -138,6 +142,12 @@
           prop="needMidBox"
         >
           <el-switch v-model="paramsProps.row.needMidBox" />
+        </el-form-item>
+        <el-form-item
+          label="是否比对"
+          prop="needScanCheck"
+        >
+          <el-switch v-model="paramsProps.row.needScanCheck" />
         </el-form-item>
         <el-form-item
           label="是否需要栈板"
@@ -257,6 +267,7 @@ const rules = reactive({
   needSn: [{ required: true, message: '请填写是否需要SN' }],
   needWeigh: [{ required: true, message: '请填写是否称重' }],
   needMidBox: [{ required: true, message: '请填写是否需要中箱' }],
+  needScanCheck: [{ required: true, message: '请填写是否需要扫描比对' }],
   needPallet: [{ required: true, message: '请填写是否需要栈板' }],
   midBoxTemplateName: [{ required: true, message: '请填写中箱模板文件名' }],
   palletTemplateName: [{ required: true, message: '请填写栈板模板文件名' }],

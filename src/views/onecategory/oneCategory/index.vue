@@ -134,6 +134,12 @@ const columns: ColumnProps<IOneCategory.Row>[] = [
     render: ({ row }) => row.needWeigh ? h(ElTag, { type: 'success' }, ['是']) : h(ElTag, { type: 'danger' }, ['否'])
   },
   { 
+    prop: 'needScanCheck', 
+    label: '是否需要扫描比对', 
+    width: 120, 
+    render: ({ row }) => row.needScanCheck ? h(ElTag, { type: 'success' }, ['是']) : h(ElTag, { type: 'danger' }, ['否'])
+  },
+  { 
     prop: 'needMidBox', 
     label: '是否需要中箱', 
     width: 120, 
