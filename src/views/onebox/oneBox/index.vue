@@ -113,7 +113,7 @@ const columns: ColumnProps<IOneBox.Row>[] = [
   {
     prop: 'midBoxCode',
     label: '中箱号',
-    width: 240,
+    width: 260,
     render: ({ row }) => {
       return h(
         ElTooltip,

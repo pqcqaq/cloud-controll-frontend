@@ -194,8 +194,8 @@ const searchColumns: SearchProps[] = [
       type: 'daterange'
     }
   },
-  { prop: 'palletCode', label: '托盘号', el: 'input' }, // 日期内
-  { prop: 'seq', label: '序列号', el: 'input-number' }
+  { prop: 'palletCode', label: '托盘号', el: 'input' } // 日期内
+  // { prop: 'seq', label: '序列号', el: 'input-number' }
 ];
 // 获取table列表
 const getTableList = (params: IOnePallet.Query) => {
