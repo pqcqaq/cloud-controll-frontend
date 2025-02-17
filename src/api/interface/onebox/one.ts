@@ -20,6 +20,8 @@ export namespace IOneBox {
     printed?: boolean
     snCodes: string[]
     createTime: string
+    printedTime: string
+    palletTime: string
   }
 
   export interface ReprintMidCode {

@@ -8,6 +8,7 @@
       :search-columns="searchColumns"
       :request-api="getTableList"
       row-key="id"
+      :search-col="4"
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader="scope">
@@ -95,7 +96,7 @@ import type { IOneProduct } from '@/api/interface/oneproduct/one';
 import ImportExcel from '@/components/ImportExcel/index.vue';
 // import { downloadTemplate } from '@/api/modules/system/common';
 import { useDownload } from '@/hooks/useDownload';
-import { dayjs, ElButton, ElMessage, ElMessageBox, ElTag, ElTooltip } from 'element-plus';
+import { ElButton, ElMessage, ElMessageBox, ElTag, ElTooltip } from 'element-plus';
 import { getOneAssemblyLineSelectionApi } from '@/api/modules/oneassemblyline/oneAssemblyLine';
 import mittBus from '@/utils/mittBus';
 defineOptions({
@@ -213,7 +214,7 @@ const searchColumns = ref<SearchProps[]>([
     prop: 'assemblyLineId',
     label: '产线',
     el: 'select',
-    enum: []
+    enum: [],
   },
   {
     prop: 'printedTime',
