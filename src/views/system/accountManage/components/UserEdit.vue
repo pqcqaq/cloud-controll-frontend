@@ -199,7 +199,7 @@ import { ElMessage } from 'element-plus';
 import UploadImg from '@/components/Upload/Img.vue';
 import type { IUploadResult } from '@/api/interface/system/upload';
 import { IS_PREVIEW } from '@/config';
-import { getOneAssemblyLineListApi } from '@/api/modules/oneassemblyline/oneAssemblyLine';
+import { getOneAssemblyLineListApi, getOneAssemblyLineSelectionApi } from '@/api/modules/oneassemblyline/oneAssemblyLine';
 import type { IOneAssemblyLine } from '@/api/interface/oneassemblyline/oneAssemblyLine';
 defineOptions({
   name: 'UserEdit'
@@ -243,27 +243,23 @@ const handleSubmit = () => {
   });
 };
 
-const assemblyLines = ref<{
-  label: string;
-  value: number;
-}[]>([]);
+const assemblyLines = ref<
+  {
+    label: string;
+    value: number;
+  }[]
+>([]);
 
 const getLineInfo = () => {
-  getOneAssemblyLineListApi({
-      page: 1,
-      limit: 1000
-  }).then((res) => {
-    assemblyLines.value = [{
-      label: '非产线员工',
-      value: -1
-    },...res.data.rows.map((item: IOneAssemblyLine.Row) => {
+  getOneAssemblyLineSelectionApi().then(res => {
+    assemblyLines.value = res.data.map((item: IOneAssemblyLine.Selection) => {
       return {
-        label: item.name!,
-        value: item.id!
-      }
-    })];
+        label: item.label,
+        value: item.id
+      };
+    });
   });
-}
+};
 
 onMounted(() => {
   getLineInfo();

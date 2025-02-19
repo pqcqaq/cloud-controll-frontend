@@ -342,6 +342,11 @@ const columns: ColumnProps<IRole.Info>[] = [
     label: '角色'
   },
   {
+    prop: 'assemblyLineName',
+    label: '所属产线',
+    width: 120
+  },
+  {
     prop: 'accountStatusCd',
     label: '状态',
     tag: true,
