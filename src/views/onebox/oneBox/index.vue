@@ -263,7 +263,14 @@ const downloadFile = async () => {
   useDownload(exportOneBoxExcelApi, '中箱号', newParams);
 };
 
+const hasAnyValue = (obj: any) => {
+  return Object.values(obj).some((item) => item);
+};
+
 const eventHandler = (data: any) => {
+  if (hasAnyValue(proTableRef.value?.searchParam)) {
+    return;
+  }
   switch (data.type) {
     case 'MID_BOX':
       proTableRef.value?.getTableList();
