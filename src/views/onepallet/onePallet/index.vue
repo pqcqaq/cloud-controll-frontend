@@ -256,7 +256,14 @@ const downloadFile = async () => {
   useDownload(exportOnePalletExcelApi, '栈板码', newParams);
 };
 
+const hasAnyValue = (obj: any) => {
+  return Object.values(obj).some(item => item);
+};
+
 const eventHandler = (data: any) => {
+  if (hasAnyValue(proTableRef.value?.searchParam)) {
+    return;
+  }
   switch (data.type) {
     case 'PALLET':
       proTableRef.value?.getTableList();

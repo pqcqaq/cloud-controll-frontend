@@ -283,7 +283,14 @@ const downloadFile = async () => {
   useDownload(exportOneDestCodeExcelApi, '目的地码生成列表', newParams);
 };
 
+const hasAnyValue = (obj: any) => {
+  return Object.values(obj).some(item => item);
+};
+
 const eventHandler = (data: any) => {
+  if (hasAnyValue(proTableRef.value?.searchParam)) {
+    return;
+  }
   switch (data.type) {
     case 'DEST':
       proTableRef.value?.getTableList();

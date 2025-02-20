@@ -147,7 +147,14 @@ const deleteInfo = async (params: IOneGenSn.Row) => {
 //   proTableRef.value?.getTableList()
 // }
 
+const hasAnyValue = (obj: any) => {
+  return Object.values(obj).some(item => item);
+};
+
 const eventHandler = (data: any) => {
+  if (hasAnyValue(proTableRef.value?.searchParam)) {
+    return;
+  }
   switch (data.type) {
     case 'SN':
       proTableRef.value?.getTableList();

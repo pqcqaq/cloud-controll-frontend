@@ -310,7 +310,14 @@ const downloadFile = async () => {
   useDownload(exportOneProductExcelApi, '产品SN', newParams);
 };
 
+const hasAnyValue = (obj: any) => {
+  return Object.values(obj).some(item => item);
+};
+
 const eventHandler = (data: any) => {
+  if (hasAnyValue(proTableRef.value?.searchParam)) {
+    return;
+  }
   switch (data.type) {
     case 'PRODUCT':
       proTableRef.value?.getTableList();

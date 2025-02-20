@@ -181,4 +181,4 @@ const handleNewLog = (data: any) => {
 onMounted(() => {
   mittBus.on('socket.SYS_LOG', handleNewLog);
 });
-</script>
+</script> 

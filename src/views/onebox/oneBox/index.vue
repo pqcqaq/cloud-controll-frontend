@@ -39,15 +39,7 @@
         >
           导入
         </el-button> -->
-        <el-button
-          v-auth="'one.box.export'"
-          type="primary"
-          :icon="Download"
-          plain
-          @click="downloadFile"
-        >
-          导出
-        </el-button>
+        <el-button v-auth="'one.box.export'" type="primary" :icon="Download" plain @click="downloadFile"> 导出 </el-button>
       </template>
       <template #operation="{ row }">
         <!-- <el-button
@@ -59,15 +51,7 @@
         >
           编辑
         </el-button> -->
-        <el-button
-          v-auth="'one.box.remove'"
-          type="primary"
-          link
-          :icon="Delete"
-          @click="deleteInfo(row)"
-        >
-          删除
-        </el-button>
+        <el-button v-auth="'one.box.remove'" type="primary" link :icon="Delete" @click="deleteInfo(row)"> 删除 </el-button>
       </template>
     </ProTable>
     <OneBoxForm ref="oneRef" />
@@ -79,12 +63,7 @@
 import { h, onMounted, onUnmounted, ref } from 'vue';
 import { Delete, Download } from '@element-plus/icons-vue';
 import ProTable from '@/components/ProTable/index.vue';
-import {
-  removeOneBoxApi,
-  getOneBoxListApi,
-  exportOneBoxExcelApi,
-  reprintMidCodeApi
-} from '@/api/modules/onebox/one';
+import { removeOneBoxApi, getOneBoxListApi, exportOneBoxExcelApi, reprintMidCodeApi } from '@/api/modules/onebox/one';
 import { useHandleData } from '@/hooks/useHandleData';
 import OneBoxForm from '@/views/onebox/oneBox/components/OneBoxForm.vue';
 import type { ColumnProps, ProTableInstance, SearchProps } from '@/components/ProTable/interface';
@@ -202,7 +181,7 @@ const searchColumns: SearchProps[] = [
     }
   },
   { prop: 'midBoxCode', label: '中箱号', el: 'input' },
-  { prop: 'seq', label: '序列号', el: 'input-number' },
+  { prop: 'seq', label: '序列号', el: 'input-number' }
 ];
 // 获取table列表
 const getTableList = (params: IOneBox.Query) => {
@@ -264,7 +243,7 @@ const downloadFile = async () => {
 };
 
 const hasAnyValue = (obj: any) => {
-  return Object.values(obj).some((item) => item);
+  return Object.values(obj).some(item => item);
 };
 
 const eventHandler = (data: any) => {
