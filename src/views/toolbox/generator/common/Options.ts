@@ -32,6 +32,10 @@ export const javaTypeOptions: Options[] = [
   {
     label: 'LocalTime',
     value: 'LocalTime'
+  },
+  {
+    label: "Boolean",
+    value: "Boolean"
   }
 ];
 
