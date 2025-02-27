@@ -1,4 +1,4 @@
-name: Docker Sz-Admin CI
+name: Docker admin-system CI
 
 on:
   push:

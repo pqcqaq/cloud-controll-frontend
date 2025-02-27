@@ -71,9 +71,11 @@ export const changePassword = (params: IUser.PasswordForm) => {
  * 重置密码
  * @param params
  */
-export const resetPassword = (params: { id: number }) => {
+export const resetPassword = (params: { id: number; newPassword: string }) => {
   const { id } = params;
-  return http.put(ADMIN_MODULE + `/sys-user/reset/password/${id}`, {});
+  return http.put(ADMIN_MODULE + `/sys-user/reset/password/${id}`, {
+    newPassword: params.newPassword
+  });
 };
 
 /**

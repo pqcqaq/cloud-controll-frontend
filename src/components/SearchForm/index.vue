@@ -1,26 +1,67 @@
 <template>
-  <div v-if="columns.length" class="card table-search">
-    <el-form ref="formRef" :model="searchParam">
-      <Grid ref="gridRef" :collapsed="collapsed" :gap="[20, 0]" :cols="searchCol">
-        <GridItem v-for="(item, index) in columns" :key="item.prop" v-bind="getResponsive(item)" :index="index">
+  <div
+    v-if="columns.length"
+    class="card table-search"
+  >
+    <el-form
+      ref="formRef"
+      :model="searchParam"
+    >
+      <Grid
+        ref="gridRef"
+        :collapsed="collapsed"
+        :gap="[20, 0]"
+        :cols="searchCol"
+      >
+        <GridItem
+          v-for="(item, index) in columns"
+          :key="item.prop"
+          v-bind="getResponsive(item)"
+          :index="index"
+        >
           <el-form-item>
             <template #label>
               <el-space :size="4">
                 <span>{{ item.label }}</span>
-                <el-tooltip v-if="item.tooltip" effect="dark" :content="item.tooltip" placement="top">
+                <el-tooltip
+                  v-if="item.tooltip"
+                  effect="dark"
+                  :content="item.tooltip"
+                  placement="top"
+                >
                   <i :class="'iconfont icon-yiwen'" />
                 </el-tooltip>
               </el-space>
               <span>:</span>
             </template>
-            <SearchFormItem :column="item" :search-param="searchParam" />
+            <SearchFormItem
+              :column="item"
+              :search-param="searchParam"
+            />
           </el-form-item>
         </GridItem>
         <GridItem suffix>
           <div class="operation">
-            <el-button type="primary" :icon="Search" @click="search"> 搜索 </el-button>
-            <el-button :icon="Delete" @click="reset"> 重置 </el-button>
-            <el-button v-if="showCollapse" type="primary" link class="search-isOpen" @click="collapsed = !collapsed">
+            <el-button
+              type="primary"
+              :icon="Search"
+              @click="search"
+            >
+              搜索
+            </el-button>
+            <el-button
+              :icon="Delete"
+              @click="reset"
+            >
+              重置
+            </el-button>
+            <el-button
+              v-if="showCollapse"
+              type="primary"
+              link
+              class="search-isOpen"
+              @click="collapsed = !collapsed"
+            >
               {{ collapsed ? '展开' : '合并' }}
               <el-icon class="el-icon--right">
                 <component :is="collapsed ? ArrowDown : ArrowUp" />

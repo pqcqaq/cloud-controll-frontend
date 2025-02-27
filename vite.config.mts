@@ -55,14 +55,22 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       open: env.VITE_OPEN === 'true',
       proxy: {
         '/api': {
-          target: env.VITE_API_URL,
+          target: env.VITE_SERVER_BASEURL,
           changeOrigin: true,
           ws: true,
           rewrite: (path) => path.replace(new RegExp(`^/api`), ''),
           // https is require secure=false
           ...(/^https:\/\//.test(env.VITE_API_URL) ? { secure: false } : {}),
         },
+        '/socket': {
+          target: env.VITE_SOCKET_BASE_URL,
+          changeOrigin: true,
+          ws: true,
+          rewrite: (path) => path.replace(new RegExp(`^/socket`), ''),
+          ...(/^https:\/\//.test(env.VITE_SOCKET_URL) ? { secure: false } : {}),
+        }
       },
     },
   };
 });
+

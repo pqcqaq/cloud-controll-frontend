@@ -23,7 +23,12 @@
       >
         <!-- 表格 header 按钮 -->
         <template #tableHeader="scope">
-          <el-button v-auth="'sys.user.create_btn'" type="primary" :icon="CirclePlus" @click="openUserAdd('新增用户')">
+          <el-button
+            v-auth="'sys.user.create_btn'"
+            type="primary"
+            :icon="CirclePlus"
+            @click="openUserAdd('新增用户')"
+          >
             新增用户
           </el-button>
           <el-button
@@ -36,46 +41,87 @@
           >
             批量删除
           </el-button>
-          <el-button type="info" plain :disabled="!scope.isSelected" @click="settingDept(scope)">
+          <el-button
+            type="info"
+            plain
+            :disabled="!scope.isSelected"
+            @click="settingDept(scope)"
+          >
             <el-icon class="el-icon--left">
               <SvgIcon name="org" />
             </el-icon>
             &nbsp;&nbsp; 设置部门
           </el-button>
-          <el-button type="info" :icon="Unlock" plain :disabled="!scope.isSelected" @click="unlock(scope.selectedListIds)">
+          <el-button
+            type="info"
+            :icon="Unlock"
+            plain
+            :disabled="!scope.isSelected"
+            @click="unlock(scope.selectedListIds)"
+          >
             解锁
           </el-button>
         </template>
 
         <template #username="{ row }">
-          <el-button type="primary" link>
+          <el-button
+            type="primary"
+            link
+          >
             {{ row?.username }}
           </el-button>
         </template>
 
         <template #logo="{ row }">
-          <el-image v-if="row.logo" :src="row.logo" />
-          <div v-else>--</div>
+          <el-image
+            v-if="row.logo"
+            :src="row.logo"
+          />
+          <div v-else>
+            --
+          </div>
         </template>
 
         <template #deptInfo="{ row }">
-          <el-tag class="user-item" v-for="tag in formatInfo(row.deptInfo)" :key="tag.id" type="info">
+          <el-tag
+            class="user-item"
+            v-for="tag in formatInfo(row.deptInfo)"
+            :key="tag.id"
+            type="info"
+          >
             {{ tag.name }}
           </el-tag>
         </template>
 
         <template #roleInfo="{ row }">
-          <el-tag class="user-item" v-for="tag in formatInfo(row.roleInfo)" :key="tag.id" type="info">
+          <el-tag
+            class="user-item"
+            v-for="tag in formatInfo(row.roleInfo)"
+            :key="tag.id"
+            type="info"
+          >
             {{ tag.name }}
           </el-tag>
         </template>
 
         <template #operation="{ row }">
           <div class="btn-group">
-            <el-button v-auth="'sys.user.update_btn'" type="primary" link :icon="EditPen" @click="openUserEdit('编辑用户', row)">
+            <el-button
+              v-auth="'sys.user.update_btn'"
+              type="primary"
+              link
+              :icon="EditPen"
+              @click="openUserEdit('编辑用户', row)"
+            >
               编辑
             </el-button>
-            <el-button v-auth="'sys.user.unlock_btn'" type="primary" :icon="Unlock" link @click="unlock(row.id)">
+            <el-button
+              v-auth="'sys.user.unlock_btn'"
+              type="primary"
+              :icon="Unlock"
+              link
+              @click="unlock(row.id)"
+            >
               解锁
             </el-button>
             <div
@@ -94,14 +140,28 @@
               ]"
             >
               <el-dropdown trigger="click">
-                <el-button type="primary" link :icon="DArrowRight"> 更多 </el-button>
+                <el-button
+                  type="primary"
+                  link
+                  :icon="DArrowRight"
+                >
+                  更多
+                </el-button>
                 <template #dropdown>
                   <el-dropdown-menu>
                     <div v-auth="'sys.user.role_set_btn'">
-                      <el-dropdown-item :icon="User" @click="openUserPermissions('设置角色', row)"> 设置角色 </el-dropdown-item>
+                      <el-dropdown-item
+                        :icon="User"
+                        @click="openUserPermissions('设置角色', row)"
+                      >
+                        设置角色
+                      </el-dropdown-item>
                     </div>
                     <div v-auth="'sys.user.dept_set_btn'">
-                      <el-dropdown-item type="primary" @click="settingDept(row)">
+                      <el-dropdown-item
+                        type="primary"
+                        @click="settingDept(row)"
+                      >
                         <el-icon>
                           <SvgIcon name="org" />
                         </el-icon>
@@ -109,13 +169,30 @@
                       </el-dropdown-item>
                     </div>
                     <div v-auth="'sys.user.unlock_btn'">
-                      <el-dropdown-item type="primary" :icon="Refresh" link @click="resetPwd(row)"> 重置密码 </el-dropdown-item>
+                      <el-dropdown-item
+                        type="primary"
+                        :icon="Refresh"
+                        link
+                        @click="resetPwd(row)"
+                      >
+                        重置密码
+                      </el-dropdown-item>
                     </div>
                     <div v-auth="'sys.user.delete_btn'">
-                      <el-dropdown-item v-if="row.id !== 1" :icon="Delete" @click="deleteInfo(row)"> 删除 </el-dropdown-item>
+                      <el-dropdown-item
+                        v-if="row.id !== 1"
+                        :icon="Delete"
+                        @click="deleteInfo(row)"
+                      >
+                        删除
+                      </el-dropdown-item>
                     </div>
                     <div v-auth="'sys.user.data_role_set_btn'">
-                      <el-dropdown-item type="primary" v-if="row.id !== 1" @click="openUserDataPermissions('设置数据角色', row)">
+                      <el-dropdown-item
+                        type="primary"
+                        v-if="row.id !== 1"
+                        @click="openUserDataPermissions('设置数据角色', row)"
+                      >
                         <el-icon class="el-icon--left">
                           <SvgIcon name="scope" />
                         </el-icon>
@@ -129,12 +206,88 @@
           </div>
         </template>
       </ProTable>
-      <UserAdd ref="userAddRef" @submit="refreshDeptTree" />
+      <UserAdd
+        ref="userAddRef"
+        @submit="refreshDeptTree"
+      />
       <UserEdit ref="userEditRef" />
       <UserPermissions ref="userPermissionsRef" />
-      <UserDeptForm ref="userDeptFormRef" @submit="refreshDeptTree" />
+      <UserDeptForm
+        ref="userDeptFormRef"
+        @submit="refreshDeptTree"
+      />
       <UserDataPermissions ref="userDataPermissionsRef" />
     </div>
+    <el-dialog
+      v-model="showResetPwd"
+      title="重置密码"
+      width="400px"
+    >
+      <main class="px-6 py-4">
+        <el-form
+          :model="form"
+          status-icon
+        >
+          <el-form-item
+            label="新密码"
+            prop="password"
+            :rules="[
+              { required: true, message: '请输入密码', trigger: 'blur' },
+              { min: 6, max: 20, message: '密码长度应在6到20字符之间', trigger: 'blur' }
+            ]"
+          >
+            <el-input
+              type="password"
+              v-model="form.password"
+              placeholder="请输入新密码"
+              clearable
+              show-password
+              :disabled="isLoading"
+            />
+          </el-form-item>
+
+          <el-form-item
+            label="确认密码"
+            prop="confirmPassword"
+            :rules="[
+              { required: true, message: '请确认密码', trigger: 'blur' },
+              { validator: validateConfirmPassword, trigger: 'blur' }
+            ]"
+          >
+            <el-input
+              type="password"
+              v-model="form.confirmPassword"
+              placeholder="请再次输入密码"
+              clearable
+              show-password
+              :disabled="isLoading"
+            />
+          </el-form-item>
+        </el-form>
+      </main>
+
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button
+            @click="
+              () => {
+                form.password = '';
+                form.confirmPassword = '';
+                showResetPwd = false;
+              }
+            "
+            :disabled="isLoading"
+          >
+            取消
+          </el-button>
+          <el-button
+            type="primary"
+            @click="handleSubmit"
+            :loading="isLoading"
+          > 确认 </el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -165,7 +318,7 @@ import type { IRole } from '@/api/interface/system/role';
 import { reactive, ref } from 'vue';
 import SvgIcon from '@/components/SvgIcon/index.vue';
 import UserDeptForm from '@/views/system/accountManage/components/UserDeptForm.vue';
-import { ElMessage, ElMessageBox } from 'element-plus';
+import { ElMessage } from 'element-plus';
 import UserDataPermissions from '@/views/system/accountManage/components/UserDataPermissions.vue';
 import { IS_PREVIEW } from '@/config';
 defineOptions({
@@ -187,6 +340,11 @@ const columns: ColumnProps<IRole.Info>[] = [
   {
     prop: 'roleInfo',
     label: '角色'
+  },
+  {
+    prop: 'assemblyLineName',
+    label: '所属产线',
+    width: 120
   },
   {
     prop: 'accountStatusCd',
@@ -311,19 +469,50 @@ const unlock = async (id: (string | number)[]) => {
   ElMessage.success(`解锁成功！`);
 };
 
+const showResetPwd = ref(false);
+const resetId = ref<number | string>('');
+const form = ref({
+  password: '',
+  confirmPassword: ''
+});
+const isLoading = ref(false);
 const resetPwd = async (row: any) => {
-  const param = { id: row?.id };
-  ElMessageBox.confirm('您确认要重置账户 [' + row.username + '] 密码?', '温馨提示', {
-    type: 'warning'
-  }).then(async () => {
-    await resetPassword(param);
-    proTableRef.value?.getTableList();
-    ElMessage.success({
-      message: `账户 [` + row.username + `] 重置密码成功！`,
-      duration: 5000,
-      showClose: true
+  resetId.value = row.id;
+  showResetPwd.value = true;
+  // ElMessageBox.confirm('您确认要重置账户 [' + row.username + '] 密码?', '温馨提示', {
+  //   type: 'warning'
+  // }).then(async () => {
+  //   await resetPassword(param);
+  //   proTableRef.value?.getTableList();
+  //   ElMessage.success({
+  //     message: `账户 [` + row.username + `] 重置密码成功！`,
+  //     duration: 5000,
+  //     showClose: true
+  //   });
+  // });
+};
+const validateConfirmPassword = (rule: any, value: string, callback: any) => {
+  if (value === '') {
+    callback(new Error('请再次输入密码'));
+  } else if (value !== form.value.password) {
+    callback(new Error('两次输入密码不一致!'));
+  } else {
+    callback();
+  }
+};
+
+const handleSubmit = async () => {
+  isLoading.value = true;
+  resetPassword({ id: resetId.value as number, newPassword: form.value.password })
+    .then(() => {
+      ElMessage.success('重置密码成功！');
+    })
+    .finally(() => {
+      isLoading.value = false;
+      showResetPwd.value = false;
+      form.value.password = '';
+      form.value.confirmPassword = '';
     });
-  });
 };
 
 const initParam = reactive({ deptId: -1 });
