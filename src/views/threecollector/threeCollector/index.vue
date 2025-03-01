@@ -11,11 +11,7 @@
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader="scope">
-        <el-button type="primary"
-          v-auth="'three.collector.create'"
-          :icon="CirclePlus"
-          @click="openAddEdit('新增采集器管理')"
-        >
+        <el-button type="primary" v-auth="'three.collector.create'" :icon="CirclePlus" @click="openAddEdit('新增采集器管理')">
           新增
         </el-button>
         <el-button
@@ -28,22 +24,8 @@
         >
           批量删除
         </el-button>
-        <el-button
-          v-auth="'three.collector.import'"
-          type="primary"
-          :icon="Upload"
-          plain
-          @click="importData"
-        >
-          导入
-        </el-button>
-        <el-button
-          v-auth="'three.collector.export'"
-          type="primary"
-          :icon="Download"
-          plain
-          @click="downloadFile"
-        >
+        <el-button v-auth="'three.collector.import'" type="primary" :icon="Upload" plain @click="importData"> 导入 </el-button>
+        <el-button v-auth="'three.collector.export'" type="primary" :icon="Download" plain @click="downloadFile">
           导出
         </el-button>
       </template>
@@ -57,14 +39,18 @@
         >
           编辑
         </el-button>
-        <el-button
-            v-auth="'three.collector.remove'"
-          type="primary"
-          link
-          :icon="Delete"
-          @click="deleteInfo(row)"
-        >
+        <el-button v-auth="'three.collector.remove'" type="primary" link :icon="Delete" @click="deleteInfo(row)">
           删除
+        </el-button>
+        <!-- 上锁按钮 -->
+        <el-button v-auth="'three.collector.lock'" type="primary" link :icon="Lock" @click="lockInfo(row)"> 上锁 </el-button>
+        <!-- 解锁按钮 -->
+        <el-button v-auth="'three.collector.unlock'" type="primary" link :icon="Unlock" @click="unlockInfo(row)">
+          解锁
+        </el-button>
+        <!-- 发送更新 -->
+        <el-button v-auth="'three.collector.sendUpdate'" type="primary" link :icon="Download" @click="sendUpdate(row)">
+          发送更新
         </el-button>
       </template>
     </ProTable>
@@ -74,15 +60,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import {
-  CirclePlus,
-  Delete,
-  EditPen,
-  Upload,
-  Download,
-} from '@element-plus/icons-vue'
-import ProTable from '@/components/ProTable/index.vue'
+import { ref } from 'vue';
+import { CirclePlus, Delete, EditPen, Upload, Download } from '@element-plus/icons-vue';
+import ProTable from '@/components/ProTable/index.vue';
 import {
   createThreeCollectorApi,
   removeThreeCollectorApi,
@@ -91,6 +71,9 @@ import {
   getThreeCollectorDetailApi,
   importThreeCollectorExcelApi,
   exportThreeCollectorExcelApi,
+  sendLockMsgApi,
+  sendUnlockMsgApi,
+  sendUpdateMsgApi
 } from '@/api/modules/threecollector/threeCollector';
 import { useHandleData } from '@/hooks/useHandleData';
 import ThreeCollectorForm from '@/views/threecollector/threeCollector/components/ThreeCollectorForm.vue';
@@ -98,11 +81,13 @@ import type { ColumnProps, ProTableInstance, SearchProps } from '@/components/Pr
 import type { IThreeCollector } from '@/api/interface/threecollector/threeCollector';
 import ImportExcel from '@/components/ImportExcel/index.vue';
 import { downloadTemplate } from '@/api/modules/system/common';
-import { ElMessageBox } from "element-plus";
-import { useDownload } from "@/hooks/useDownload";
+import { ElMessageBox } from 'element-plus';
+import { useDownload } from '@/hooks/useDownload';
+import { Lock, Unlock } from '@element-plus/icons-vue';
+
 defineOptions({
   name: 'ThreeCollectorView'
-})
+});
 const proTableRef = ref<ProTableInstance>();
 // 表格配置项
 const columns: ColumnProps<IThreeCollector.Row>[] = [
@@ -113,18 +98,18 @@ const columns: ColumnProps<IThreeCollector.Row>[] = [
   { prop: 'lockOnStartup', label: '初始状态是否锁机' },
   { prop: 'deviceTypeId', label: '设备类型' },
   { prop: 'operation', label: '操作', width: 250, fixed: 'right' }
-]
+];
 // 搜索条件项
 const searchColumns: SearchProps[] = [
   { prop: 'imei', label: '唯一标识', el: 'input' },
-  { prop: 'deviceTypeId', label: '设备类型', el: 'select' },
-]
+  { prop: 'deviceTypeId', label: '设备类型', el: 'select' }
+];
 // 获取table列表
 const getTableList = (params: IThreeCollector.Query) => {
   let newParams = formatParams(params);
   return getThreeCollectorListApi(newParams);
 };
-const formatParams = (params: IThreeCollector.Query) =>{
+const formatParams = (params: IThreeCollector.Query) => {
   let newParams = JSON.parse(JSON.stringify(params));
   newParams.createTime && (newParams.createTimeStart = newParams.createTime[0]);
   newParams.createTime && (newParams.createTimeEnd = newParams.createTime[1]);
@@ -133,39 +118,35 @@ const formatParams = (params: IThreeCollector.Query) =>{
   newParams.updateTime && (newParams.updateTimeEnd = newParams.updateTime[1]);
   delete newParams.updateTime;
   return newParams;
-}
+};
 // 打开 drawer(新增、查看、编辑)
-const threeCollectorRef = ref<InstanceType<typeof ThreeCollectorForm>>()
-const openAddEdit = async(title: string, row: any = {}, isAdd = true) => {
+const threeCollectorRef = ref<InstanceType<typeof ThreeCollectorForm>>();
+const openAddEdit = async (title: string, row: any = {}, isAdd = true) => {
   if (!isAdd) {
-    const record = await getThreeCollectorDetailApi({ id: row?.id })
-    row = record?.data
+    const record = await getThreeCollectorDetailApi({ id: row?.id });
+    row = record?.data;
   }
   const params = {
     title,
     row: { ...row },
     api: isAdd ? createThreeCollectorApi : updateThreeCollectorApi,
     getTableList: proTableRef.value?.getTableList
-  }
-  threeCollectorRef.value?.acceptParams(params)
-}
+  };
+  threeCollectorRef.value?.acceptParams(params);
+};
 // 删除信息
 const deleteInfo = async (params: IThreeCollector.Row) => {
-  await useHandleData(
-    removeThreeCollectorApi,
-    { ids: [params.id] },
-    `删除【${params.id}】采集器管理`
-  )
-  proTableRef.value?.getTableList()
-}
+  await useHandleData(removeThreeCollectorApi, { ids: [params.id] }, `删除【${params.id}】采集器管理`);
+  proTableRef.value?.getTableList();
+};
 // 批量删除信息
 const batchDelete = async (ids: (string | number)[]) => {
-  await useHandleData(removeThreeCollectorApi, { ids }, '删除所选采集器管理')
-  proTableRef.value?.clearSelection()
-  proTableRef.value?.getTableList()
-}
+  await useHandleData(removeThreeCollectorApi, { ids }, '删除所选采集器管理');
+  proTableRef.value?.clearSelection();
+  proTableRef.value?.getTableList();
+};
 // 导入
-const ImportExcelRef = ref<InstanceType<typeof ImportExcel>>()
+const ImportExcelRef = ref<InstanceType<typeof ImportExcel>>();
 const importData = () => {
   const params = {
     title: '采集器管理',
@@ -173,12 +154,63 @@ const importData = () => {
     tempApi: downloadTemplate,
     importApi: importThreeCollectorExcelApi,
     getTableList: proTableRef.value?.getTableList
-  }
-  ImportExcelRef.value?.acceptParams(params)
-}
+  };
+  ImportExcelRef.value?.acceptParams(params);
+};
 // 导出
 const downloadFile = async () => {
   let newParams = formatParams(proTableRef.value?.searchParam as IThreeCollector.Query);
-  useDownload(exportThreeCollectorExcelApi, "采集器管理", newParams);
+  useDownload(exportThreeCollectorExcelApi, '采集器管理', newParams);
+};
+
+const lockInfo = async (params: IThreeCollector.Row) => {
+  const res = await ElMessageBox.confirm('确定要上锁吗?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  });
+  if (res === 'confirm') {
+    await sendLockMsgApi({ id: params.id! }).then(() => {
+      ElMessageBox.alert('上锁成功', '提示', {
+        confirmButtonText: '确定',
+        type: 'success'
+      });
+    });
+    proTableRef.value?.getTableList();
+  }
+};
+
+const unlockInfo = async (params: IThreeCollector.Row) => {
+  const res = await ElMessageBox.confirm('确定要解锁吗?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  });
+  if (res === 'confirm') {
+    await sendUnlockMsgApi({ id: params.id! }).then(() => {
+      ElMessageBox.alert('解锁成功', '提示', {
+        confirmButtonText: '确定',
+        type: 'success'
+      });
+    });
+    proTableRef.value?.getTableList();
+  }
+};
+
+const sendUpdate = async (params: IThreeCollector.Row) => {
+  const res = await ElMessageBox.confirm('确定要发送更新吗?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  });
+  if (res === 'confirm') {
+    await sendUpdateMsgApi({ id: params.id! }).then(() => {
+      ElMessageBox.alert('发送更新成功', '提示', {
+        confirmButtonText: '确定',
+        type: 'success'
+      });
+    });
+    proTableRef.value?.getTableList();
+  }
 };
 </script>
