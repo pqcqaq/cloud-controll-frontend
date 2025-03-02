@@ -11,9 +11,9 @@
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader="scope">
-        <el-button type="primary" v-auth="'three.collector.create'" :icon="CirclePlus" @click="openAddEdit('新增采集器管理')">
+        <!-- <el-button type="primary" v-auth="'three.collector.create'" :icon="CirclePlus" @click="openAddEdit('新增采集器管理')">
           新增
-        </el-button>
+        </el-button> -->
         <el-button
           v-auth="'three.collector.remove'"
           type="danger"
@@ -24,7 +24,7 @@
         >
           批量删除
         </el-button>
-        <el-button v-auth="'three.collector.import'" type="primary" :icon="Upload" plain @click="importData"> 导入 </el-button>
+        <!-- <el-button v-auth="'three.collector.import'" type="primary" :icon="Upload" plain @click="importData"> 导入 </el-button> -->
         <el-button v-auth="'three.collector.export'" type="primary" :icon="Download" plain @click="downloadFile">
           导出
         </el-button>
@@ -60,7 +60,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import { CirclePlus, Delete, EditPen, Upload, Download } from '@element-plus/icons-vue';
 import ProTable from '@/components/ProTable/index.vue';
 import {
@@ -84,9 +84,23 @@ import { downloadTemplate } from '@/api/modules/system/common';
 import { ElMessageBox } from 'element-plus';
 import { useDownload } from '@/hooks/useDownload';
 import { Lock, Unlock } from '@element-plus/icons-vue';
+import { getThreeDeviceTypeOptionsApi } from '@/api/modules/threedevicetype/threeDeviceType';
 
 defineOptions({
   name: 'ThreeCollectorView'
+});
+
+const getOptionsList = () => {
+  getThreeDeviceTypeOptionsApi().then(res => {
+    searchColumns[1].enum = res.data.map(item => ({
+      label: `${item.name}/${item.enableHighVoltage ? 'high' : 'low'}`,
+      value: item.id
+    }));
+  });
+};
+
+onMounted(() => {
+  getOptionsList();
 });
 const proTableRef = ref<ProTableInstance>();
 // 表格配置项
@@ -100,10 +114,14 @@ const columns: ColumnProps<IThreeCollector.Row>[] = [
   { prop: 'operation', label: '操作', width: 250, fixed: 'right' }
 ];
 // 搜索条件项
-const searchColumns: SearchProps[] = [
+const searchColumns: SearchProps[] = reactive<SearchProps[]>([
   { prop: 'imei', label: '唯一标识', el: 'input' },
-  { prop: 'deviceTypeId', label: '设备类型', el: 'select' }
-];
+  {
+    prop: 'deviceTypeId',
+    label: '设备类型',
+    el: 'select'
+  }
+]);
 // 获取table列表
 const getTableList = (params: IThreeCollector.Query) => {
   let newParams = formatParams(params);

@@ -29,6 +29,7 @@ export namespace IThreeDeviceStatus {
     uptime?: number
     posLat?: number
     posLon?: number
+    isOnline?: boolean
   }
 
 }

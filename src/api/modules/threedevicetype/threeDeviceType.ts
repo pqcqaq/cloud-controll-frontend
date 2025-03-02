@@ -38,7 +38,7 @@ export const updateThreeDeviceTypeApi = (params: IThreeDeviceType.Form) => {
 * @returns {*}
 */
 export const removeThreeDeviceTypeApi = (params: { ids: (string | number)[] }) => {
- return http.delete(ADMIN_MODULE + `/three-device-type`, params)
+  return http.delete(ADMIN_MODULE + `/three-device-type`, params)
 }
 
 /**
@@ -55,7 +55,7 @@ export const getThreeDeviceTypeDetailApi = (params: { id: number }) => {
 * 导入excel
 * @param params
 */
-export const importThreeDeviceTypeExcelApi = (params : UploadRawFile, config?: AxiosRequestConfig<{}> | undefined) => {
+export const importThreeDeviceTypeExcelApi = (params: UploadRawFile, config?: AxiosRequestConfig<{}> | undefined) => {
   return http.upload(ADMIN_MODULE + `/three-device-type/import`, params, config)
 }
 
@@ -64,6 +64,13 @@ export const importThreeDeviceTypeExcelApi = (params : UploadRawFile, config?: A
 * @param params
 * @returns {*}
 */
-export const exportThreeDeviceTypeExcelApi  = (params: IThreeDeviceType.Query) => {
+export const exportThreeDeviceTypeExcelApi = (params: IThreeDeviceType.Query) => {
   return http.download(ADMIN_MODULE + `/three-device-type/export`, params)
+}
+
+/**
+ * 获取所有设备类型选项（大批量下会导致性能问题）
+ */
+export const getThreeDeviceTypeOptionsApi = () => {
+  return http.get<IThreeDeviceType.Options[]>(ADMIN_MODULE + `/three-device-type/options`)
 }

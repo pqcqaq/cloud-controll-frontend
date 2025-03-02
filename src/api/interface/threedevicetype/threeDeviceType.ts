@@ -13,13 +13,19 @@ export namespace IThreeDeviceType {
     id?: number
     effectiveHighVoltage?: number
     name?: string
- }
+  }
 
   // list或detail返回结构
   export interface Row {
     id?: number
     effectiveHighVoltage?: number
     name?: string
+  }
+
+  export interface Options {
+    id: number
+    name: string
+    enableHighVoltage: boolean
   }
 
 }
