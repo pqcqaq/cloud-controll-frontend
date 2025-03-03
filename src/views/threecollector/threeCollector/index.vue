@@ -52,6 +52,10 @@
         <el-button v-auth="'three.collector.sendUpdate'" type="primary" link :icon="Download" @click="sendUpdate(row)">
           发送更新
         </el-button>
+        <!-- reboot -->
+        <el-button v-auth="'three.collector.reboot'" type="primary" link :icon="Download" @click="rebootInfo(row)">
+          重启
+        </el-button>
       </template>
     </ProTable>
     <ThreeCollectorForm ref="threeCollectorRef" />
@@ -73,7 +77,8 @@ import {
   exportThreeCollectorExcelApi,
   sendLockMsgApi,
   sendUnlockMsgApi,
-  sendUpdateMsgApi
+  sendUpdateMsgApi,
+  sendRestartMsgApi
 } from '@/api/modules/threecollector/threeCollector';
 import { useHandleData } from '@/hooks/useHandleData';
 import ThreeCollectorForm from '@/views/threecollector/threeCollector/components/ThreeCollectorForm.vue';
@@ -110,6 +115,21 @@ const columns: ColumnProps<IThreeCollector.Row>[] = [
   { prop: 'diScanGap', label: 'DI扫描间隔' },
   { prop: 'stateCallbackGap', label: '状态回传间隔' },
   { prop: 'lockOnStartup', label: '初始状态是否锁机' },
+  // ntpTimeCalibrationGap
+  {
+    prop: 'ntpTimeCalibrationGap',
+    label: 'NTP时间校准间隔'
+  },
+  // locationTimeGap
+  {
+    prop: 'locationTimeGap',
+    label: '定位时间间隔'
+  },
+  // keepaliveGap
+  {
+    prop: 'keepaliveGap',
+    label: '心跳间隔'
+  },
   { prop: 'deviceTypeId', label: '设备类型' },
   { prop: 'operation', label: '操作', width: 250, fixed: 'right' }
 ];
@@ -224,6 +244,23 @@ const sendUpdate = async (params: IThreeCollector.Row) => {
   if (res === 'confirm') {
     await sendUpdateMsgApi({ id: params.id! }).then(() => {
       ElMessageBox.alert('发送更新成功', '提示', {
+        confirmButtonText: '确定',
+        type: 'success'
+      });
+    });
+    proTableRef.value?.getTableList();
+  }
+};
+
+const rebootInfo = async (params: IThreeCollector.Row) => {
+  const res = await ElMessageBox.confirm('确定要重启吗?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  });
+  if (res === 'confirm') {
+    await sendRestartMsgApi({ id: params.id! }).then(() => {
+      ElMessageBox.alert('重启成功', '提示', {
         confirmButtonText: '确定',
         type: 'success'
       });

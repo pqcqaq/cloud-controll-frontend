@@ -88,3 +88,10 @@ export const sendUnlockMsgApi = (params: { id: number }) => {
 export const sendUpdateMsgApi = (params: { id: number }) => {
   return http.post(ADMIN_MODULE + `/three-collector/update/${params.id}`)
 }
+
+/**
+ * 发送重启消息
+ */
+export const sendRestartMsgApi = (params: { id: number }) => {
+  return http.post(ADMIN_MODULE + `/three-collector/restart/${params.id}`)
+} 
