@@ -48,7 +48,7 @@ export const removeThreeCollectorApi = (params: { ids: (string | number)[] }) =>
 */
 export const getThreeCollectorDetailApi = (params: { id: number }) => {
   const { id } = params
-  return http.get<IThreeCollector.Row>(ADMIN_MODULE + `/three-collector/${id}`)
+  return http.get<IThreeCollector.DeviceData>(ADMIN_MODULE + `/three-collector/${id}`)
 }
 
 /**
@@ -95,3 +95,15 @@ export const sendUpdateMsgApi = (params: { id: number }) => {
 export const sendRestartMsgApi = (params: { id: number }) => {
   return http.post(ADMIN_MODULE + `/three-collector/restart/${params.id}`)
 } 
+
+/**
+ * 获取我的采集器
+ */
+// @Operation(summary = "获取我的采集器")
+// @GetMapping("/my")
+// public ApiResult<List<SelectionVo>> getMyCollectors() {
+//     return ApiResult.success(threeCollectorService.getMyCollectors());
+// }
+export const getMyCollectorsApi = () => {
+  return http.get<IThreeCollector.Selection[]>(ADMIN_MODULE + `/three-collector/my`)
+}

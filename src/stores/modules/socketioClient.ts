@@ -12,6 +12,26 @@ const socketIOUrl = new URL(import.meta.env.VITE_SOCKET_IO_URL, window.location.
 socketIOUrl.protocol = socketIOUrl.protocol === 'https:' ? 'https:' : 'http:';
 const MAX_RECONNECT_COUNT = 10;
 
+function isTopicMatch(subscription: string, topic: string): boolean {
+  const subParts = subscription.split('/');
+  const topicParts = topic.split('/');
+
+  if (subParts.length > topicParts.length && subParts[subParts.length - 1] !== '#') {
+    return false;
+  }
+
+  for (let i = 0; i < subParts.length; i++) {
+    if (subParts[i] === '#') {
+      return true;
+    }
+    if (subParts[i] !== '+' && subParts[i] !== topicParts[i]) {
+      return false;
+    }
+  }
+
+  return subParts.length === topicParts.length;
+}
+
 /**
  * 使用socket
  * @param url
@@ -29,8 +49,6 @@ export const useSocketIOStore = defineStore('socket-io', () => {
 
   const reconnectCount = ref(0);
 
-  const subedList = ref<string[]>([]);
-
   const _onOpen = () => {
     canReconnect.value = true;
     reconnectCount.value = 0;
@@ -38,7 +56,9 @@ export const useSocketIOStore = defineStore('socket-io', () => {
 
   const _onMessage = (event: any) => {
     console.log('socket.io message', event);
-    mittBus.emit('socket.io.message', event);
+    if (event.topic && event.data) {
+      handleIncomingMessage(event.topic, event.data);
+    }
   };
 
   const _onError = (event: Event) => {
@@ -65,6 +85,18 @@ export const useSocketIOStore = defineStore('socket-io', () => {
     }, timeout);
   };
 
+  type MsgCallBack = (data: any) => void;
+
+  const subscriptions = ref<Map<string, ((data: any) => void)[]>>(new Map());
+
+  const handleIncomingMessage = (topic: string, data: any) => {
+    subscriptions.value.forEach((callbacks, subscription) => {
+      if (isTopicMatch(subscription, topic)) {
+        callbacks.forEach(callback => callback(data));
+      }
+    });
+  };
+
   /**
    * 初始化开启socket
    */
@@ -84,12 +116,15 @@ export const useSocketIOStore = defineStore('socket-io', () => {
     };
     const socketIO = io(socketIOConfig);
     socketIO.on('open', _onOpen);
-    socketIO.on('message', _onMessage);
     socketIO.on('error', _onError);
     socketIO.on('close', _onClose);
     socketIO.connect();
     // // 连接时处理
     socket.value = socketIO;
+
+    socket.value.onAny((event, ...args) => {
+      _onMessage({ topic: event, data: args });
+    });
   };
 
   /**
@@ -108,28 +143,60 @@ export const useSocketIOStore = defineStore('socket-io', () => {
     const userId = useUserStore().userInfo.id;
     const userChannel = `${userId}/${channel}`;
     socket.value?.emit('subscribe', userChannel);
-    subedList.value.push(userChannel);
-    socket.value?.on(userChannel, callback);
+
+    if (!subscriptions.value.has(userChannel)) {
+      subscriptions.value.set(userChannel, []);
+    }
+    subscriptions.value.get(userChannel)!.push(callback);
   };
 
   const unsub = (channel: string, callback?: (data: any) => void) => {
     const userId = useUserStore().userInfo.id;
     const userChannel = `${userId}/${channel}`;
     socket.value?.emit('unsubscribe', userChannel);
-    subedList.value = subedList.value.filter(item => item !== userChannel);
-    socket.value?.off(userChannel, callback);
+
+    if (callback) {
+      const callbacks = subscriptions.value.get(userChannel);
+      if (callbacks) {
+        const index = callbacks.indexOf(callback);
+        if (index > -1) {
+          callbacks.splice(index, 1);
+        }
+        if (callbacks.length === 0) {
+          subscriptions.value.delete(userChannel);
+        }
+      }
+    } else {
+      subscriptions.value.delete(userChannel);
+    }
   };
 
   const psub = (channel: string, callback: (data: any) => void) => {
     socket.value?.emit('subscribe', channel);
-    subedList.value.push(channel);
-    socket.value?.on(channel, callback);
+
+    if (!subscriptions.value.has(channel)) {
+      subscriptions.value.set(channel, []);
+    }
+    subscriptions.value.get(channel)!.push(callback);
   };
 
   const punsub = (channel: string, callback?: (data: any) => void) => {
     socket.value?.emit('unsubscribe', channel);
-    subedList.value = subedList.value.filter(item => item !== channel);
-    socket.value?.off(channel, callback);
+
+    if (callback) {
+      const callbacks = subscriptions.value.get(channel);
+      if (callbacks) {
+        const index = callbacks.indexOf(callback);
+        if (index > -1) {
+          callbacks.splice(index, 1);
+        }
+        if (callbacks.length === 0) {
+          subscriptions.value.delete(channel);
+        }
+      }
+    } else {
+      subscriptions.value.delete(channel);
+    }
   };
 
   return {
@@ -138,6 +205,6 @@ export const useSocketIOStore = defineStore('socket-io', () => {
     sub,
     unsub,
     psub,
-    punsub,
+    punsub
   };
 });

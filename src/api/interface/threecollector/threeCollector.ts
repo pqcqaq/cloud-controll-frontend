@@ -28,4 +28,44 @@ export namespace IThreeCollector {
     deviceTypeId?: number
   }
 
+  export interface DeviceData {
+    id: number;
+    imei: string;
+    diScanGap: number;
+    stateCallbackGap: number;
+    lockOnStartup: boolean;
+    ntpTimeCalibrationGap: number;
+    locationTimeGap: number;
+    keepaliveGap: number;
+    deviceType: {
+      effectiveHighVoltage: boolean;
+      name: string;
+    };
+    status: {
+      signalStrength: number;
+      voltage: number;
+      temperature: number;
+      uptime: number;
+      posLat: number;
+      posLon: number;
+      isOnline: boolean;
+      updateTime: string;
+    };
+    lockedInfo: string;
+    pins: Array<{
+      pinDef: number;
+      counts: number;
+      triggerTime: string;
+      uptime: number;
+      active: boolean;
+      updateTime: string;
+    }>;
+  }
+  
+
+  export interface Selection {
+    id: number
+    imei: string
+  }
+
 }
