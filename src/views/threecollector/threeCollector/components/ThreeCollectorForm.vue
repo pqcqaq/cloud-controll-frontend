@@ -18,11 +18,17 @@
         <el-input-number v-model="paramsProps.row.stateCallbackGap" :precision="0" :min="1" :max="999999" />
       </el-form-item>
       <el-form-item label="初始状态是否锁机" prop="lockOnStartup">
-        <el-input-number v-model="paramsProps.row.lockOnStartup" :precision="0" :min="1" :max="999999" />
+        <!-- <el-input-number v-model="paramsProps.row.lockOnStartup" :precision="0" :min="1" :max="999999" /> -->
+         <el-switch v-model="paramsProps.row.lockOnStartup" />
       </el-form-item>
       <el-form-item label="设备类型" prop="deviceTypeId">
         <el-select v-model="paramsProps.row.deviceTypeId" clearable placeholder="请选择设备类型">
-          <el-option v-for="item in optionsStore.getDictOptions('')" :key="item.id" :label="item.codeName" :value="item.id" />
+          <el-option
+            v-for="item in options"
+            :key="item.id"
+            :label="`${item.name}/${item.enableHighVoltage ? 'high' : 'low'}`"
+            :value="item.id"
+          />
         </el-select>
       </el-form-item>
       <el-form-item label="NTP时间校准间隔" prop="ntpTimeCalibrationGap">
@@ -43,9 +49,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import { type ElForm, ElMessage } from 'element-plus';
 import { useOptionsStore } from '@/stores/modules/options';
+import type { IThreeDeviceType } from '@/api/interface/threedevicetype/threeDeviceType';
+import { getThreeDeviceTypeOptionsApi } from '@/api/modules/threedevicetype/threeDeviceType';
+
+const options = ref<IThreeDeviceType.Options[]>([]);
+
+const getOptionsList = () => {
+  getThreeDeviceTypeOptionsApi().then(res => {
+    options.value = res.data;
+  });
+};
+
+onMounted(() => {
+  getOptionsList();
+});
 
 defineOptions({
   name: 'ThreeCollectorForm'

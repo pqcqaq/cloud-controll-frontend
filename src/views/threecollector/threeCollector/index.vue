@@ -90,6 +90,7 @@ import { ElMessageBox } from 'element-plus';
 import { useDownload } from '@/hooks/useDownload';
 import { Lock, Unlock } from '@element-plus/icons-vue';
 import { getThreeDeviceTypeOptionsApi } from '@/api/modules/threedevicetype/threeDeviceType';
+import { useSocketIOStore } from '@/stores/modules/socketioClient';
 
 defineOptions({
   name: 'ThreeCollectorView'
@@ -157,6 +158,7 @@ const formatParams = (params: IThreeCollector.Query) => {
   delete newParams.updateTime;
   return newParams;
 };
+
 // 打开 drawer(新增、查看、编辑)
 const threeCollectorRef = ref<InstanceType<typeof ThreeCollectorForm>>();
 const openAddEdit = async (title: string, row: any = {}, isAdd = true) => {

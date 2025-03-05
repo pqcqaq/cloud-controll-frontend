@@ -13,6 +13,7 @@ import LayoutTransverse from '@/layouts/LayoutTransverse/index.vue';
 import LayoutColumns from '@/layouts/LayoutColumns/index.vue';
 import { useAppStore } from '@/stores/modules/app';
 import { useSocketStore } from '@/stores/modules/socket';
+import { useSocketIOStore } from '@/stores/modules/socketioClient';
 import { storeToRefs } from 'pinia';
 import { useLoadingStore } from '@/stores/modules/loading';
 import { ElLoading, ElMessage, ElNotification } from 'element-plus';
@@ -59,6 +60,9 @@ watch(
 // 开启socket
 const socketStore = useSocketStore();
 socketStore.open();
+
+const socketIOStore = useSocketIOStore();
+socketIOStore.open();
 
 onMounted(() => {
   mittBus.on('socket.PRINT_ERROR', (data: any) => {

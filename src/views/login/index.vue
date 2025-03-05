@@ -17,7 +17,7 @@
             alt=""
           >
           <h2 class="logo-text">
-            信恒英聚-管理系统
+            云控后台-管理系统
           </h2>
         </div>
         <LoginForm />

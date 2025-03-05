@@ -67,7 +67,14 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
           changeOrigin: true,
           ws: true,
           rewrite: (path) => path.replace(new RegExp(`^/socket`), ''),
-          ...(/^https:\/\//.test(env.VITE_SOCKET_URL) ? { secure: false } : {}),
+          ...(/^wss:\/\//.test(env.VITE_SOCKET_URL) ? { secure: false } : {}),
+        },
+        '/io': {
+          target: env.VITE_SOCKET_IO_BASE_URL,
+          changeOrigin: true,
+          ws: true,
+          rewrite: (path) => path.replace(new RegExp(`^/io`), ''),
+          ...(/^wss:\/\//.test(env.VITE_SOCKET_IO_URL) ? { secure: false } : {}),
         }
       },
     },

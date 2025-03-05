@@ -17,6 +17,7 @@ import Loading from '@/components/Loading/index.vue';
 import ThemeDrawer from '@/layouts/components/ThemeDrawer/index.vue';
 import { useAppStore } from '@/stores/modules/app';
 import { useSocketStore } from '@/stores/modules/socket';
+import { useSocketIOStore } from '@/stores/modules/socketioClient';
 
 defineOptions({
   name: 'LayoutAsync'
@@ -35,6 +36,10 @@ const layout = computed(() => appStore.layout);
 // 开启socket
 const socketStore = useSocketStore();
 socketStore.open();
+
+const socketIOStore = useSocketIOStore();
+socketIOStore.open();
+
 </script>
 
 <style scoped lang="scss">

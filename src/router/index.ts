@@ -24,6 +24,7 @@ import { useOptionsStore } from '@/stores/modules/options';
  * @param meta.isKeepAlive ==> 当前路由是否缓存
  */
 const router = createRouter({
+  // history: createWebHistory(import.meta.env.BASE_URL),
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [...staticRouter, ...errorRouter],
   strict: false,

@@ -122,7 +122,7 @@ const performLogin = async () => {
     router.push(HOME_URL);
     ElNotification({
       title: getTimeState(),
-      message: '欢迎登录 信恒英聚-后台管理系统',
+      message: '欢迎登录 云控后台-后台管理系统',
       type: 'success',
       duration: 3000
     });
