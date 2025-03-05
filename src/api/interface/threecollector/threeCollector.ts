@@ -51,7 +51,11 @@ export namespace IThreeCollector {
       isOnline: boolean;
       updateTime: string;
     };
-    lockedInfo: string;
+    lockedInfo: {
+      lockedTime: string;
+      unlockTime: string;
+      status: string;
+    };
     pins: Array<{
       pinDef: number;
       counts: number;

@@ -11,6 +11,20 @@
         <el-select v-model="selectedCollector" placeholder="请选择采集器" class="collector-select">
           <el-option v-for="item in selections" :key="item.id" :label="item.imei" :value="item"> </el-option>
         </el-select>
+        <div v-if="collectorDetail" class="action-buttons">
+          <el-button v-auth="'three.collector.lock'" type="primary" :icon="Lock" @click="lockInfo(collectorDetail)">
+            上锁
+          </el-button>
+          <el-button v-auth="'three.collector.unlock'" type="primary" :icon="Unlock" @click="unlockInfo(collectorDetail)">
+            解锁
+          </el-button>
+          <el-button v-auth="'three.collector.sendUpdate'" type="primary" :icon="Download" @click="sendUpdate(collectorDetail)">
+            发送更新
+          </el-button>
+          <el-button v-auth="'three.collector.reboot'" type="primary" :icon="Refresh" @click="rebootInfo(collectorDetail)">
+            重启
+          </el-button>
+        </div>
 
         <div v-if="collectorDetail" class="detail-section">
           <h3>基本信息</h3>
@@ -28,9 +42,7 @@
             <el-descriptions-item label="信号强度">{{ collectorDetail.status.signalStrength }} dBm</el-descriptions-item>
             <el-descriptions-item label="电压">{{ collectorDetail.status.voltage.toFixed(2) }} V</el-descriptions-item>
             <el-descriptions-item label="温度">{{ collectorDetail.status.temperature.toFixed(1) }} °C</el-descriptions-item>
-            <el-descriptions-item label="运行时间"
-              >{{ collectorDetail.status.uptime }} 秒</el-descriptions-item
-            >
+            <el-descriptions-item label="运行时间">{{ collectorDetail.status.uptime }} 秒</el-descriptions-item>
             <el-descriptions-item label="纬度">{{ collectorDetail.status.posLat.toFixed(6) }}</el-descriptions-item>
             <el-descriptions-item label="经度">{{ collectorDetail.status.posLon.toFixed(6) }}</el-descriptions-item>
             <el-descriptions-item label="在线状态">
@@ -40,6 +52,23 @@
             </el-descriptions-item>
             <el-descriptions-item label="更新时间">{{ collectorDetail.status.updateTime }}</el-descriptions-item>
           </el-descriptions>
+
+          <!-- 锁机状态 -->
+          <h3>锁机状态</h3>
+          <el-descriptions :column="2" border v-if="collectorDetail.lockedInfo">
+            <el-descriptions-item label="锁机状态">
+              <el-tag :type="collectorDetail.lockedInfo.status === 'LOCKED' ? 'success' : 'info'">
+                {{ collectorDetail.lockedInfo.status === 'LOCKED' ? '已锁机' : '未锁机' }}
+              </el-tag>
+            </el-descriptions-item>
+            <el-descriptions-item label="锁机时间">{{ collectorDetail.lockedInfo.lockedTime }}</el-descriptions-item>
+            <el-descriptions-item label="解锁时间">{{ collectorDetail.lockedInfo.unlockTime }}</el-descriptions-item>
+          </el-descriptions>
+          <el-descriptions :column="2" border v-else>
+            <el-descriptions-item label="锁机状态">
+              <el-tag type="info">未锁机</el-tag>
+            </el-descriptions-item>
+            </el-descriptions>
 
           <h3>引脚状态</h3>
           <el-table :data="collectorDetail.pins" border style="width: 100%">
@@ -64,11 +93,18 @@
 
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue';
-import { ElMessage } from 'element-plus';
-import { Refresh } from '@element-plus/icons-vue';
+import { ElMessage, ElMessageBox } from 'element-plus';
 import type { IThreeCollector } from '@/api/interface/threecollector/threeCollector';
-import { getMyCollectorsApi, getThreeCollectorDetailApi } from '@/api/modules/threecollector/threeCollector';
+import {
+  getMyCollectorsApi,
+  getThreeCollectorDetailApi,
+  sendLockMsgApi,
+  sendRestartMsgApi,
+  sendUnlockMsgApi,
+  sendUpdateMsgApi
+} from '@/api/modules/threecollector/threeCollector';
 import { useSocketIOStore } from '@/stores/modules/socketioClient';
+import { Refresh, Lock, Unlock, Download } from '@element-plus/icons-vue';
 
 const selections = ref<IThreeCollector.Selection[]>([]);
 const selectedCollector = ref<IThreeCollector.Selection | null>(null);
@@ -120,6 +156,66 @@ watch(
     }
   }
 );
+
+const lockInfo = async (params: IThreeCollector.DeviceData) => {
+  try {
+    await ElMessageBox.confirm('确定要上锁吗?', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    });
+    await sendLockMsgApi({ id: params.id });
+    ElMessage.success('上锁成功');
+    await getDetails();
+  } catch (error) {
+    if (error !== 'cancel') ElMessage.error('上锁失败');
+  }
+};
+
+const unlockInfo = async (params: IThreeCollector.DeviceData) => {
+  try {
+    await ElMessageBox.confirm('确定要解锁吗?', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    });
+    await sendUnlockMsgApi({ id: params.id });
+    ElMessage.success('解锁成功');
+    await getDetails();
+  } catch (error) {
+    if (error !== 'cancel') ElMessage.error('解锁失败');
+  }
+};
+
+const sendUpdate = async (params: IThreeCollector.DeviceData) => {
+  try {
+    await ElMessageBox.confirm('确定要发送更新吗?', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    });
+    await sendUpdateMsgApi({ id: params.id });
+    ElMessage.success('发送更新成功');
+    await getDetails();
+  } catch (error) {
+    if (error !== 'cancel') ElMessage.error('发送更新失败');
+  }
+};
+
+const rebootInfo = async (params: IThreeCollector.DeviceData) => {
+  try {
+    await ElMessageBox.confirm('确定要重启吗?', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    });
+    await sendRestartMsgApi({ id: params.id });
+    ElMessage.success('重启成功');
+    await getDetails();
+  } catch (error) {
+    if (error !== 'cancel') ElMessage.error('重启失败');
+  }
+};
 </script>
 
 <style scoped>
@@ -154,5 +250,15 @@ watch(
 h3 {
   margin-top: 20px;
   margin-bottom: 10px;
+}
+
+.action-buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.action-buttons .el-button {
+  margin: 0 10px;
 }
 </style>
