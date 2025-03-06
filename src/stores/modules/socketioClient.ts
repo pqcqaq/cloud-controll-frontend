@@ -55,7 +55,6 @@ export const useSocketIOStore = defineStore('socket-io', () => {
   };
 
   const _onMessage = (event: any) => {
-    console.log('socket.io message', event);
     if (event.topic && event.data) {
       handleIncomingMessage(event.topic, event.data);
     }
@@ -87,12 +86,12 @@ export const useSocketIOStore = defineStore('socket-io', () => {
 
   type MsgCallBack = (data: any) => void;
 
-  const subscriptions = ref<Map<string, ((data: any) => void)[]>>(new Map());
+  const subscriptions = ref<Map<string, ((topic: string, data: any) => void)[]>>(new Map());
 
   const handleIncomingMessage = (topic: string, data: any) => {
     subscriptions.value.forEach((callbacks, subscription) => {
       if (isTopicMatch(subscription, topic)) {
-        callbacks.forEach(callback => callback(data));
+        callbacks.forEach(callback => callback(topic, data));
       }
     });
   };
@@ -123,7 +122,7 @@ export const useSocketIOStore = defineStore('socket-io', () => {
     socket.value = socketIO;
 
     socket.value.onAny((event, ...args) => {
-      _onMessage({ topic: event, data: args });
+      _onMessage({ topic: event, data: args[0] });
     });
   };
 
@@ -139,7 +138,7 @@ export const useSocketIOStore = defineStore('socket-io', () => {
     socket.value = null;
   };
 
-  const sub = (channel: string, callback: (data: any) => void) => {
+  const sub = (channel: string, callback: (topic: string, data: any) => void) => {
     const userId = useUserStore().userInfo.id;
     const userChannel = `${userId}/${channel}`;
     socket.value?.emit('subscribe', userChannel);
@@ -150,7 +149,7 @@ export const useSocketIOStore = defineStore('socket-io', () => {
     subscriptions.value.get(userChannel)!.push(callback);
   };
 
-  const unsub = (channel: string, callback?: (data: any) => void) => {
+  const unsub = (channel: string, callback?: (topic: string, data: any) => void) => {
     const userId = useUserStore().userInfo.id;
     const userChannel = `${userId}/${channel}`;
     socket.value?.emit('unsubscribe', userChannel);
@@ -171,7 +170,7 @@ export const useSocketIOStore = defineStore('socket-io', () => {
     }
   };
 
-  const psub = (channel: string, callback: (data: any) => void) => {
+  const psub = (channel: string, callback: (topic: string, data: any) => void) => {
     socket.value?.emit('subscribe', channel);
     const userChannel = `#/${channel}`;
 
@@ -181,7 +180,7 @@ export const useSocketIOStore = defineStore('socket-io', () => {
     subscriptions.value.get(userChannel)!.push(callback);
   };
 
-  const punsub = (channel: string, callback?: (data: any) => void) => {
+  const punsub = (channel: string, callback?: (topic: string, data: any) => void) => {
     socket.value?.emit('unsubscribe', channel);
     const userChannel = `#/${channel}`;
 

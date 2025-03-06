@@ -68,7 +68,7 @@
             <el-descriptions-item label="锁机状态">
               <el-tag type="info">未锁机</el-tag>
             </el-descriptions-item>
-            </el-descriptions>
+          </el-descriptions>
 
           <h3>引脚状态</h3>
           <el-table :data="collectorDetail.pins" border style="width: 100%">
@@ -98,6 +98,7 @@ import type { IThreeCollector } from '@/api/interface/threecollector/threeCollec
 import {
   getMyCollectorsApi,
   getThreeCollectorDetailApi,
+  getThreeCollectorDetailInfoApi,
   sendLockMsgApi,
   sendRestartMsgApi,
   sendUnlockMsgApi,
@@ -124,7 +125,7 @@ const fetchList = async () => {
 const getDetails = async () => {
   if (selectedCollector.value) {
     try {
-      const res = await getThreeCollectorDetailApi({ id: selectedCollector.value.id });
+      const res = await getThreeCollectorDetailInfoApi({ id: selectedCollector.value.id });
       collectorDetail.value = res.data;
     } catch (error) {
       ElMessage.error('获取采集器详情失败');
@@ -132,8 +133,46 @@ const getDetails = async () => {
   }
 };
 
-const handleSub = (data: any) => {
-  getDetails();
+const updateValueIfExist = (source: Record<string, any>, target: Record<string, any>) => {
+  // 遍历target的所有key，如果value存在，则更新到source中
+  for (const key in target) {
+    if (Object.prototype.hasOwnProperty.call(target, key)) {
+      const element = target[key];
+      if (element) {
+        source[key] = element;
+      }
+    }
+  }
+};
+
+const handleSub = (topic: string, data: any) => {
+  console.log(topic, data);
+  if (topic.endsWith('pin')) {
+    const pinDef = data.pinDef;
+    if (collectorDetail.value?.pins[pinDef - 1]) {
+      updateValueIfExist(collectorDetail.value?.pins[pinDef - 1], data);
+    } else {
+      collectorDetail.value?.pins.push(data);
+    }
+  } else if (topic.endsWith('state')) {
+    collectorDetail.value?.status && updateValueIfExist(collectorDetail.value?.status, data);
+  } else if (topic.endsWith('locke')) {
+    if (collectorDetail.value) {
+      collectorDetail.value.lockedInfo = data;
+    }
+  } else if (topic.endsWith('unlock')) {
+    if (collectorDetail.value) {
+      collectorDetail.value.lockedInfo = '';
+    }
+  } else if (topic.endsWith('online')) {
+    if (collectorDetail.value) {
+      collectorDetail.value.status.isOnline = true;
+    }
+  } else if (topic.endsWith('offline')) {
+    if (collectorDetail.value) {
+      collectorDetail.value.status.isOnline = false;
+    }
+  }
 };
 
 const formatUptime = (row: any) => {
@@ -166,7 +205,6 @@ const lockInfo = async (params: IThreeCollector.DeviceData) => {
     });
     await sendLockMsgApi({ id: params.id });
     ElMessage.success('上锁成功');
-    await getDetails();
   } catch (error) {
     if (error !== 'cancel') ElMessage.error('上锁失败');
   }
@@ -181,7 +219,6 @@ const unlockInfo = async (params: IThreeCollector.DeviceData) => {
     });
     await sendUnlockMsgApi({ id: params.id });
     ElMessage.success('解锁成功');
-    await getDetails();
   } catch (error) {
     if (error !== 'cancel') ElMessage.error('解锁失败');
   }
@@ -196,7 +233,6 @@ const sendUpdate = async (params: IThreeCollector.DeviceData) => {
     });
     await sendUpdateMsgApi({ id: params.id });
     ElMessage.success('发送更新成功');
-    await getDetails();
   } catch (error) {
     if (error !== 'cancel') ElMessage.error('发送更新失败');
   }
@@ -211,7 +247,6 @@ const rebootInfo = async (params: IThreeCollector.DeviceData) => {
     });
     await sendRestartMsgApi({ id: params.id });
     ElMessage.success('重启成功');
-    await getDetails();
   } catch (error) {
     if (error !== 'cancel') ElMessage.error('重启失败');
   }

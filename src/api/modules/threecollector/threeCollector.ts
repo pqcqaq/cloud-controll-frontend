@@ -48,7 +48,17 @@ export const removeThreeCollectorApi = (params: { ids: (string | number)[] }) =>
 */
 export const getThreeCollectorDetailApi = (params: { id: number }) => {
   const { id } = params
-  return http.get<IThreeCollector.DeviceData>(ADMIN_MODULE + `/three-collector/${id}`)
+  return http.get<IThreeCollector.Row>(ADMIN_MODULE + `/three-collector/${id}`)
+}
+
+/**
+* 获取采集器详情
+* @param params
+* @returns {*}
+*/
+export const getThreeCollectorDetailInfoApi = (params: { id: number }) => {
+  const { id } = params
+  return http.get<IThreeCollector.DeviceData>(ADMIN_MODULE + `/three-collector/details/${id}`)
 }
 
 /**

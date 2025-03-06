@@ -55,7 +55,7 @@ export namespace IThreeCollector {
       lockedTime: string;
       unlockTime: string;
       status: string;
-    };
+    } | "";
     pins: Array<{
       pinDef: number;
       counts: number;
