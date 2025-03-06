@@ -146,7 +146,6 @@ const updateValueIfExist = (source: Record<string, any>, target: Record<string, 
 };
 
 const handleSub = (topic: string, data: any) => {
-  console.log(topic, data);
   if (topic.endsWith('pin')) {
     const pinDef = data.pinDef;
     if (collectorDetail.value?.pins[pinDef - 1]) {
