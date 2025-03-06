@@ -156,7 +156,7 @@ const handleSub = (topic: string, data: any) => {
     }
   } else if (topic.endsWith('state')) {
     collectorDetail.value?.status && updateValueIfExist(collectorDetail.value?.status, data);
-  } else if (topic.endsWith('locke')) {
+  } else if (topic.endsWith('lock')) {
     if (collectorDetail.value) {
       collectorDetail.value.lockedInfo = data;
     }
