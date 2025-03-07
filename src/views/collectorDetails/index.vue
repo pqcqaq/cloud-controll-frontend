@@ -42,9 +42,9 @@
             <el-descriptions-item label="信号强度">{{ collectorDetail.status.signalStrength }} dBm</el-descriptions-item>
             <el-descriptions-item label="电压">{{ collectorDetail.status.voltage.toFixed(2) }} V</el-descriptions-item>
             <el-descriptions-item label="温度">{{ collectorDetail.status.temperature.toFixed(1) }} °C</el-descriptions-item>
-            <el-descriptions-item label="运行时间">{{ collectorDetail.status.uptime }} 秒</el-descriptions-item>
-            <el-descriptions-item label="纬度">{{ collectorDetail.status.posLat.toFixed(6) }}</el-descriptions-item>
-            <el-descriptions-item label="经度">{{ collectorDetail.status.posLon.toFixed(6) }}</el-descriptions-item>
+            <el-descriptions-item label="运行时间">{{ collectorDetail.status.uptime.toFixed(2) }} 秒</el-descriptions-item>
+            <el-descriptions-item label="纬度">{{ collectorDetail.status.posLat }}</el-descriptions-item>
+            <el-descriptions-item label="经度">{{ collectorDetail.status.posLon }}</el-descriptions-item>
             <el-descriptions-item label="在线状态">
               <el-tag :type="collectorDetail.status.isOnline ? 'success' : 'danger'">
                 {{ collectorDetail.status.isOnline ? '在线' : '离线' }}
@@ -97,21 +97,22 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 import type { IThreeCollector } from '@/api/interface/threecollector/threeCollector';
 import {
   getMyCollectorsApi,
-  getThreeCollectorDetailApi,
-  getThreeCollectorDetailInfoApi,
   sendLockMsgApi,
   sendRestartMsgApi,
   sendUnlockMsgApi,
   sendUpdateMsgApi
 } from '@/api/modules/threecollector/threeCollector';
-import { useSocketIOStore } from '@/stores/modules/socketioClient';
 import { Refresh, Lock, Unlock, Download } from '@element-plus/icons-vue';
+import { useRealTimeCollector } from '@/utils/useRealTimeCollector';
 
 const selections = ref<IThreeCollector.Selection[]>([]);
 const selectedCollector = ref<IThreeCollector.Selection | null>(null);
-const collectorDetail = ref<IThreeCollector.DeviceData | null>(null);
 
-const socketIoStore = useSocketIOStore();
+const { collectorDetail, sub, unsub } = useRealTimeCollector();
+
+const formatUptime = (row: any) => {
+  return `${(row.uptime / 3600).toFixed(2)} 小时`;
+};
 
 const fetchList = async () => {
   try {
@@ -122,62 +123,6 @@ const fetchList = async () => {
   }
 };
 
-const getDetails = async () => {
-  if (selectedCollector.value) {
-    try {
-      const res = await getThreeCollectorDetailInfoApi({ id: selectedCollector.value.id });
-      collectorDetail.value = res.data;
-    } catch (error) {
-      ElMessage.error('获取采集器详情失败');
-    }
-  }
-};
-
-const updateValueIfExist = (source: Record<string, any>, target: Record<string, any>) => {
-  // 遍历target的所有key，如果value存在，则更新到source中
-  for (const key in target) {
-    if (Object.prototype.hasOwnProperty.call(target, key)) {
-      const element = target[key];
-      if (element) {
-        source[key] = element;
-      }
-    }
-  }
-};
-
-const handleSub = (topic: string, data: any) => {
-  if (topic.endsWith('pin')) {
-    const pinDef = data.pinDef;
-    if (collectorDetail.value?.pins[pinDef - 1]) {
-      updateValueIfExist(collectorDetail.value?.pins[pinDef - 1], data);
-    } else {
-      collectorDetail.value?.pins.push(data);
-    }
-  } else if (topic.endsWith('state')) {
-    collectorDetail.value?.status && updateValueIfExist(collectorDetail.value?.status, data);
-  } else if (topic.endsWith('lock')) {
-    if (collectorDetail.value) {
-      collectorDetail.value.lockedInfo = data;
-    }
-  } else if (topic.endsWith('unlock')) {
-    if (collectorDetail.value) {
-      collectorDetail.value.lockedInfo = '';
-    }
-  } else if (topic.endsWith('online')) {
-    if (collectorDetail.value) {
-      collectorDetail.value.status.isOnline = true;
-    }
-  } else if (topic.endsWith('offline')) {
-    if (collectorDetail.value) {
-      collectorDetail.value.status.isOnline = false;
-    }
-  }
-};
-
-const formatUptime = (row: any) => {
-  return `${(row.uptime / 3600).toFixed(2)} 小时`;
-};
-
 onMounted(() => {
   fetchList();
 });
@@ -186,11 +131,10 @@ watch(
   () => selectedCollector.value,
   (newVal, oldVal) => {
     if (oldVal) {
-      socketIoStore.unsub(`RTU/${oldVal.imei}/#`);
+      unsub();
     }
     if (newVal) {
-      socketIoStore.sub(`RTU/${newVal.imei}/#`, handleSub);
-      getDetails();
+      sub(newVal.imei, newVal.id);
     }
   }
 );
