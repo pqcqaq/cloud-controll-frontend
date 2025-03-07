@@ -44,9 +44,7 @@ export const useSocketIOStore = defineStore('socket-io', () => {
    * @type {Socket|null}
    */
   const socket = ref<Socket | null>(null);
-
   const canReconnect = ref(true);
-
   const reconnectCount = ref(0);
 
   const _onOpen = () => {
@@ -83,8 +81,6 @@ export const useSocketIOStore = defineStore('socket-io', () => {
       open();
     }, timeout);
   };
-
-  type MsgCallBack = (data: any) => void;
 
   const subscriptions = ref<Map<string, ((topic: string, data: any) => void)[]>>(new Map());
 
@@ -200,12 +196,17 @@ export const useSocketIOStore = defineStore('socket-io', () => {
     }
   };
 
+  const isConnected = () => {
+    return !!socket.value?.connected;
+  };
+
   return {
     open,
     close,
     sub,
     unsub,
     psub,
-    punsub
+    punsub,
+    isConnected
   };
 });

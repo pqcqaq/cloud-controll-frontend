@@ -1,5 +1,5 @@
 // useRealTimeCollector.ts
-import { ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import { useSocketIOStore } from '@/stores/modules/socketioClient';
 import { getThreeCollectorDetailInfoApi } from '@/api/modules/threecollector/threeCollector';
 import type { IThreeCollector } from '@/api/interface/threecollector/threeCollector';
@@ -7,7 +7,7 @@ import type { IThreeCollector } from '@/api/interface/threecollector/threeCollec
 export function useRealTimeCollector() {
   const collectorDetail = ref<IThreeCollector.DeviceData | null>(null);
   const socketIoStore = useSocketIOStore();
-  let currentImei: string | null = null;
+  const currentImei = ref<string | null>(null);
 
   const updateValueIfExist = (source: Record<string, any>, target: Record<string, any>) => {
     for (const key in target) {
@@ -45,7 +45,7 @@ export function useRealTimeCollector() {
 
   const sub = async (imei: string, id: number) => {
     unsub(); // 先取消之前的订阅
-    currentImei = imei;
+    currentImei.value = imei;
     socketIoStore.sub(`RTU/${imei}/#`, handleSub);
     try {
       const res = await getThreeCollectorDetailInfoApi({ id });
@@ -56,12 +56,16 @@ export function useRealTimeCollector() {
   };
 
   const unsub = () => {
-    if (currentImei) {
-      socketIoStore.unsub(`RTU/${currentImei}/#`);
-      currentImei = null;
+    if (currentImei.value) {
+      socketIoStore.unsub(`RTU/${currentImei.value}/#`);
+      currentImei.value = null;
     }
     collectorDetail.value = null;
   };
+
+  onUnmounted(() => {
+    unsub();
+  });
 
   return {
     collectorDetail,
