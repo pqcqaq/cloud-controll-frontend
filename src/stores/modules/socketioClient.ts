@@ -1,7 +1,6 @@
 import { useUserStore } from '@/stores/modules/user';
 import { defineStore } from 'pinia';
 import mittBus from '@/utils/mittBus';
-import { CHANNEL_DEFAULT, CHANNEL_KICK_OFF, UPGRADE_CHANNEL } from '@/config/consts';
 import { ref } from 'vue';
 import { io, Socket, type ManagerOptions, type SocketOptions } from 'socket.io-client';
 
@@ -50,6 +49,10 @@ export const useSocketIOStore = defineStore('socket-io', () => {
   const _onOpen = () => {
     canReconnect.value = true;
     reconnectCount.value = 0;
+    // 启动完成重新订阅之前订阅过的频道
+    subscriptions.value.forEach((callbacks, subscription) => {
+      socket.value?.emit('subscribe', subscription);
+    });
   };
 
   const _onMessage = (event: any) => {
