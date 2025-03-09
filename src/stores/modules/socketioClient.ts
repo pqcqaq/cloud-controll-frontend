@@ -61,29 +61,29 @@ export const useSocketIOStore = defineStore('socket-io', () => {
     }
   };
 
-  const _onError = (event: Event) => {
+  const _onError = (event: Error) => {
     mittBus.emit('socket.io.error', event);
   };
 
-  const _onClose = () => {
-    socket.value = null;
-    if (canReconnect.value) {
-      handleReconnect();
-    }
-  };
+  // const _onClose = () => {
+  //   socket.value = null;
+  //   if (canReconnect.value) {
+  //     handleReconnect();
+  //   }
+  // };
 
-  const handleReconnect = () => {
-    let timeout;
-    if (reconnectCount.value < MAX_RECONNECT_COUNT) {
-      timeout = Math.min(10000 * Math.pow(2, reconnectCount.value), 30000); // 指数退避算法
-    } else {
-      timeout = 60000; // 超过最大次数次后，每分钟重试一次
-    }
-    setTimeout(() => {
-      reconnectCount.value++;
-      open();
-    }, timeout);
-  };
+  // const handleReconnect = () => {
+  //   let timeout;
+  //   if (reconnectCount.value < MAX_RECONNECT_COUNT) {
+  //     timeout = Math.min(10000 * Math.pow(2, reconnectCount.value), 30000); // 指数退避算法
+  //   } else {
+  //     timeout = 60000; // 超过最大次数次后，每分钟重试一次
+  //   }
+  //   setTimeout(() => {
+  //     reconnectCount.value++;
+  //     open();
+  //   }, timeout);
+  // };
 
   const subscriptions = ref<Map<string, ((topic: string, data: any) => void)[]>>(new Map());
 
@@ -113,9 +113,9 @@ export const useSocketIOStore = defineStore('socket-io', () => {
       transports: ['websocket'] // 强制使用 WebSocket
     };
     const socketIO = io(socketIOConfig);
-    socketIO.on('open', _onOpen);
-    socketIO.on('error', _onError);
-    socketIO.on('close', _onClose);
+    socketIO.on('connect', _onOpen);
+    socketIO.on('connect_error', _onError);
+    // socketIO.on('disconnect', _onClose);
     socketIO.connect();
     // // 连接时处理
     socket.value = socketIO;
