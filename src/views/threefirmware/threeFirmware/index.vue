@@ -81,7 +81,7 @@ const proTableRef = ref<ProTableInstance>();
 const columns: ColumnProps<IThreeFirmware.Row>[] = [
   { type: 'selection', width: 80 },
   { prop: 'version', label: '固件版本' },
-  { prop: 'fileId', label: '关联的文件id' },
+  { prop: 'url', label: '文件地址' },
   { prop: 'operation', label: '操作', width: 250, fixed: 'right' }
 ]
 // 搜索条件项

@@ -109,11 +109,16 @@ export const sendRestartMsgApi = (params: { id: number }) => {
 /**
  * 获取我的采集器
  */
-// @Operation(summary = "获取我的采集器")
-// @GetMapping("/my")
-// public ApiResult<List<SelectionVo>> getMyCollectors() {
-//     return ApiResult.success(threeCollectorService.getMyCollectors());
-// }
 export const getMyCollectorsApi = () => {
   return http.get<IThreeCollector.Selection[]>(ADMIN_MODULE + `/three-collector/my`)
+}
+
+
+/**
+ * 发送升级消息
+ * @param params
+ * @returns {*}
+  */
+export const sendUpgradeMsgApi = (params: IThreeCollector.CollectorUpgradeMsg) => {
+  return http.post(ADMIN_MODULE + `/three-collector/upgrade`, params)
 }

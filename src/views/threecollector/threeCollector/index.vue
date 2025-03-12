@@ -56,10 +56,13 @@
         <el-button v-auth="'three.collector.reboot'" type="primary" link :icon="Download" @click="rebootInfo(row)">
           重启
         </el-button>
+        <!-- 升级 -->
+        <el-button type="primary" link :icon="Download" @click="UpgradeFormRef?.open(row)"> 升级 </el-button>
       </template>
     </ProTable>
     <ThreeCollectorForm ref="threeCollectorRef" />
     <ImportExcel ref="ImportExcelRef" />
+    <UpgradeForm ref="UpgradeFormRef" />
   </div>
 </template>
 
@@ -90,7 +93,10 @@ import { ElMessageBox } from 'element-plus';
 import { useDownload } from '@/hooks/useDownload';
 import { Lock, Unlock } from '@element-plus/icons-vue';
 import { getThreeDeviceTypeOptionsApi } from '@/api/modules/threedevicetype/threeDeviceType';
+import UpgradeForm from './components/UpgradeForm.vue';
 import { useSocketIOStore } from '@/stores/modules/socketioClient';
+
+const UpgradeFormRef = ref<InstanceType<typeof UpgradeForm>>();
 
 defineOptions({
   name: 'ThreeCollectorView'
@@ -132,6 +138,12 @@ const columns: ColumnProps<IThreeCollector.Row>[] = [
     label: '心跳间隔'
   },
   { prop: 'deviceTypeId', label: '设备类型' },
+  { prop: 'version', label: '固件版本' },
+  { prop: 'weakSignal', label: '弱信号阈值' },
+  { prop: 'lowVoltage', label: '低电压阈值' },
+  { prop: 'highVoltage', label: '高电压阈值' },
+  { prop: 'lowTemperature', label: '低温度阈值' },
+  { prop: 'highTemperature', label: '高温度阈值' },
   { prop: 'operation', label: '操作', width: 250, fixed: 'right' }
 ];
 // 搜索条件项
