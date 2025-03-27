@@ -1,4 +1,4 @@
-name: Docker Sz-Admin Test CI
+name: Docker tr-Admin Test CI
 
 on:
   push:
@@ -11,17 +11,17 @@ jobs:
     runs-on: ubuntu-latest
     env:
       # 服务名
-      APP_NAME: sz-admin
+      APP_NAME: tr-admin
       # 运行环境变量
       RUNNING_ACTIVE: preview
       # 端口。若修改端口，请保持与 Dockerfile中的 EXPOSE属性一致
       SERVICE_PORT: 9800
       # nginx配置文件路径
-      NGINX_CONF_DIR: /home/conf/sz-admin-nginx/conf.d
+      NGINX_CONF_DIR: /home/conf/tr-admin-nginx/conf.d
       # Docker 仓库域名
       ACR_DOMAIN: registry.cn-beijing.aliyuncs.com
       # 命名空间
-      ACR_ZONE: sz-action
+      ACR_ZONE: tr-action
       VERSION: test
       SHELL_RUN_DIR: /home/run
       # 预览环境标识（预览环境某些功能将禁用）

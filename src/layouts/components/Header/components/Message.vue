@@ -29,7 +29,7 @@
                 class="message-icon"
               >
               <div class="message-content">
-                <span class="message-title">一键三连 Sz-Admin 🧡</span>
+                <span class="message-title">一键三连 tr-Admin 🧡</span>
                 <span class="message-date">一分钟前</span>
               </div>
             </div>
@@ -40,7 +40,7 @@
                 class="message-icon"
               >
               <div class="message-content">
-                <span class="message-title">一键三连 Sz-Admin 💙</span>
+                <span class="message-title">一键三连 tr-Admin 💙</span>
                 <span class="message-date">一小时前</span>
               </div>
             </div>
@@ -51,7 +51,7 @@
                 class="message-icon"
               >
               <div class="message-content">
-                <span class="message-title">一键三连 Sz-Admin 💚</span>
+                <span class="message-title">一键三连 tr-Admin 💚</span>
                 <span class="message-date">半天前</span>
               </div>
             </div>
@@ -62,7 +62,7 @@
                 class="message-icon"
               >
               <div class="message-content">
-                <span class="message-title">一键三连 Sz-Admin 💜</span>
+                <span class="message-title">一键三连 tr-Admin 💜</span>
                 <span class="message-date">一星期前</span>
               </div>
             </div>
@@ -73,7 +73,7 @@
                 class="message-icon"
               >
               <div class="message-content">
-                <span class="message-title">一键三连 Sz-Admin 💛</span>
+                <span class="message-title">一键三连 tr-Admin 💛</span>
                 <span class="message-date">一个月前</span>
               </div>
             </div> -->
