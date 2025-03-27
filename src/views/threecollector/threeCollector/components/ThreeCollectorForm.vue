@@ -19,7 +19,7 @@
       </el-form-item>
       <el-form-item label="初始状态是否锁机" prop="lockOnStartup">
         <!-- <el-input-number v-model="paramsProps.row.lockOnStartup" :precision="0" :min="1" :max="999999" /> -->
-         <el-switch v-model="paramsProps.row.lockOnStartup" />
+        <el-switch v-model="paramsProps.row.lockOnStartup" />
       </el-form-item>
       <el-form-item label="设备类型" prop="deviceTypeId">
         <el-select v-model="paramsProps.row.deviceTypeId" clearable placeholder="请选择设备类型">
@@ -39,6 +39,30 @@
       </el-form-item>
       <el-form-item label="心跳间隔" prop="keepaliveGap">
         <el-input-number v-model="paramsProps.row.keepaliveGap" :precision="0" :min="1" :max="999999" />
+      </el-form-item>
+      <!-- { prop: 'version', label: '固件版本' },
+          { prop: 'weakSignal', label: '弱信号阈值' },
+          { prop: 'lowVoltage', label: '低电压阈值' },
+          { prop: 'highVoltage', label: '高电压阈值' },
+          { prop: 'lowTemperature', label: '低温度阈值' },
+          { prop: 'highTemperature', label: '高温度阈值' }, -->
+      <!-- <el-form-item label="固件版本" prop="version">
+        <el-input v-model="paramsProps.row.version" placeholder="请填写固件版本" clearable></el-input>
+      </el-form-item> -->
+      <el-form-item label="弱信号阈值" prop="weakSignal">
+        <el-input-number v-model="paramsProps.row.weakSignal" :precision="0" />
+      </el-form-item>
+      <el-form-item label="低电压阈值" prop="lowVoltage">
+        <el-input-number v-model="paramsProps.row.lowVoltage" :precision="2" />
+      </el-form-item>
+      <el-form-item label="高电压阈值" prop="highVoltage">
+        <el-input-number v-model="paramsProps.row.highVoltage" :precision="2" />
+      </el-form-item>
+      <el-form-item label="低温度阈值" prop="lowTemperature">
+        <el-input-number v-model="paramsProps.row.lowTemperature" :precision="2" />
+      </el-form-item>
+      <el-form-item label="高温度阈值" prop="highTemperature">
+        <el-input-number v-model="paramsProps.row.highTemperature" :precision="2" />
       </el-form-item>
     </el-form>
     <template #footer>
