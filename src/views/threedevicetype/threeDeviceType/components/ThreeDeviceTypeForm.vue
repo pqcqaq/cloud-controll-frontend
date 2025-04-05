@@ -11,6 +11,25 @@
       <el-form-item label="类型名称" prop="name">
         <el-input v-model="paramsProps.row.name" placeholder="请填写类型名称" clearable></el-input>
       </el-form-item>
+      <!-- 类别型号 -->
+      <el-form-item label="类别型号" prop="model">
+        <el-input v-model="paramsProps.row.model" placeholder="请填写类别型号" clearable></el-input>
+      </el-form-item>
+      <el-form-item label="图片文件" prop="imageId">
+        <!-- <el-input
+          v-model="paramsProps.row.imageId"
+          placeholder="请填写图片文件ID"
+          clearable
+        ></el-input> -->
+        <UploadFile
+          v-model="paramsProps.row.imageId"
+          type="product"
+          tip="请上传图片文件"
+          accept="image/*"
+          :url="paramsProps.row.url"
+        >
+        </UploadFile>
+      </el-form-item>
       <el-form-item label="高电平有效" prop="effectiveHighVoltage">
         <!-- <el-input-number
           v-model="paramsProps.row.effectiveHighVoltage" :precision="0" :min="1" :max="999999" 
@@ -28,6 +47,7 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue';
 import { type ElForm, ElMessage } from 'element-plus';
+import UploadFile from '@/components/Upload/file.vue';
 
 defineOptions({
   name: 'ThreeDeviceTypeForm'
@@ -36,7 +56,14 @@ defineOptions({
 const rules = reactive({
   delFlag: [{ required: true, message: '请填写删除与否' }],
   effectiveHighVoltage: [{ required: true, message: '请填写是否为高电平有效' }],
-  name: [{ required: true, message: '请填写类型名称' }]
+  name: [{ required: true, message: '请填写类型名称' }],
+  imageId: [
+    {
+      required: true,
+      message: '请上传一个图片'
+    }
+  ],
+  model: [{ required: true, message: '请填写类别型号' }]
 });
 
 const visible = ref(false);

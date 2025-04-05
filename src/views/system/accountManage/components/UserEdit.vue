@@ -133,26 +133,6 @@
             </el-radio-group>
           </el-form-item>
         </el-col>
-        <!-- 选择产线 -->
-        <el-col :span="12">
-          <el-form-item
-            label="产线"
-            prop="assemblyLineId"
-          >
-            <el-select
-              v-model="paramsProps.row.assemblyLineId"
-              clearable
-              placeholder="请选择产线"
-            >
-              <el-option
-                v-for="item in assemblyLines"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </el-form-item>
-        </el-col>
       </el-row>
       <el-row>
         <el-form-item
@@ -199,8 +179,6 @@ import { ElMessage } from 'element-plus';
 import UploadImg from '@/components/Upload/Img.vue';
 import type { IUploadResult } from '@/api/interface/system/upload';
 import { IS_PREVIEW } from '@/config';
-import { getOneAssemblyLineListApi, getOneAssemblyLineSelectionApi } from '@/api/modules/oneassemblyline/oneAssemblyLine';
-import type { IOneAssemblyLine } from '@/api/interface/oneassemblyline/oneAssemblyLine';
 defineOptions({
   name: 'UserEdit'
 });
@@ -242,28 +220,6 @@ const handleSubmit = () => {
     }
   });
 };
-
-const assemblyLines = ref<
-  {
-    label: string;
-    value: number;
-  }[]
->([]);
-
-const getLineInfo = () => {
-  getOneAssemblyLineSelectionApi().then(res => {
-    assemblyLines.value = res.data.map((item: IOneAssemblyLine.Selection) => {
-      return {
-        label: item.label,
-        value: item.id
-      };
-    });
-  });
-};
-
-onMounted(() => {
-  getLineInfo();
-})
 
 // 获取文件变更事件
 const fileChange = (data: IUploadResult) => {

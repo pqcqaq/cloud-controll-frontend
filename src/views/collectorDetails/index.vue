@@ -37,21 +37,26 @@
             }}</el-descriptions-item>
           </el-descriptions>
 
-          <h3>状态信息</h3>
-          <el-descriptions :column="2" border>
-            <el-descriptions-item label="信号强度">{{ collectorDetail.status.signalStrength }} dBm</el-descriptions-item>
-            <el-descriptions-item label="电压">{{ collectorDetail.status.voltage.toFixed(2) }} V</el-descriptions-item>
-            <el-descriptions-item label="温度">{{ collectorDetail.status.temperature.toFixed(1) }} °C</el-descriptions-item>
-            <el-descriptions-item label="运行时间">{{ collectorDetail.status.uptime.toFixed(2) }} 秒</el-descriptions-item>
-            <el-descriptions-item label="纬度">{{ collectorDetail.status.posLat }}</el-descriptions-item>
-            <el-descriptions-item label="经度">{{ collectorDetail.status.posLon }}</el-descriptions-item>
-            <el-descriptions-item label="在线状态">
-              <el-tag :type="collectorDetail.status.isOnline ? 'success' : 'danger'">
-                {{ collectorDetail.status.isOnline ? '在线' : '离线' }}
-              </el-tag>
-            </el-descriptions-item>
-            <el-descriptions-item label="更新时间">{{ collectorDetail.status.updateTime }}</el-descriptions-item>
-          </el-descriptions>
+          <template v-if="collectorDetail.status">
+            <h3>状态信息</h3>
+            <el-descriptions :column="2" border>
+              <el-descriptions-item label="信号强度">{{ collectorDetail.status.signalStrength }} dBm</el-descriptions-item>
+              <el-descriptions-item label="电压">{{ collectorDetail.status.voltage.toFixed(2) }} V</el-descriptions-item>
+              <el-descriptions-item label="温度">{{ collectorDetail.status.temperature.toFixed(1) }} °C</el-descriptions-item>
+              <el-descriptions-item label="运行时间">{{ collectorDetail.status.uptime.toFixed(2) }} 秒</el-descriptions-item>
+              <el-descriptions-item label="纬度">{{ collectorDetail.status.posLat }}</el-descriptions-item>
+              <el-descriptions-item label="经度">{{ collectorDetail.status.posLon }}</el-descriptions-item>
+              <el-descriptions-item label="在线状态">
+                <el-tag :type="collectorDetail.status.isOnline ? 'success' : 'danger'">
+                  {{ collectorDetail.status.isOnline ? '在线' : '离线' }}
+                </el-tag>
+              </el-descriptions-item>
+              <el-descriptions-item label="更新时间">{{ collectorDetail.status.updateTime }}</el-descriptions-item>
+            </el-descriptions>
+          </template>
+          <template v-else>
+            <h3>状态信息获取失败</h3>
+          </template>
 
           <!-- 锁机状态 -->
           <h3>锁机状态</h3>

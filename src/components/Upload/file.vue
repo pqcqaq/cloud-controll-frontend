@@ -14,9 +14,14 @@
     :on-remove="handleRemove"
   >
     <div class="note-box">
-      <el-icon class="upload_icon">
-        <UploadFilled />
-      </el-icon>
+      <template v-if="(_fileList.length === 1 && _fileList[0]?.url) || url">
+        <ElImage :src="_fileList[0]?.url || url" style="width: 100%; height: 100%" fit="contain" />
+      </template>
+      <template v-else>
+        <el-icon class="upload_icon">
+          <UploadFilled />
+        </el-icon>
+      </template>
       <div class="el-upload__text">
         <template v-if="drag"> 拖拽或<em>点击上传</em> </template>
         <template v-else> 点击上传 </template>
@@ -62,8 +67,15 @@
 <script setup lang="ts">
 import { Download, UploadFilled } from '@element-plus/icons-vue';
 import { ref, watch } from 'vue';
-import { uploadTmpFile } from '@/api/modules/system/upload';
-import { ElNotification, type UploadFile, type UploadProps, type UploadRequestOptions, type UploadUserFile } from 'element-plus';
+import { uploadFile, uploadTmpFile } from '@/api/modules/system/upload';
+import {
+  ElImage,
+  ElNotification,
+  type UploadFile,
+  type UploadProps,
+  type UploadRequestOptions,
+  type UploadUserFile
+} from 'element-plus';
 import type { IUploadResult } from '@/api/interface/system/upload';
 import type { AxiosProgressEvent } from 'axios';
 
@@ -83,6 +95,7 @@ type Props = {
   modelValue?: string | string[];
   height?: string; // 组件高度 ==> 非必传（默认为 150px）
   width?: string; // 组件宽度 ==> 非必传（默认为 150px）
+  url?: string; // 图片地址 ==> 非必传
 };
 
 const props = withDefaults(defineProps<Props>(), {
@@ -95,15 +108,22 @@ const props = withDefaults(defineProps<Props>(), {
   fileSize: 5,
   accept: '',
   height: '150px',
-  width: '200px'
+  width: '200px',
+  url: ''
 });
+
+type FileUploadNew = UploadUserFile & {
+  fileId?: number;
+  url?: string;
+  name?: string;
+};
 
 const emit = defineEmits<{
   'update:modelValue': [string | (string | undefined)[]];
   'update:fileList': [value: UploadUserFile[]];
   change: [value: IUploadResult];
 }>();
-const _fileList = ref<UploadUserFile[]>([]);
+const _fileList = ref<FileUploadNew[]>([]);
 
 // 监听 props.fileList 列表默认值改变
 watch(
@@ -152,8 +172,11 @@ const handleExceed = () => {
 // 重新设置的上传
 const uploadFileRequest = async (options: UploadRequestOptions) => {
   try {
-    const { data } = await uploadTmpFile(
-      { file: options.file },
+    const { data } = await uploadFile(
+      {
+        file: options.file,
+        dirTag: props.type
+      },
       {
         onUploadProgress(event: AxiosProgressEvent) {
           const progressEvent = new ProgressEvent('upload', {
@@ -171,12 +194,21 @@ const uploadFileRequest = async (options: UploadRequestOptions) => {
   }
 };
 
-const handleSuccess = (response: IUploadResult | undefined, file: UploadFile) => {
+const handleSuccess = (
+  response: IUploadResult | undefined,
+  file: UploadFile & {
+    fileId?: number;
+    url?: string;
+    name?: string;
+  }
+) => {
   if (!response) return;
   file.url = response.url;
   file.name = response.filename;
+  file.fileId = response.fileId;
   emit('update:fileList', _fileList.value);
   emit('change', response);
+  emit('update:modelValue', props.limit === 1 ? `${response.fileId}` : _fileList.value.map(item => `${item.fileId}`));
 };
 
 const handleRemove = (file: UploadFile) => {

@@ -68,7 +68,7 @@ import type { ColumnProps, ProTableInstance, SearchProps } from '@/components/Pr
 import type { IThreeDeviceType } from '@/api/interface/threedevicetype/threeDeviceType';
 import ImportExcel from '@/components/ImportExcel/index.vue';
 import { downloadTemplate } from '@/api/modules/system/common';
-import { ElMessageBox, ElTag } from 'element-plus';
+import { ElImage, ElMessageBox, ElTag } from 'element-plus';
 import { useDownload } from '@/hooks/useDownload';
 defineOptions({
   name: 'ThreeDeviceTypeView'
@@ -77,7 +77,21 @@ const proTableRef = ref<ProTableInstance>();
 // 表格配置项
 const columns: ColumnProps<IThreeDeviceType.Row>[] = [
   { type: 'selection', width: 80 },
+  {
+    prop: 'url',
+    label: '图片',
+    width: 200,
+    render: ({ row }) => {
+      return h(ElImage, {
+        src: row.url,
+        previewSrcList: [row.url!],
+        lazy: true,
+        previewTeleported: true
+      });
+    }
+  },
   { prop: 'name', label: '类型名称' },
+  { prop: 'model', label: '型号' },
   {
     prop: 'effectiveHighVoltage',
     label: '是否为高电平有效',

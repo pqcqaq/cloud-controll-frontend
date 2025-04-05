@@ -20,6 +20,9 @@ export namespace IThreeDeviceType {
     id?: number
     effectiveHighVoltage?: number
     name?: string
+    imageId: number
+    url?: string
+    model?: string
   }
 
   export interface Options {
