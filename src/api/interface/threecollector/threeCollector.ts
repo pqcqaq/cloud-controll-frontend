@@ -65,6 +65,13 @@ export namespace IThreeCollector {
       active: boolean;
       updateTime: string;
     }>;
+    lastUptime: {
+      id: number;
+      uptime: number;
+      countDate: string;
+      runSeconds24h: number;
+      collectorId: number;
+    }
   }
 
   export interface Selection {

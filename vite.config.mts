@@ -4,7 +4,7 @@ import { fileURLToPath, URL } from 'node:url';
 import { defineConfig, ConfigEnv, UserConfig, loadEnv } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
-import vueDevTools from 'vite-plugin-vue-devtools'
+import vueDevTools from 'vite-plugin-vue-devtools';
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
 import viteCompression from 'vite-plugin-compression';
 
@@ -25,29 +25,29 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       // 使用 svg 图标
       createSvgIconsPlugin({
         iconDirs: [resolve(process.cwd(), 'src/assets/icons')],
-        symbolId: 'icon-[dir]-[name]',
+        symbolId: 'icon-[dir]-[name]'
       }),
       // 配置 gzip 压缩插件
       viteCompression({
         algorithm: 'gzip', // 使用 gzip 压缩
         ext: '.gz', // 压缩文件扩展名
-        threshold: 10240, // 只有大于 10 KB 的文件才会被压缩
-        deleteOriginFile: false, // 不删除源文件
-      }),
+        threshold: 5120, // 只有大于 5 KB 的文件才会被压缩
+        deleteOriginFile: false // 不删除源文件
+      })
     ],
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
-        'package.json': new URL('package.json', import.meta.url).pathname,
-      },
+        'package.json': new URL('package.json', import.meta.url).pathname
+      }
     },
     css: {
       preprocessorOptions: {
         scss: {
           api: 'modern-compiler', // https://github.com/sass/dart-sass/issues/2395#issuecomment-988870897
-          additionalData: `@use "@/styles/element/index.scss" as *;`,
-        },
-      },
+          additionalData: `@use "@/styles/element/index.scss" as *;`
+        }
+      }
     },
     server: {
       host: '0.0.0.0',
@@ -58,26 +58,34 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
           target: env.VITE_SERVER_BASEURL,
           changeOrigin: true,
           ws: true,
-          rewrite: (path) => path.replace(new RegExp(`^/api`), ''),
+          rewrite: path => path.replace(new RegExp(`^/api`), ''),
           // https is require secure=false
-          ...(/^https:\/\//.test(env.VITE_API_URL) ? { secure: false } : {}),
+          ...(/^https:\/\//.test(env.VITE_API_URL) ? { secure: false } : {})
         },
         '/socket': {
           target: env.VITE_SOCKET_BASE_URL,
           changeOrigin: true,
           ws: true,
-          rewrite: (path) => path.replace(new RegExp(`^/socket`), ''),
-          ...(/^wss:\/\//.test(env.VITE_SOCKET_URL) ? { secure: false } : {}),
+          rewrite: path => path.replace(new RegExp(`^/socket`), ''),
+          ...(/^wss:\/\//.test(env.VITE_SOCKET_URL) ? { secure: false } : {})
         },
         '/io': {
           target: env.VITE_SOCKET_IO_BASE_URL,
           changeOrigin: true,
           ws: true,
-          rewrite: (path) => path.replace(new RegExp(`^/io`), ''),
-          ...(/^wss:\/\//.test(env.VITE_SOCKET_IO_URL) ? { secure: false } : {}),
+          rewrite: path => path.replace(new RegExp(`^/io`), ''),
+          ...(/^wss:\/\//.test(env.VITE_SOCKET_IO_URL) ? { secure: false } : {})
         }
-      },
+      }
     },
+    build: {
+      rollupOptions: {
+        output: {
+          entryFileNames: 'assets/[name]-[hash].js', //入口文件
+          chunkFileNames: 'assets/js/chunk/[name]-[hash].js', //分包引入文件
+          assetFileNames: 'assets/[ext]/[name]-[hash].[ext]' //静态文件
+        }
+      }
+    }
   };
 });
-
