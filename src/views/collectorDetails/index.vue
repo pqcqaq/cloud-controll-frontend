@@ -65,16 +65,14 @@
               <el-descriptions-item label="统计日期">{{ collectorDetail.lastUptime.countDate }}</el-descriptions-item>
               <el-descriptions-item label="统计在线">{{ collectorDetail.lastUptime.runSeconds24h }}秒</el-descriptions-item>
               <el-descriptions-item label="开机时间">{{ collectorDetail.lastUptime.uptime }}秒</el-descriptions-item>
-              <el-descriptions-item label="今天在线">{{
-                (collectorDetail.status?.uptime || Infinity) - collectorDetail.lastUptime.uptime
-              }}秒</el-descriptions-item>
+              <el-descriptions-item label="今天在线"
+                >{{ (collectorDetail.status?.uptime || Infinity) - collectorDetail.lastUptime.uptime }}秒</el-descriptions-item
+              >
             </el-descriptions>
           </template>
           <template v-else>
             <el-descriptions :column="2" border>
-              <el-descriptions-item>
-                上一次在线状态获取失败
-              </el-descriptions-item>
+              <el-descriptions-item> 上一次在线状态获取失败 </el-descriptions-item>
             </el-descriptions>
           </template>
 
