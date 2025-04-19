@@ -36,6 +36,10 @@ export const javaTypeOptions: Options[] = [
   {
     label: "Boolean",
     value: "Boolean"
+  },
+  {
+    label: "Point",
+    value: "Point"
   }
 ];
 
