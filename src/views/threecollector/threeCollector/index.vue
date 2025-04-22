@@ -52,6 +52,10 @@
         <el-button v-auth="'three.collector.sendUpdate'" type="primary" link :icon="Download" @click="sendUpdate(row)">
           发送更新
         </el-button>
+        <!-- 更新未知 -->
+        <el-button type="primary" link :icon="Download" @click="sendUpdateLocation(row)">
+          更新位置
+        </el-button>
         <!-- reboot -->
         <el-button v-auth="'three.collector.reboot'" type="primary" link :icon="Download" @click="rebootInfo(row)">
           重启
@@ -81,7 +85,8 @@ import {
   sendLockMsgApi,
   sendUnlockMsgApi,
   sendUpdateMsgApi,
-  sendRestartMsgApi
+  sendRestartMsgApi,
+  updateLocation
 } from '@/api/modules/threecollector/threeCollector';
 import { useHandleData } from '@/hooks/useHandleData';
 import ThreeCollectorForm from '@/views/threecollector/threeCollector/components/ThreeCollectorForm.vue';
@@ -265,6 +270,23 @@ const sendUpdate = async (params: IThreeCollector.Row) => {
     proTableRef.value?.getTableList();
   }
 };
+
+const sendUpdateLocation = async (params: IThreeCollector.Row) => {
+    const res = await ElMessageBox.confirm('确定要重新获取位置吗', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  });
+  if (res === 'confirm') {
+    await updateLocation(params.id!).then(() => {
+      ElMessageBox.alert('发送更新成功', '提示', {
+        confirmButtonText: '确定',
+        type: 'success'
+      });
+    });
+    proTableRef.value?.getTableList();
+  }
+}
 
 const rebootInfo = async (params: IThreeCollector.Row) => {
   const res = await ElMessageBox.confirm('确定要重启吗?', '提示', {

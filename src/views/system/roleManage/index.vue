@@ -44,7 +44,7 @@
         >
           编辑
         </el-button>
-        <el-button v-auth="'sys.menu.delete_btn'" v-if="row.id !== 1" type="primary" link :icon="Delete" @click="deleteInfo(row)">
+        <el-button v-auth="'sys.menu.delete_btn'" v-if="row.isLock === 'F'" type="primary" link :icon="Delete" @click="deleteInfo(row)">
           删除
         </el-button>
       </template>
